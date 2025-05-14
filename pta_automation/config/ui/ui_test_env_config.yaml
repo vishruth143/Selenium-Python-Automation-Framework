@@ -1,0 +1,17 @@
+---
+DEV:
+  url: https://practicetestautomation.com/practice-test-login/
+  username: student
+  password: Password123
+QA:
+  url: https://practicetestautomation.com/practice-test-login/
+  username: student
+  password: Password123
+STAGE:
+  url: https://practicetestautomation.com/practice-test-login/
+  username: student
+  password: Password123
+PROD:
+  url: https://practicetestautomation.com/practice-test-login/
+  username: student
+  password: Password123

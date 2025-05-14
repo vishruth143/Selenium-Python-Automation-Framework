@@ -1,0 +1,11 @@
+2025-05-14 02:52:15            INFO test_reqres:test_create:77 **************************************************
+2025-05-14 02:52:15            INFO test_reqres:test_create:78 Test #02 : Verify POST /api/users to create a user.
+2025-05-14 02:52:15            INFO test_reqres:test_create:79 **************************************************
+2025-05-14 02:52:15            INFO test_reqres:test_create:81 STEP 01: Sending POST request to create user.
+2025-05-14 02:52:16            INFO test_reqres:test_create:83 Response received: 401
+2025-05-14 02:52:16            INFO test_reqres:test_create:84 Response body: {"error":"Missing API key.","how_to_get_one":"https://reqres.in/signup"}
+2025-05-14 02:52:16            INFO test_reqres:test_create:86 STEP 02: Validating status code.
+2025-05-14 02:52:16            ERROR test_reqres:test_create:101 Exception occurred: Expected status code 201, got 401
+assert 401 == 201
+ +  where 401 = <Response [401]>.status_code
+2025-05-14 02:52:16            INFO test_reqres:test_create:102 Test #02 : Verify POST /api/users - Failed

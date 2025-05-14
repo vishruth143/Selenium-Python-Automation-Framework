@@ -4,7 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4c60d0a7-5667-41c9-8f2d-67d4c8b57c34" name="Changes" comment="" />
+    <list default="true" id="4c60d0a7-5667-41c9-8f2d-67d4c8b57c34" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/Selenium Python Automation.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/config/api/api_test_data_config.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/config/api/api_test_env_config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/config/common_config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/config/config_parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/config/ui/ui_test_data_config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/config/ui/ui_test_env_config.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/interfaces/api_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/logs/test_execution.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/pages/base_page.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/pages/login_page.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/utilities/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/utilities/common.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/utilities/custom_logger.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/framework/utilities/loaders.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/listeners/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/listeners/event_listeners.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/api/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/api/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/api/test_reqres.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/ui/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/ui/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pta_automation/tests/ui/test_pta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,18 +59,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "vishruth143"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;vishruth143&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/vishruth143/Selenium-Python-Automation-Framework.git",
-    "accountId": "4531b873-f187-4eba-a24c-3a5aa845740c"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/vishruth143/Selenium-Python-Automation-Framework.git&quot;,
+    &quot;accountId&quot;: &quot;4531b873-f187-4eba-a24c-3a5aa845740c&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -45,26 +79,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python tests.Python tests for test_pta_login.TestPTALogin.executor": "Run",
-    "Python tests.Python tests for test_pta_login.TestPTALogin.test_pta_login.executor": "Run",
-    "Python tests.Python tests for test_reqres.TestReqRes.test_create.executor": "Run",
-    "Python tests.Python tests for test_reqres.TestReqRes.test_single_user.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Selenium Python Automation Framework",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests for test_pta_login.TestPTALogin.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_pta_login.TestPTALogin.test_pta_login.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_reqres.TestReqRes.test_create.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_reqres.TestReqRes.test_single_user.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Selenium Python Automation Framework&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\PTA_Selenium_Python_Automation_Framework\pta_automation\tests\api" />
@@ -167,7 +201,7 @@
       <updated>1747128705075</updated>
       <workItem from="1747128706507" duration="710000" />
       <workItem from="1747129474741" duration="18605000" />
-      <workItem from="1747200665080" duration="965000" />
+      <workItem from="1747200665080" duration="1296000" />
     </task>
     <servers />
   </component>
