@@ -7,11 +7,11 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
 ## 🚀 Environment Variables
 
 ### 🔹 UI Testing
-| Variable | Description                           | Default  |
-|----------|---------------------------------------|----------|
-| `BROWSER` | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`) | `CHROME` |
-| `HEADLESS` | Run in headless mode (`Y` or `N`)    | `N`      |
-| `REGION` | Target region/environment (e.g., `QA`, `DEV`, `PROD`) | *Required* |
+| Variable | Description                                                  | Default  |
+|----------|--------------------------------------------------------------|----------|
+| `BROWSER` | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)        | `CHROME` |
+| `HEADLESS` | Run in headless mode (`Y` or `N`)                            | `N`      |
+| `REGION` | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | *Required* |
 
 ### 🔹 API Testing
 | Variable | Description                           | Default  |
@@ -22,9 +22,9 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
 
 ## 🐳 To run on docker container: (PowerShell)
 
-docker build -t selenium-tests .
+### `docker build -t selenium-tests .`
 
-docker run -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests
+### `docker run -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests`
 
 ---
 
