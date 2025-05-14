@@ -11,3 +11,7 @@ REGION=QA
 To run the tests using command line (powershell):
 $env:REGION="qa"; $env:BROWSER="CHROME"; $env:HEADLESS="N"; pytest pta_automation/tests/ui/test_pta.py
 
+To run on docker container:
+docker build -t selenium-tests .
+docker run -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests
+
