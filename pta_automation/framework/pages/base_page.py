@@ -1,6 +1,6 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
 class BasePage:
@@ -13,8 +13,23 @@ class BasePage:
             return WebDriverWait(self.driver, self.timeout).until(
                 EC.presence_of_element_located((by, locator))
             )
-        except TimeoutException:
-            raise Exception(f"Element not found: ({by}, {locator})")
+        except TimeoutException as e:
+            raise Exception(f"Element not found: ({by}, {locator}) | Exception: {str(e)}")
+
+    def find_elements(self, by, locator):
+        try:
+            return WebDriverWait(self.driver, self.timeout).until(
+                EC.presence_of_all_elements_located((by, locator))
+            )
+        except TimeoutException as e:
+            raise Exception(f"Elements not found: ({by}, {locator}) | Exception: {str(e)}")
+
+    def is_element_present(self, by, locator):
+        try:
+            self.driver.find_element(by, locator)
+            return True
+        except NoSuchElementException:
+            return False
 
     def is_element_visible(self, by, locator):
         try:
@@ -43,3 +58,11 @@ class BasePage:
             )
         except TimeoutException:
             raise Exception(f"Element still visible after timeout: ({by}, {locator})")
+
+    def wait_for_clickable(self, by, locator):
+        try:
+            return WebDriverWait(self.driver, self.timeout).until(
+                EC.element_to_be_clickable((by, locator))
+            )
+        except TimeoutException as e:
+            raise Exception(f"Element not clickable: ({by}, {locator}) | Exception: {str(e)}")

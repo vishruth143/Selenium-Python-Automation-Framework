@@ -4,7 +4,7 @@
 # pylint: disable=line-too-long, too-few-public-methods
 
 import os
-from pta_automation.framework.utilities.loaders import load_yaml, load_json
+from pta_automation.framework.utilities.loaders import load_json, load_yaml
 
 class ConfigParser:
     CONFIG_FILE_PATHS = {
