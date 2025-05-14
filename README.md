@@ -22,9 +22,18 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
 
 ## 🐳 To run on docker container: (PowerShell)
 
+## To build docker image
 ### `docker build -t selenium-tests .`
 
+## To run on Chrome browser
 ### `docker run -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests`
+
+## To run on Firefox browser
+### `docker run -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-tests`
+
+## To run on Edge browser
+### `docker run -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-tests`
+
 
 ---
 
