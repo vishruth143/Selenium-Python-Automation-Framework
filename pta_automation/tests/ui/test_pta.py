@@ -13,8 +13,8 @@ from pta_automation.framework.pages.login_page import LoginPage
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 
 
-@pytest.mark.pta.login
-class TestPTALogin:
+@pytest.mark.pta
+class TestPTA:
 
     """
     Test cases for PTA Application
