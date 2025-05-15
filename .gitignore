@@ -8,3 +8,5 @@ pta_automation/tests/__pycache__
 pta_automation/tests/pytest_cache
 pta_automation/screenshots
 reports
+allure-results
+allure-rports

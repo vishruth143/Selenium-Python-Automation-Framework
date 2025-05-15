@@ -43,4 +43,15 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
 $env:REGION="qa"
 $env:BROWSER="CHROME"
 $env:HEADLESS="N"
-pytest --html=reports/report.html pta_automation/tests/ui/test_pta.py
+pytest --html=reports/report.html pta_automation/tests
+
+## To generate Allure Results
+pytest --alluredir=allure-results pta_automation/tests
+
+## To install allure run the below commands in powershell
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+iwr -useb get.scoop.sh | iex
+scoop install allure
+
+## To generate Allure Report
+allure generate allure-results --clean -o allure-report
