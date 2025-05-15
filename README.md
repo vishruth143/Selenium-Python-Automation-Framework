@@ -43,4 +43,4 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
 $env:REGION="qa"
 $env:BROWSER="CHROME"
 $env:HEADLESS="N"
-pytest pta_automation/tests/ui/test_pta.py
+pytest --html=reports/report.html pta_automation/tests/ui/test_pta.py

@@ -1,9 +1,10 @@
 .idea
 __pycache__
 .pytest_cache
-venv
+.venv
 .DS_Store
 pta_automation/framework/logs
 pta_automation/tests/__pycache__
 pta_automation/tests/pytest_cache
 pta_automation/screenshots
+reports

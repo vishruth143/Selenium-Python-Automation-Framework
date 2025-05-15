@@ -46,7 +46,6 @@ class TestPTA:
             log.info("Login to PTA application - Started.")
             common.pta_login(region)
             if self.loginpage.logged_in_successfully_txt_visible():
-                self.driver.save_screenshot(screenshot_path)
                 log.info("'Logged In Successfully' text is visible.")
                 log.info("Login to PTA application - Completed Successfully.")
             else:
