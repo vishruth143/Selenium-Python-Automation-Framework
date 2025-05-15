@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from pta_automation.framework.pages.base_page import BasePage
-
+from selenium.webdriver.support import expected_conditions as EC
 
 class LoginPage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------
@@ -25,21 +25,21 @@ class LoginPage(BasePage):
     # ---------------------------------------------------Input Fields---------------------------------------------------
     @property
     def username_input(self):
-        return self.find_element(*self._username_input)
+        return self.find_element(*self._username_input, EC.presence_of_element_located)
 
     @property
     def password_input(self):
-        return self.find_element(*self._password_input)
+        return self.find_element(*self._password_input, EC.presence_of_element_located)
 
     # -----------------------------------------------------Buttons------------------------------------------------------
     @property
     def submit_btn(self):
-        return self.find_element(*self._submit_btn)
+        return self.find_element(*self._submit_btn, EC.element_to_be_clickable)
 
     # -----------------------------------------------------texts------------------------------------------------------
     @property
     def logged_in_successfully_txt(self):
-        return self.find_element(*self._logged_in_successfully_txt)
+        return self.find_element(*self._logged_in_successfully_txt, EC.visibility_of_element_located)
 
 
 

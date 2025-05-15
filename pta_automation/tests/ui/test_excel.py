@@ -1,7 +1,5 @@
 import pytest
 import os
-import pandas as pd
-import shutil
 from pta_automation.config.config_parser import ConfigParser
 from pta_automation.framework.utilities.common import save_excel
 

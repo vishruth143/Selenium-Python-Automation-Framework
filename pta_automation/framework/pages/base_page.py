@@ -8,10 +8,10 @@ class BasePage:
         self.driver = driver
         self.timeout = timeout
 
-    def find_element(self, by, locator):
+    def find_element(self, by, locator, condition=EC.presence_of_element_located):
         try:
             return WebDriverWait(self.driver, self.timeout).until(
-                EC.presence_of_element_located((by, locator))
+                condition((by, locator))
             )
         except TimeoutException as e:
             raise Exception(f"Element not found: ({by}, {locator}) | Exception: {str(e)}")

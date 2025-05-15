@@ -3,7 +3,6 @@
 # pylint: disable=[too-many-statements, too-many-branches, unused-variable, too-many-locals, unsubscriptable-object]
 # pylint: disable=C0302
 
-import os
 import pytest
 
 from pta_automation.config.config_parser import ConfigParser
@@ -19,7 +18,7 @@ class TestReqRes:
     Test cases for Reqres API
     """
 
-    def test_single_user(self, api_client, request):
+    def test_single_user(self, api_client):
         """
         Test #01 : Verify GET /api/users/2
         Steps:
@@ -27,7 +26,6 @@ class TestReqRes:
         02) Verify status code is 200.
         03) Validate user details in the response body.
         """
-        test_name = request.node.name.rsplit("[", 1)[0]
         endpoint = "/api/users/2"
 
         try:
@@ -61,7 +59,7 @@ class TestReqRes:
             log.info("Test #01 : Verify GET /api/users/2 - Failed")
             raise
 
-    def test_create(self, api_client, request):
+    def test_create(self, api_client):
         """
         Test #02 : Verify POST /api/users
         Steps:
@@ -69,7 +67,6 @@ class TestReqRes:
         02) Validate status code is 201.
         03) Validate response contains the expected user details.
         """
-        test_name = request.node.name.rsplit("[", 1)[0]
         endpoint = "/api/users"
         payload = api_test_data.get("Create", {})
 
