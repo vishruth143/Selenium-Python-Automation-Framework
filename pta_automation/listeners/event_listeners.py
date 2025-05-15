@@ -3,6 +3,7 @@
 
 from selenium.webdriver.support.abstract_event_listener import AbstractEventListener
 from pta_automation.framework.utilities.custom_logger import Logger
+from pta_automation.framework.utilities.screenshot_utils import get_screenshot_path
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 
@@ -37,7 +38,8 @@ class MyEventListener(AbstractEventListener):
         log.info(f"[Event] Exception occurred: {exception}")
         # Optional: Take screenshot on error
         try:
-            screenshot_path = f"screenshots/error_{driver.title}.png"
+            test_name = driver.title or "unknown"
+            screenshot_path = get_screenshot_path(f"error_{test_name}")
             driver.save_screenshot(screenshot_path)
             print(f"[Event] Screenshot saved to {screenshot_path}")
             log.info(f"[Event] Screenshot saved to {screenshot_path}")

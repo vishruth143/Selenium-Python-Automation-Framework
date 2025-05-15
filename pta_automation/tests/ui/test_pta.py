@@ -9,6 +9,7 @@ import pytest
 from pta_automation.framework.utilities.common import Common
 from pta_automation.framework.utilities.custom_logger import Logger
 from pta_automation.framework.pages.login_page import LoginPage
+from pta_automation.framework.utilities.screenshot_utils import get_screenshot_path
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 
@@ -29,6 +30,7 @@ class TestPTA:
         02) Logout of PTA application.
         """
         test_name = request.node.name.rsplit("[", 1)[0]
+        screenshot_path = get_screenshot_path(test_name)
         self.driver = driver
 
         # Libraries needed
@@ -50,7 +52,7 @@ class TestPTA:
                 log.info("'Logged In Successfully' text is visible.")
                 log.info("Login to PTA application - Completed Successfully.")
             else:
-                self.driver.save_screenshot(os.path.dirname(os.getcwd()) + "/screenshots/" + test_name + ".png")
+                self.driver.save_screenshot(screenshot_path)
                 log.info("'Logged In Successfully' text is not visible.")
                 log.info("Test #01 : Verify PTA Application Login. - Failed")
             # Logout of PTA application
@@ -59,7 +61,7 @@ class TestPTA:
             common.pta_logout()
             log.info("Logout from PTA application - Completed Successfully.")
         except Exception as e:
-            self.driver.save_screenshot(os.path.dirname(os.getcwd()) + "/screenshots/" + test_name + ".png")
+            self.driver.save_screenshot(screenshot_path)
             log.error(f"Error: {e}")
             log.info("Test #01 : Verify PTA Application Login. - Failed")
             raise
