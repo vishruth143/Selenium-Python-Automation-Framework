@@ -3,8 +3,6 @@
 # pylint: disable=[too-many-statements, too-many-branches, unused-variable, too-many-locals, unsubscriptable-object]
 # pylint: disable=C0302
 
-
-import os
 import pytest
 from pta_automation.framework.utilities.common import Common
 from pta_automation.framework.utilities.custom_logger import Logger
@@ -12,7 +10,6 @@ from pta_automation.framework.pages.login_page import LoginPage
 from pta_automation.framework.utilities.screenshot_utils import get_screenshot_path
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
-
 
 @pytest.mark.pta
 class TestPTA:
@@ -49,6 +46,7 @@ class TestPTA:
             log.info("Login to PTA application - Started.")
             common.pta_login(region)
             if self.loginpage.logged_in_successfully_txt_visible():
+                self.driver.save_screenshot(screenshot_path)
                 log.info("'Logged In Successfully' text is visible.")
                 log.info("Login to PTA application - Completed Successfully.")
             else:

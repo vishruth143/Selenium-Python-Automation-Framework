@@ -3,13 +3,11 @@ import os
 from pta_automation.config.config_parser import ConfigParser
 from pta_automation.framework.utilities.common import save_excel
 
-
 @pytest.mark.pta
 class TestPTA:
     """
     Test cases for PTA Application
     """
-
     def test_excel(self, request):
         """
         Test #01 : Read the data from Excel file and write results to a new output file.

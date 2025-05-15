@@ -10,7 +10,6 @@ from selenium.webdriver.support.events import EventFiringWebDriver
 from pta_automation.listeners.event_listeners import MyEventListener
 from pta_automation.config.config_parser import ConfigParser
 
-
 @pytest.fixture(scope="session")
 def testdata():
     return ConfigParser.load_config("ui_test_data_config")
@@ -48,7 +47,6 @@ def driver(request):
     request.addfinalizer(teardown)
     return driver_instance
 
-
 def create_chrome_options(headless: bool):
     options = ChromeOptions()
     if headless:
@@ -60,7 +58,6 @@ def create_chrome_options(headless: bool):
         })
     options.add_argument("window-size=1920,1080")
     return options
-
 
 def create_firefox_options(headless: bool, binary_path: str):
     options = FirefoxOptions()
