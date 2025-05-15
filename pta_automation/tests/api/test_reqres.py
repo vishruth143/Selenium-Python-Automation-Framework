@@ -12,7 +12,7 @@ from pta_automation.framework.utilities.custom_logger import Logger
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 api_test_data = ConfigParser.load_config('api_test_data_config')
 
-@pytest.mark.reqres
+@pytest.mark.req_res
 class TestReqRes:
 
     """

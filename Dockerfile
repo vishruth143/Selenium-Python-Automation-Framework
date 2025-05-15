@@ -30,6 +30,9 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > mic
 # Set working directory
 WORKDIR /app
 
+# Copy pytest.ini
+COPY pytest.ini /app/
+
 # Copy requirements file first (improves build caching)
 COPY requirements.txt /app/
 

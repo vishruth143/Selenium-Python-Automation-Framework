@@ -32,6 +32,7 @@ class TestPTA:
                 print(f"Running Test Case: {test_case} with User: {username}")
 
                 # Dummy test logic - mark Pass
+                df["Status"] = df["Status"].astype(str)  # Ensure it's string-compatible
                 df.at[idx, 'Status'] = 'Pass'
 
         # Step 3: Copy original Excel file to output version
