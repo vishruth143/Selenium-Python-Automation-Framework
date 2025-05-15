@@ -40,4 +40,4 @@ COPY pta_automation /app/pta_automation
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Set default command
-CMD ["pytest", "pta_automation/tests/ui"]
+CMD ["pytest", "-n", "4", "pta_automation/tests"]

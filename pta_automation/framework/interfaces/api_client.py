@@ -1,9 +1,13 @@
 import requests
 
 class APIClient:
-    def __init__(self, base_url: str):
+    def __init__(self, base_url):
         self.base_url = base_url
-        self.session = requests.Session()  # Reuse TCP connection for performance
+        self.session = requests.Session()
+        # Add the API key header here
+        self.session.headers.update({
+            "x-api-key": "reqres-free-v1"
+        })
 
     def get(self, endpoint: str, **kwargs):
         return self.session.get(f"{self.base_url}{endpoint}", **kwargs)
