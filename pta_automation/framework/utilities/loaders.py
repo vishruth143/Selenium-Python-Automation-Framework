@@ -2,8 +2,9 @@
 # pylint: disable=[import-error, line-too-long]
 import os
 import json
-import yaml
 
+import pandas as pd
+import yaml
 
 def load_json(file_path: str) -> dict:
     """
@@ -37,3 +38,10 @@ def load_yaml(file_path: str) -> dict:
     except yaml.YAMLError as e:
         # Re-raise a custom exception with 'from' to preserve the traceback
         raise yaml.YAMLError(f'Failed to load YAML file {file_path}: {str(e)}') from e
+
+def load_xlsx_sheet(file_path: str, sheet_name: str) -> pd.DataFrame:
+    try:
+        df = pd.read_excel(file_path, sheet_name=sheet_name, engine='openpyxl')
+        return df
+    except Exception as e:
+        raise RuntimeError(f"Error loading Excel file '{file_path}' sheet '{sheet_name}': {e}")

@@ -1,10 +1,12 @@
-import os
 import time
 import random
-import json
 from datetime import datetime, timezone
+import shutil
 
-import pytest
+import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
+
 from faker import Faker
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
@@ -150,3 +152,31 @@ def wait_for_element_to_disappear(driver, element_locator, timeout=60):
         WebDriverWait(driver, timeout).until_not(element_present)
     except TimeoutError:
         print("Timed out waiting for element to disappear")
+
+def save_excel(sheet_name, df, input_path, output_path):
+    shutil.copy(input_path, output_path)
+
+    with pd.ExcelWriter(output_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+        df.to_excel(writer, sheet_name=sheet_name, index=False)
+
+    # Post-process green fill for "Pass" in "Status"
+    wb = load_workbook(output_path)
+    ws = wb["PTA"]
+
+    # Define fills
+    green_fill = PatternFill(fill_type="solid", fgColor="90EE90") # light green
+    red_fill = PatternFill(fill_type="solid", fgColor="FF7F7F")  # light red
+
+    # Find 'Status' column index (1-based)
+    status_col_index = [cell.value for cell in ws[1]].index("Status") + 1  # 1-based index
+
+    # Apply color based on status value
+    for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
+        cell = row[status_col_index - 1]
+        if cell.value == 'Pass':
+            cell.fill = green_fill
+        elif cell.value == 'Fail':
+            cell.fill = red_fill
+
+    # Save changes
+    wb.save(output_path)

@@ -15,11 +15,9 @@ from pta_automation.config.config_parser import ConfigParser
 def testdata():
     return ConfigParser.load_config("ui_test_data_config")
 
-
 @pytest.fixture(scope="session")
 def region():
     return os.environ["REGION"]
-
 
 @pytest.fixture()
 def driver(request):
