@@ -31,6 +31,7 @@ jobs:
 
       - name: Run Pylint and Enforce 10/10 Score
         run: |
+          echo "Linting pta_automation directory..."
           SCORE=$(pylint pta_automation | tee pylint-output.txt | tail -n 2 | grep "rated at" | awk '{print $7}' | cut -d'/' -f1)
           echo "Pylint Score: $SCORE"
           if [ "$(echo "$SCORE < 10.0" | bc)" -eq 1 ]; then
