@@ -1,3 +1,6 @@
+# pylint: disable=[line-too-long, missing-module-docstring, missing-module-docstring, missing-function-docstring]
+# pylint: disable=[unused-variable, missing-class-docstring]
+
 import time
 import random
 from datetime import datetime, timezone
@@ -14,7 +17,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.common.by import By
 from pta_automation.framework.pages.login_page import LoginPage
 from pta_automation.config.config_parser import ConfigParser
 

@@ -1,5 +1,7 @@
 # pylint: disable=[line-too-long, missing-module-docstring, useless-object-inheritance, too-many-instance-attributes]
 # pylint: disable=[too-many-arguments, self-assigning-variable, too-few-public-methods, import-error]
+# pylint: disable=[too-many-positional-arguments]
+
 
 import datetime
 import logging

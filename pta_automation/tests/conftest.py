@@ -1,3 +1,6 @@
+# pylint: disable=[unused-argument, missing-module-docstring, missing-module-docstring, unspecified-encoding]
+# pylint: disable=[missing-function-docstring]
+
 import os
 
 def pytest_sessionstart(session):

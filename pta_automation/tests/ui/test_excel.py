@@ -1,5 +1,7 @@
-import pytest
+# pylint: disable=[missing-module-docstring, too-few-public-methods]
+
 import os
+import pytest
 from pta_automation.config.config_parser import ConfigParser
 from pta_automation.framework.utilities.common import save_excel
 
@@ -8,7 +10,7 @@ class TestPTA:
     """
     Test cases for PTA Application
     """
-    def test_excel(self, request):
+    def test_excel(self):
         """
         Test #01 : Read the data from Excel file and write results to a new output file.
         """
@@ -23,7 +25,6 @@ class TestPTA:
             if row.get('Run') == 'Y':
                 test_case = row.get('Tets Case')
                 username = row.get('UserName')
-                password = row.get('Password')
 
                 print(f"Running Test Case: {test_case} with User: {username}")
 

@@ -1,5 +1,5 @@
 # pylint: disable=[missing-function-docstring, missing-module-docstring, unspecified-encoding, invalid-name]
-# pylint: disable=[import-error, line-too-long]
+# pylint: disable=[import-error, line-too-long, raise-missing-from]
 import os
 import json
 

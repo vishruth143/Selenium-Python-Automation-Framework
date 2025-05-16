@@ -1,5 +1,5 @@
 # pylint: disable=[missing-module-docstring, missing-class-docstring, import-error, missing-function-docstring]
-# pylint: disable=[invalid-name, too-few-public-methods]
+# pylint: disable=[invalid-name, too-few-public-methods, logging-fstring-interpolation, broad-exception-caught]
 
 from selenium.webdriver.support.abstract_event_listener import AbstractEventListener
 from pta_automation.framework.utilities.custom_logger import Logger

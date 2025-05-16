@@ -12,7 +12,34 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.3'
+
+      - name: Install Pylint
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+
+      - name: Run Pylint and Enforce 10/10 Score
+        run: |
+          SCORE=$(pylint pta_automation | tee pylint-output.txt | tail -n 2 | grep "rated at" | awk '{print $7}' | cut -d'/' -f1)
+          echo "Pylint Score: $SCORE"
+          if [ "$(echo "$SCORE < 10.0" | bc)" -eq 1 ]; then
+            echo "❌ Pylint score is less than 10.0. Failing the build."
+            exit 1
+          fi
+
   build-and-test:
+    needs: lint
     runs-on: ubuntu-latest
 
     steps:

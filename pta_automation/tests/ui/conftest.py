@@ -1,4 +1,6 @@
-# pylint: disable=missing-function-docstring, import-error, invalid-name, global-variable-undefined, ungrouped-imports, line-too-long, missing-module-docstring, unnecessary-lambda
+# pylint: disable=[missing-function-docstring, import-error, invalid-name, global-variable-undefined, ungrouped-imports]
+# pylint: disable=[line-too-long, missing-module-docstring, unnecessary-lambda, unused-argument, unspecified-encoding]
+# pylint: disable=[missing-module-docstring, missing-function-docstring]
 
 import os
 import pytest

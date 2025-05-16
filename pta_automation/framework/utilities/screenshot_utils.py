@@ -1,3 +1,6 @@
+# pylint: disable=[line-too-long, missing-module-docstring, missing-function-docstring]
+
+
 import os
 import re
 from datetime import datetime
