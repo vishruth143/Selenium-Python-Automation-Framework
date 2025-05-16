@@ -31,4 +31,16 @@ jobs:
             -e REGION=qa \
             -e BROWSER=CHROME \
             -e HEADLESS=Y \
-            selenium-tests
+            selenium-tests \
+            sh -c "pytest --alluredir=allure-results pta_automation/tests"
+
+      - name: Copy Allure Results from Container
+        run: |
+          CONTAINER_ID=$(docker ps -alq)
+          docker cp $CONTAINER_ID:/app/allure-results ./allure-results || echo "No results"
+
+      - name: Upload Allure Results Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
