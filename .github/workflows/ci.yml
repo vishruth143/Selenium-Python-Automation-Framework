@@ -39,11 +39,13 @@ jobs:
           CONTAINER_ID=$(docker ps -alq)
           docker cp $CONTAINER_ID:/app/allure-results ./allure-results || echo "No results"
 
-      - name: Install Allure CLI
+      - name: Install Allure CLI (Manual)
         run: |
-          sudo apt-add-repository ppa:qameta/allure -y
-          sudo apt-get update
-          sudo apt-get install allure -y
+          wget https://github.com/allure-framework/allure2/releases/latest/download/allure-2.34.0.tgz
+          tar -zxvf allure-2.27.0.tgz
+          sudo mv allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+          allure --version
 
       - name: Generate Allure Report HTML
         run: |
