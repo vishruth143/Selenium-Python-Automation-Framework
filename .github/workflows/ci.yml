@@ -42,8 +42,8 @@ jobs:
       - name: Install Allure CLI (Manual)
         run: |
           wget https://github.com/allure-framework/allure2/releases/latest/download/allure-2.34.0.tgz
-          tar -zxvf allure-2.27.0.tgz
-          sudo mv allure-2.27.0 /opt/allure
+          tar -zxvf allure-2.34.0.tgz
+          sudo mv allure-2.34.0 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
           allure --version
 
