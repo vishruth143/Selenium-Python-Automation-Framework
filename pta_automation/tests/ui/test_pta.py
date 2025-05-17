@@ -65,7 +65,7 @@ class TestPTA:
             raise
 
     # @pytest.mark.skip
-    def test_pta_login(self, driver, request, testdata, region):
+    def test_pta_login1(self, driver, request, testdata, region):
         """
         Test #01 : Verify PTA Application Login.
         Steps:
