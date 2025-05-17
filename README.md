@@ -66,3 +66,18 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
     python -m http.server 8000
     http://localhost:8000    
 ---
+## 🖥️ Notification to MS Team
+### On MS Teams
+1. Create a Team with Channel in MS Team
+2. Click on the ... beside the channel you want the notifications to be sent
+3. Under Connector Click 'Edit'
+4. Search for Incoming Webhook and Click Add
+5. Provide the name for the 'Incoming Webhook' and click on 'Create'
+6. Copy the Webhook URL
+
+### On GitHub
+1. Go to your workflow and click on the Settings
+2. On the left side panel under 'Secrets and variables' Click on Actions
+3. Click on the 'New repository secret' 
+4. Provide Name=TEAMS_WEBHOOK_URL Secret="<Webhook URL from the MS Teams>"
+5. Click on Add secret
