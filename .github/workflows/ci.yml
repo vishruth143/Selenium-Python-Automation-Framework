@@ -95,22 +95,30 @@ jobs:
 
   notify-teams:
     name: Notify Teams
-    needs: build-and-test
+    needs: [ lint, build-and-test ]
     runs-on: ubuntu-latest
+    if: always()  # Always run this job
 
     steps:
       - name: Send Notification to Microsoft Teams
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          JOB_STATUS: ${{ needs.build-and-test.result }}
+          LINT_STATUS: ${{ needs.lint.result }}
+          BUILD_STATUS: ${{ needs.build-and-test.result }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
           GITHUB_SERVER_URL: ${{ github.server_url }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
+          echo "Lint Job Status: $LINT_STATUS"
+          echo "Build and Test Job Status: $BUILD_STATUS"
+
+          OVERALL_STATUS="success"
           STATUS_EMOJI="✅"
           COLOR="00FF00"
-          if [ "$JOB_STATUS" != "success" ]; then
+
+          if [ "$LINT_STATUS" != "success" ] || [ "$BUILD_STATUS" != "success" ]; then
+            OVERALL_STATUS="failure"
             STATUS_EMOJI="❌"
             COLOR="FF0000"
           fi
@@ -120,12 +128,12 @@ jobs:
             "@type": "MessageCard",
             "@context": "http://schema.org/extensions",
             "themeColor": "$COLOR",
-            "summary": "Automation Test Status",
+            "summary": "Automation CI Status",
             "sections": [ {
-              "activityTitle": "$STATUS_EMOJI Selenium Pytest Automation Report",
+              "activityTitle": "$STATUS_EMOJI Selenium CI Pipeline Report",
               "facts": [
-                { "name": "Job", "value": "build-and-test" },
-                { "name": "Status", "value": "$JOB_STATUS" },
+                { "name": "Lint Job", "value": "$LINT_STATUS" },
+                { "name": "Build & Test Job", "value": "$BUILD_STATUS" },
                 { "name": "Branch", "value": "$GITHUB_REF_NAME" },
                 { "name": "Run", "value": "[View Run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" }
               ],
@@ -135,4 +143,4 @@ jobs:
           EOF
           )
 
-          curl -H "Content-Type: application/json" -d "$MESSAGE" "$TEAMS_WEBHOOK_URL"
+          curl --retry 3 --retry-delay 5 -H "Content-Type: application/json" -d "$MESSAGE" "$TEAMS_WEBHOOK_URL"
