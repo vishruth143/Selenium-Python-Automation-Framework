@@ -103,6 +103,9 @@ jobs:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           JOB_STATUS: ${{ needs.build-and-test.result }}
           GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
         run: |
           STATUS_EMOJI="✅"
           COLOR="00FF00"
@@ -111,21 +114,24 @@ jobs:
             COLOR="FF0000"
           fi
           
-          MESSAGE="{
-            \"@type\": \"MessageCard\",
-            \"@context\": \"http://schema.org/extensions\",
-            \"themeColor\": \"$COLOR\",
-            \"summary\": \"Automation Test Status\",
-            \"sections\": [{
-              \"activityTitle\": \"$STATUS_EMOJI Selenium Pytest Automation Report\",
-              \"facts\": [
-                {\"name\": \"Job\", \"value\": \"build-and-test\"},
-                {\"name\": \"Status\", \"value\": \"$JOB_STATUS\"},
-                {\"name\": \"Branch\", \"value\": \"$GITHUB_REF_NAME\"},
-                {\"name\": \"Run\", \"value\": \"[View Run](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})\"}
+          MESSAGE=$(cat <<EOF
+          {
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "themeColor": "$COLOR",
+            "summary": "Automation Test Status",
+            "sections": [{
+              "activityTitle": "$STATUS_EMOJI Selenium Pytest Automation Report",
+              "facts": [
+                { "name": "Job", "value": "build-and-test" },
+                { "name": "Status", "value": "$JOB_STATUS" },
+                { "name": "Branch", "value": "$GITHUB_REF_NAME" },
+                { "name": "Run", "value": "[View Run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" }
               ],
-              \"markdown\": true
+              "markdown": true
             }]
-          }"
-          
-          curl -H "Content-Type: application/json" -d "$MESSAGE" $TEAMS_WEBHOOK_URL
+          }
+          EOF
+          )
+
+          curl -H "Content-Type: application/json" -d "$MESSAGE" "$TEAMS_WEBHOOK_URL"
