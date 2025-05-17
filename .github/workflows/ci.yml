@@ -114,6 +114,7 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_RUN_ID: ${{ github.run_id }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_ACTOR: ${{ github.actor }}
         run: |
           echo "Lint Job Status: $LINT_STATUS"
           echo "Build and Test Job Status: $BUILD_STATUS"
@@ -138,6 +139,7 @@ jobs:
               "activityTitle": "$STATUS_EMOJI Selenium CI Pipeline Report",
               "facts": [
                 { "name": "Trigger", "value": "$GITHUB_EVENT_NAME" },
+                { "name": "Triggered By", "value": "$GITHUB_ACTOR" },
                 { "name": "Lint Job", "value": "$LINT_STATUS" },
                 { "name": "Build & Test Job", "value": "$BUILD_STATUS" },
                 { "name": "Branch", "value": "$GITHUB_REF_NAME" },
