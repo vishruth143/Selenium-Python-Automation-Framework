@@ -2,7 +2,7 @@
 
 A robust and scalable test automation framework using **Selenium WebDriver**, **Pytest**, and **Python**. Supports both UI and API testing with environment-driven configuration and Docker integration.
 
-![img.png](Architecture.png)
+![img.png](architecture_diagram.png)
 
 ---
 ## 🚀 Environment Variables
