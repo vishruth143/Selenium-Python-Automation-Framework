@@ -11,11 +11,11 @@ from pta_automation.framework.utilities.loaders import load_json, load_yaml, loa
 
 class ConfigParser:
     CONFIG_FILE_PATHS = {
-        'common_config': 'common_config.yaml',
-        'ui_test_env_config': 'ui/ui_test_env_config.yaml',
-        'ui_test_data_config': 'ui/ui_test_data_config.yaml',
+        'common_config': 'common_config.yml',
+        'ui_test_env_config': 'ui/ui_test_env_config.yml',
+        'ui_test_data_config': 'ui/ui_test_data_config.yml',
         'ui_test_excel_data_config': 'ui/ui_test_excel_data_config.xlsx',
-        'api_test_env_config': 'api/api_test_env_config.yaml',
+        'api_test_env_config': 'api/api_test_env_config.yml',
         'api_test_data_config': 'api/api_test_data_config.json',
     }
 
