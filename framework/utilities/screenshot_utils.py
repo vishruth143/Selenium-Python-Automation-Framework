@@ -5,19 +5,9 @@ import os
 import re
 from datetime import datetime
 
-
-def get_project_root(project_name="Selenium-Python-Automation-Framework") -> str:
-    current_dir = os.path.abspath(os.path.dirname(__file__))
-    while True:
-        if os.path.basename(current_dir) == project_name:
-            return current_dir
-        parent = os.path.dirname(current_dir)
-        if parent == current_dir:
-            raise FileNotFoundError(f"Project root '{project_name}' not found.")
-        current_dir = parent
-
 def get_screenshot_path(test_name: str, subdir="screenshots") -> str:
-    project_root = get_project_root()
+    # Go up three levels from this file's directory
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     output_dir = os.path.join(project_root, "output", subdir)
     os.makedirs(output_dir, exist_ok=True)
 
