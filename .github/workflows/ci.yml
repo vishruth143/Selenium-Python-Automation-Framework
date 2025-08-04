@@ -76,8 +76,8 @@ jobs:
 
       - name: Copy Allure Results  and Screenshots from Container
         run: |
-          docker cp test-container:/app/allure-results ./output/allure-results || echo "No allure-results"
-          docker cp test-container:/app/screenshots ./output/screenshots || echo "No screenshots"
+          docker cp test-container:/app/allure-results output/allure-results || echo "No allure-results"
+          docker cp test-container:/app/screenshots output/screenshots || echo "No screenshots"
 
       - name: Install Allure CLI (Manual)
         run: |
