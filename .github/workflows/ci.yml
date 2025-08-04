@@ -72,12 +72,12 @@ jobs:
             -e BROWSER=CHROME \
             -e HEADLESS=Y \
             selenium-tests \ 
-            sh -c "pytest tests"
+            sh -c "pytest --alluredir=allure-results tests"
 
       - name: Copy Allure Results  and Screenshots from Container
         run: |
-          docker cp test-container:/app/output/allure-results ./allure-results || echo "No allure-results"
-          docker cp test-container:/app/output/screenshots ./screenshots || echo "No screenshots"
+          docker cp test-container:/app/allure-results ./allure-results || echo "No allure-results"
+          docker cp test-container:/app/screenshots ./screenshots || echo "No screenshots"
 
       - name: Install Allure CLI (Manual)
         run: |
