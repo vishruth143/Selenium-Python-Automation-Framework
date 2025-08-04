@@ -4,7 +4,7 @@
 import os
 
 def pytest_sessionstart(session):
-    results_dir = os.path.join(os.getcwd(), 'allure-results')
+    results_dir = os.path.join(os.getcwd(), 'output/allure-results')
     os.makedirs(results_dir, exist_ok=True)
 
     env_file_path = os.path.join(results_dir, 'environment.properties')

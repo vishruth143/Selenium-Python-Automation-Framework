@@ -11,8 +11,8 @@ import sys
 from datetime import timezone
 import colorlog
 
-ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOG_PATH = os.path.join(ROOT_PATH, "logs")
+ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+LOG_PATH = os.path.join(ROOT_PATH, "output/logs")
 
 sys.path.append(LOG_PATH)
 

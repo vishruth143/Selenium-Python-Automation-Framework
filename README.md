@@ -38,14 +38,11 @@ Selenium-Python-Automation-Framework/
 │   │   ├── __init__.py
 │   │   └── event_listeners.py                              # Event hooks (e.g., for Selenium)
 │   │
-│   ├── logs/
-│   │   └── test_execution.log                              # Execution log file
-│   │
 │   ├── pages/
 │   │   ├── __init__.py
 │   │   └── base_page.py                                    # Common page object base class
 │   │
-│   ├── utilities/
+│   ├── utilities/                                          # Utility functions
 │   │   ├── __init__.py
 │   │   ├── common.py                                       # General helpers
 │   │   ├── custom_logger.py                                # Logger setup
@@ -53,6 +50,13 @@ Selenium-Python-Automation-Framework/
 │   │   └── screenshot_utils.py                             # Screenshot helper
 │   │
 │   └── __init__.py
+│
+│   ├── output/                                             # Output directory
+│   │   ├── allure-results/                                 # Allure results directory
+│   │   ├── logs                                            # Log files directory
+│   │       └── test_execution.log                          # Execution log file
+│   │   ├── reports/                                        # Reports directory
+│   │   ├── screenshots/                                    # Screenshots directory
 │
 ├── tests/                                                  # Test suite
 │   ├── api/
@@ -115,7 +119,7 @@ Selenium-Python-Automation-Framework/
     $env:REGION="qa"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
-    pytest -vvv -m "pta or reqres" --html=reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "pta or reqres" --html=output/reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests
 ---
 ### Explanation of Flags
 | Variable                | Description                                                            |

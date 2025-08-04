@@ -3,7 +3,7 @@ __pycache__
 .pytest_cache
 .venv
 .DS_Store
-framework/logs
+output
 tests/__pycache__
 tests/pytest_cache
 screenshots
