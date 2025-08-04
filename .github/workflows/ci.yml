@@ -72,7 +72,7 @@ jobs:
             -e BROWSER=CHROME \
             -e HEADLESS=Y \
             selenium-tests \
-            sh -c "pytest --alluredir=allure-results tests"
+            sh -c "pytest --alluredir=output/allure-results tests"
 
       - name: Copy Allure Results  and Screenshots from Container
         run: |
