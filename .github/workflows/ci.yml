@@ -72,13 +72,14 @@ jobs:
             -e BROWSER=CHROME \
             -e HEADLESS=Y \
             selenium-tests \
-            sh -c "pytest --alluredir=output/allure-results tests"
+            sh -c "pytest -vvv -m "pta or reqres" --html=output/reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests"
 
       - name: Copy Allure Results  and Screenshots from Container
         run: |
           docker cp test-container:/app/output/allure-results ./allure-results || echo "No allure-results"
           docker cp test-container:/app/output/screenshots ./screenshots || echo "No screenshots"
           docker cp test-container:/app/output/logs ./logs || echo "No logs" 
+          docker cp test-container:/app/output/reports ./reports || echo "No HTML report"
 
       - name: Install Allure CLI (Manual)
         run: |
@@ -111,6 +112,13 @@ jobs:
         with:
           name: logs
           path: logs
+
+      - name: Upload HTML Report as Artifact
+        if: always()  # Always attempt to upload even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: reports
 
   notify-teams:
     name: Notify Teams
