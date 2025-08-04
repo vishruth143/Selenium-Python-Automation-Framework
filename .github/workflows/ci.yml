@@ -78,6 +78,7 @@ jobs:
         run: |
           docker cp test-container:/app/output/allure-results ./allure-results || echo "No allure-results"
           docker cp test-container:/app/output/screenshots ./screenshots || echo "No screenshots"
+          docker cp test-container:/app/output/logs ./logs || echo "No logs" 
 
       - name: Install Allure CLI (Manual)
         run: |
@@ -103,6 +104,13 @@ jobs:
         with:
             name: screenshots
             path: screenshots
+
+      - name: Upload Logs as Artifact
+        if: always()  # Always attempt to upload even if tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs
+          path: logs
 
   notify-teams:
     name: Notify Teams
