@@ -65,14 +65,19 @@ jobs:
 
       - name: Run Pytest in Docker
         run: |          
-          docker run --rm --name test-container \
-            -v ${{ github.workspace }}/output:/app/output \
+          docker run --name test-container\
             -e APP_NAME=PTA \
             -e SERVICE_NAME=REQRES \
             -e REGION=qa \
             -e BROWSER=CHROME \
             -e HEADLESS=Y \
-            selenium-tests \            
+            selenium-tests \ 
+            sh -c "pytest tests"
+
+      - name: Copy Allure Results  and Screenshots from Container
+        run: |
+          docker cp test-container:/app/output/allure-results ./allure-results || echo "No allure-results"
+          docker cp test-container:/app/output/screenshots ./screenshots || echo "No screenshots"
 
       - name: Install Allure CLI (Manual)
         run: |
