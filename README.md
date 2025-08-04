@@ -162,8 +162,12 @@ Selenium-Python-Automation-Framework/
     allure generate allure-results --clean -o allure-report
 ---
 ## 🖥️ CI / CD
-    Any changes made and commit to the files under pta_automation or merge any branch 
-    to the main branch the git hub action will trigger and build the project.
+    Any changes made and commit to the
+    Folder files i.e. '.gihub', 'config', 'framework', 'tests' 
+    or
+    Files i.e. 'Dockerfile', 'pytest.ini' 
+    or 
+    merge any branch to the main branch the git hub action will trigger and build the project.
 
     After the pipeline ran we can download the allure-report as artifact from the 
     github actions

@@ -3,8 +3,13 @@ name: CI - Docker Build and Test
 on:
   push:
     paths:
-      - 'pta_automation/**'
+      - '.github/**'
+      - 'config/**'
+      - 'framework/**'
+      - 'tests/**'
       - 'Dockerfile'
+      - 'pytest.ini'
+      - 'requirements.txt'
     branches:
       - '**'
 
@@ -13,7 +18,7 @@ on:
       - main
 
   schedule:
-    - cron: '30 3 * * *'  #Runs at 09:00 AM IST every day
+    - cron: '30 3 * * *'  # Runs at 09:00 AM IST every day
 
 jobs:
   lint:
@@ -34,10 +39,10 @@ jobs:
           pip install -r requirements.txt
           pip install pylint
 
-      - name: Run Pylint on pta_automation and Enforce 10/10 Score
+      - name: Run Pylint on tests and Enforce 10/10 Score
         run: |
-          echo "Linting pta_automation directory..."
-          SCORE=$(pylint pta_automation | tee pylint-output.txt | tail -n 2 | grep "rated at" | awk '{print $7}' | cut -d'/' -f1)
+          echo "Linting tests directory..."
+          SCORE=$(pylint tests | tee pylint-output.txt | tail -n 2 | grep "rated at" | awk '{print $7}' | cut -d'/' -f1)
           echo "Pylint Score: $SCORE"
           if [ "$(echo "$SCORE < 10.0" | bc)" -eq 1 ]; then
             echo "❌ Pylint score is less than 10.0. Failing the build."
