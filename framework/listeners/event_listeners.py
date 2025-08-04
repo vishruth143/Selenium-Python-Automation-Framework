@@ -2,8 +2,8 @@
 # pylint: disable=[invalid-name, too-few-public-methods, logging-fstring-interpolation, broad-exception-caught]
 
 from selenium.webdriver.support.abstract_event_listener import AbstractEventListener
-from pta_automation.framework.utilities.custom_logger import Logger
-from pta_automation.framework.utilities.screenshot_utils import get_screenshot_path
+from framework.utilities.custom_logger import Logger
+from framework.utilities.screenshot_utils import get_screenshot_path
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 

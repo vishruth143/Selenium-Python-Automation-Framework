@@ -9,16 +9,20 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.events import EventFiringWebDriver
 
-from pta_automation.listeners.event_listeners import MyEventListener
-from pta_automation.config.config_parser import ConfigParser
+from framework.listeners.event_listeners import MyEventListener
+from config.config_parser import ConfigParser
 
 @pytest.fixture(scope="session")
 def testdata():
-    return ConfigParser.load_config("ui_test_data_config")
+    if os.environ["APP_NAME"].upper() == "PTA":
+        return ConfigParser.load_config("pta_ui_test_data_config")
+    return None
+
 
 @pytest.fixture(scope="session")
 def region():
-    return os.environ["REGION"]
+    region = os.environ.get("REGION", "QA").upper()
+    return region
 
 @pytest.fixture()
 def driver(request):

@@ -7,16 +7,16 @@ import os
 
 import pandas as pd
 
-from pta_automation.framework.utilities.loaders import load_json, load_yaml, load_xlsx_sheet
+from framework.utilities.loaders import load_json, load_yaml, load_xlsx_sheet
 
 class ConfigParser:
     CONFIG_FILE_PATHS = {
         'common_config': 'common_config.yml',
-        'ui_test_env_config': 'ui/ui_test_env_config.yml',
-        'ui_test_data_config': 'ui/ui_test_data_config.yml',
-        'ui_test_excel_data_config': 'ui/ui_test_excel_data_config.xlsx',
-        'api_test_env_config': 'api/api_test_env_config.yml',
-        'api_test_data_config': 'api/api_test_data_config.json',
+        'pta_ui_test_env_config': 'ui/pta/ui_test_env_config.yml',
+        'pta_ui_test_data_config': 'ui/pta/ui_test_data_config.yml',
+        'pta_ui_test_excel_data_config': 'ui/pta/ui_test_excel_data_config.xlsx',
+        'reqres_api_test_env_config': 'api/reqres/api_test_env_config.yml',
+        'reqres_api_test_data_config': 'api/reqres/api_test_data_config.json',
     }
 
     @staticmethod

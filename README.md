@@ -1,23 +1,135 @@
 # 🧪 Selenium-Python-Automation-Framework
 
-A robust and scalable test automation framework using **Selenium WebDriver**, **Pytest**, and **Python**. Supports both UI and API testing with environment-driven configuration and Docker integration.
+A robust and scalable test automation framework using **Python**, **Selenium WebDriver**, **Pytest**, and **Pytest BDD**. 
+Supports both UI and API testing with environment-driven configuration and Docker integration.
 
 ![img.png](architecture_diagram.png)
 
 ---
+## 🚀 Project Folder Structure
+```
+Selenium-Python-Automation-Framework/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                                          # GitHub Actions CI workflow
+│
+├── config/                                                 # Configuration files
+│   ├── api/
+│   │   └── reqres/
+│   │       ├── api_test_data_config.json                   # API test data
+│   │       └── api_test_env_config.yml                     # API environment config
+│   │
+│   ├── ui/
+│   │   └── pta/
+│   │       ├── ui_test_data_config.yml                     # UI test data
+│   │       ├── ui_test_env_config.yml                      # UI environment config
+│   │       ├── ui_test_excel_data_config.xlsx              # Excel input data
+│   │       └── ui_test_excel_data_config_output.xlsx       # Excel output
+│   │
+│   ├── common_config.yml                                   # Shared config
+│   └── config_parser.py                                    # Centralized config parser
+│
+├── framework/                                              # Core framework
+│   ├── interfaces/
+│   │   ├── __init__.py
+│   │   └── api_client.py                                   # API client wrapper
+│   │
+│   ├── listeners/
+│   │   ├── __init__.py
+│   │   └── event_listeners.py                              # Event hooks (e.g., for Selenium)
+│   │
+│   ├── logs/
+│   │   └── test_execution.log                              # Execution log file
+│   │
+│   ├── pages/
+│   │   ├── __init__.py
+│   │   └── base_page.py                                    # Common page object base class
+│   │
+│   ├── utilities/
+│   │   ├── __init__.py
+│   │   ├── common.py                                       # General helpers
+│   │   ├── custom_logger.py                                # Logger setup
+│   │   ├── loaders.py                                      # Data/config loaders
+│   │   └── screenshot_utils.py                             # Screenshot helper
+│   │
+│   └── __init__.py
+│
+├── tests/                                                  # Test suite
+│   ├── api/
+│   │   └── reqres/
+│   │       ├── __init__.py
+│   │       └── test_reqres.py                              # API test cases for Reqres
+│   │   ├── __init__.py
+│   │   └── conftest.py                                     # API-specific fixtures
+│   │
+│   ├── ui/
+│   │   └── pta/
+│   │       ├── features/
+│   │       │   ├── pta_app.feature                         # Gherkin feature file for PTA
+│   │       ├── pages/
+│   │       │   ├── __init__.py
+│   │       │   └── login_page.py                           # Page object for login
+│   │       ├── steps/
+│   │       │   ├── __init__.py
+│   │       │   └── test_pta_app.py                         #  Step definitions for PTA
+│   │       ├── __init__.py
+│   │       ├── test_excel.py                               # Excel-driven UI test
+│   │       └── test_pta.py                                 # PTA functional tests
+│   │   ├── __init__.py
+│   │   └── conftest.py                                     # UI-specific fixtures
+│   │
+│   ├── __init__.py
+│   └── conftest.py                                         # Root-level fixtures
+│
+├── .gitignore                                              # Files to ignore in git
+├── architecture_diagram.png                                # Framework architecture diagram
+├── conftest.py                                             # Global fixtures (root scope)
+├── Dockerfile                                              # Docker container setup
+├── pytest.ini                                              # Pytest configuration
+├── README.md                                               # Framework documentation
+├── requirements.txt                                        # Python dependencies
+├── __init__.py
+```
+---
 ## 🚀 Environment Variables
 
 ### 🔹 UI Testing
-| Variable | Description                                                  | Default  |
-|----------|--------------------------------------------------------------|----------|
-| `BROWSER` | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)        | `CHROME` |
-| `HEADLESS` | Run in headless mode (`Y` or `N`)                            | `N`      |
-| `REGION` | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | *Required* |
+| Variable    | Description                                                   | Default Value | Required/Optional |
+|-------------|---------------------------------------------------------------|---------------|-------------------|
+| `APP_NAME`  | Short name of application under test (AUT)                    | `None`        | `Required`        | 
+| `REGION`    | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`          | `Optional`        | 
+| `BROWSER`   | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)         | `CHROME`      | `Optional`        |
+| `HEADLESS`  | Run in headless mode (`Y` or `N`)                             | `N`           | `Optional`        |
+
 
 ### 🔹 API Testing
-| Variable | Description                           | Default  |
-|----------|---------------------------------------|----------|
-| `REGION` | Target API environment    | *Required* |
+| Variable       | Description                                                   | Default | Required/Optional |
+|----------------|---------------------------------------------------------------|---------|-------------------|
+| `SERVICE_NAME` | Short name of service under test (AUT)                        | `None`  | `Required`        |
+| `REGION`       | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`    | `Optional`        |
+
+---
+## 🖥️ Running Tests from Command Line (PowerShell)
+    $env:APP_NAME="PTA"
+    $env:SERVICE_NAME="REQRES"
+    $env:REGION="qa"
+    $env:BROWSER="CHROME"
+    $env:HEADLESS="N"
+    pytest -vvv -m "pta or reqres" --html=reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests
+---
+### Explanation of Flags
+| Variable                | Description                                                            |
+|-------------------------|------------------------------------------------------------------------|
+| `-v`                    | Verbose output (shows test names and status)                           |
+| `-vv`                   | More verbose output (adds captured output, fixture info, etc.)         |
+| `-vvv`                  | Most verbose output (adds internal debug logs, detailed fixture steps) |
+| `-m <expression>`       | Run tests matching the given marker expression (e.g., `pta or reqres`) |
+| `--html=...`            | Save HTML report to specified path                                     |
+| `--self-contained-html` | Embed CSS/JS into the report (no external files)                       |
+| `--capture=tee-sys`     | Shows print() and log output in both terminal & HTML report            |
+| `--durations=10`        | Shows top 10 slowest tests (for optimization)                          |
+| `tests`                 | Path to your test suite root                                           | 
+
 ---
 ## 🐳 To run on docker container: (PowerShell)
 
@@ -25,31 +137,22 @@ A robust and scalable test automation framework using **Selenium WebDriver**, **
     docker build -t selenium-tests .
     
     # To run on Chrome browser
-    docker run -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests
     
     # To run on Firefox browser
-    docker run -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-tests
     
     # To run on Edge browser
-    docker run -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-tests
----
-## 🖥️ Running Tests from Command Line (PowerShell)
-    
-    $env:REGION="qa"
-    $env:BROWSER="CHROME"
-    $env:HEADLESS="N"
-    pytest --html=reports/report.html pta_automation/tests
-    
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-tests
+
 ---
 ## 🖥️ To generate Allure Results
-    pytest --alluredir=allure-results pta_automation/tests
+    pytest --alluredir=allure-results tests
     
     # To install allure run the below commands in powershell
-
     Set-ExecutionPolicy RemoteSigned -scope CurrentUser
     iwr -useb get.scoop.sh | iex
-    scoop install allure
-    
+    scoop install allure    
     
     # To generate Allure Report
     allure generate allure-results --clean -o allure-report

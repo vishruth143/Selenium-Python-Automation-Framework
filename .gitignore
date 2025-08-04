@@ -3,9 +3,9 @@ __pycache__
 .pytest_cache
 .venv
 .DS_Store
-pta_automation/framework/logs
-pta_automation/tests/__pycache__
-pta_automation/tests/pytest_cache
+framework/logs
+tests/__pycache__
+tests/pytest_cache
 screenshots
 reports
 allure-results

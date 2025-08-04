@@ -37,10 +37,10 @@ COPY pytest.ini /app/
 COPY requirements.txt /app/
 
 # Copy project files
-COPY pta_automation /app/pta_automation
+COPY . /app
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Set default command
-CMD ["pytest", "-n", "4", "pta_automation/tests"]
+CMD ["pytest", "-n", "4", "tests"]

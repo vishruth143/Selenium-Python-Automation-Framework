@@ -17,8 +17,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from pta_automation.framework.pages.login_page import LoginPage
-from pta_automation.config.config_parser import ConfigParser
+from tests.ui.pta.pages.login_page import LoginPage
+from config.config_parser import ConfigParser
 
 class Common:
     @staticmethod
@@ -107,7 +107,7 @@ class Common:
         self.loginpage = LoginPage(self.driver)
 
     def pta_login(self, region):
-        ui_test_env_config = ConfigParser.load_config("ui_test_env_config")
+        ui_test_env_config = ConfigParser.load_config("pta_ui_test_env_config")
 
         # Get the correct env block based on the region
         env_config = ui_test_env_config.get(region.upper(), {})
@@ -163,7 +163,7 @@ def save_excel(sheet_name, df, input_path, output_path):
 
     # Post-process green fill for "Pass" in "Status"
     wb = load_workbook(output_path)
-    ws = wb["PTA"]
+    ws = wb[sheet_name]
 
     # Define fills
     green_fill = PatternFill(fill_type="solid", fgColor="90EE90") # light green

@@ -5,13 +5,13 @@
 
 import pytest
 
-from pta_automation.config.config_parser import ConfigParser
-from pta_automation.framework.utilities.custom_logger import Logger
+from config.config_parser import ConfigParser
+from framework.utilities.custom_logger import Logger
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
-api_test_data = ConfigParser.load_config('api_test_data_config')
+reqres_api_test_data = ConfigParser.load_config('reqres_api_test_data_config')
 
-@pytest.mark.req_res
+@pytest.mark.reqres
 class TestReqRes:
 
     """
@@ -68,7 +68,7 @@ class TestReqRes:
         03) Validate response contains the expected user details.
         """
         endpoint = "/api/users"
-        payload = api_test_data.get("Create", {})
+        payload = reqres_api_test_data.get("Create", {})
 
         try:
             log.info(50 * '*')

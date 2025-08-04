@@ -4,10 +4,10 @@
 # pylint: disable=C0302
 
 import pytest
-from pta_automation.framework.utilities.common import Common
-from pta_automation.framework.utilities.custom_logger import Logger
-from pta_automation.framework.pages.login_page import LoginPage
-from pta_automation.framework.utilities.screenshot_utils import get_screenshot_path
+from framework.utilities.common import Common
+from framework.utilities.custom_logger import Logger
+from tests.ui.pta.pages.login_page import LoginPage
+from framework.utilities.screenshot_utils import get_screenshot_path
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 
