@@ -151,7 +151,7 @@ Selenium-Python-Automation-Framework/
 
 ---
 ## 🖥️ To generate Allure Results
-    pytest --alluredir=allure-results tests
+    pytest --alluredir=output/allure-results tests
     
     # To install allure run the below commands in powershell
     Set-ExecutionPolicy RemoteSigned -scope CurrentUser
@@ -159,7 +159,7 @@ Selenium-Python-Automation-Framework/
     scoop install allure    
     
     # To generate Allure Report
-    allure generate allure-results --clean -o allure-report
+    allure generate output/allure-results --clean -o allure-report
 ---
 ## 🖥️ CI / CD
     Any changes made and commit to the
