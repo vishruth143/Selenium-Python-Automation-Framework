@@ -159,7 +159,7 @@ Selenium-Python-Automation-Framework/
     scoop install allure    
     
     # To generate Allure Report
-    allure generate output/allure-results --clean -o allure-report
+    allure generate output/allure-results --clean -o output/allure-report
 ---
 ## 🖥️ CI / CD
     Any changes made and commit to the
