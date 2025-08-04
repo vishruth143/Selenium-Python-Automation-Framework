@@ -1,5 +1,5 @@
 # pylint: disable=[unused-argument, missing-module-docstring, missing-module-docstring, unspecified-encoding]
-# pylint: disable=[missing-function-docstring]
+# pylint: disable=[missing-function-docstring, line-too-long]
 
 import os
 

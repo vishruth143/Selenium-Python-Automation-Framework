@@ -1,3 +1,5 @@
+# pylint: disable=[missing-module-docstring, missing-function-docstring, logging-fstring-interpolation]
+
 import pytest
 from pytest_bdd import scenarios, given, then, parsers
 

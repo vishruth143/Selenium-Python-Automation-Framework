@@ -1,6 +1,8 @@
+# pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
+
 from selenium.webdriver.common.by import By
-from framework.pages.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
+from framework.pages.base_page import BasePage
 
 class LoginPage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------
@@ -66,4 +68,3 @@ class LoginPage(BasePage):
 
     def click_logout_btn(self):
         self.click(*self._logout_btn)
-
