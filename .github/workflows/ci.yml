@@ -77,6 +77,7 @@ jobs:
         run: |
           mkdir -p output/allure-results output/screenshots output/logs output/reports
           pytest -vvv -m "pta or reqres" \
+            -n 4 \
             --html=output/reports/pta_report.html \
             --self-contained-html \
             --capture=tee-sys \

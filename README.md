@@ -119,7 +119,7 @@ Selenium-Python-Automation-Framework/
     $env:REGION="qa"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
-    pytest -vvv -m "pta or reqres" --html=output/reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "pta or reqres" -n 4 --html=output/reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests
 ---
 ### Explanation of Flags
 | Variable                | Description                                                            |
@@ -179,16 +179,16 @@ Selenium-Python-Automation-Framework/
 ---
 ## 🖥️ Notification to MS Team
 ### On MS Teams
-1. Create a Team with Channel in MS Team
-2. Click on the ... beside the channel you want the notifications to be sent
-3. Under Connector Click 'Edit'
-4. Search for Incoming Webhook and Click Add
-5. Provide the name for the 'Incoming Webhook' and click on 'Create'
-6. Copy the Webhook URL
+1. Create a Team with Channel in MS Team.
+2. Click on the ... beside the channel you want the notifications to be sent and select 'Manage channel'.
+3. Under 'Connectors' section Click 'Edit'.
+4. Search for 'Incoming Webhook' and click 'Add'.
+5. Provide the name for the 'Incoming Webhook' and click on 'Create'.
+6. Copy the Webhook URL.
 
 ### On GitHub
-1. Go to your workflow and click on the Settings
-2. On the left side panel under 'Secrets and variables' Click on Actions
-3. Click on the 'New repository secret' 
-4. Provide Name=TEAMS_WEBHOOK_URL Secret="<Webhook URL from the MS Teams>"
-5. Click on Add secret
+1. Go to your workflow and click on the Settings.
+2. On the left side panel under 'Secrets and variables' click on 'Actions'.
+3. Click on the 'New repository secret'.
+4. Provide Name=TEAMS_WEBHOOK_URL Secret="<Webhook URL from the MS Teams>".
+5. Click on 'Add secret'.
