@@ -1,68 +1,88 @@
 # pylint: disable=[missing-module-docstring, missing-function-docstring, logging-fstring-interpolation]
 
 import pytest
-from pytest_bdd import scenarios, given, then, parsers
+from pytest_bdd import scenarios, given, when, then, parsers
 
+from config.config_parser import ConfigParser
 from framework.utilities.common import Common
 from framework.utilities.custom_logger import Logger
 from framework.utilities.screenshot_utils import get_screenshot_path
 from tests.ui.pta.pages.login_page import LoginPage
+from tests.ui.pta.pages.home_page import HomePage
 
-# ✅ Apply the marker to all tests in this module
 pytestmark = pytest.mark.pta
-
 log = Logger(file_id=__name__.rsplit(".", 1)[0])
 
-# ✅ Update the path based on your folder structure
+# ✅ Update this path based on where your .feature file lives
 scenarios('../features/pta_app.feature')
 
-@given("Login to PTA application with sample credentials.", target_fixture="login_result")
-def login_to_pta(driver, request, testdata, region):
-    log.info("STEP 01: Login to PTA application.")
-
+# Store context across steps
+@pytest.fixture
+def context(driver, request, testdata, region):
     test_name = request.node.name.rsplit("[", 1)[0]
     screenshot_path = get_screenshot_path(test_name)
 
-    # Libraries needed
-    common = Common(driver, testdata)
-
-    # Pages needed
-    loginpage = LoginPage(driver)
-
-    try:
-        common.pta_login(region)
-        driver.save_screenshot(screenshot_path)
-        log.info("Login action performed successfully.")
-    except Exception as e:
-        driver.save_screenshot(screenshot_path)
-        log.error(f"Login Exception: {e}")
-        raise
-
     return {
-        "common": common,
-        "login_page": loginpage,
+        "driver": driver,
+        "testdata": testdata,
+        "region": region,
         "screenshot_path": screenshot_path,
-        "driver": driver
+        "common": Common(driver, testdata),
+        "login_page": LoginPage(driver),
+        "home_page": HomePage(driver)
     }
 
-@then(parsers.parse('"Logged In Successfully" text is visible.'))
-def verify_logged_in_text(login_result):
-    login_page = login_result["login_page"]
-    driver = login_result["driver"]
-    screenshot_path = login_result["screenshot_path"]
+# -----------------------------------------------
+#                  GIVEN
+# -----------------------------------------------
+@given("the user navigates to the PTA application home page")
+def navigate_to_home_page(context):
+    log.info("STEP 01: Navigate to PTA application home page.")
+    env_config = ConfigParser.load_config("pta_ui_test_env_config").get(context["region"].upper(), {})
+    context["driver"].get(env_config["url"])
+
+# -----------------------------------------------
+#                  WHEN
+# -----------------------------------------------
+@when("the user clicks on the 'PRACTICE' link")
+def click_practice_link(context):
+    log.info("STEP 02: Click on 'PRACTICE' link.")
+    context["home_page"].click_practice_lnk()
+
+@when("the user clicks on the 'Test Login Page' link")
+def click_test_login_page(context):
+    log.info("STEP 03: Click on 'Test Login Page' link.")
+    context["login_page"].click_test_login_page_lnk()
+
+@when("the user login to PTA application with valid credentials")
+def enter_credentials(context):
+    log.info("STEP 04: Enter valid credentials.")
+    # You can get username/password from testdata if needed
+    context["common"].pta_login(context["region"])
+
+# -----------------------------------------------
+#                  THEN
+# -----------------------------------------------
+@then("the user should see a 'Logged In Successfully' message")
+def verify_login_success(context):
+    log.info("STEP 05: Verify login success.")
+    login_page = context["login_page"]
+    driver = context["driver"]
+    screenshot_path = context["screenshot_path"]
 
     if login_page.logged_in_successfully_txt_visible():
+        driver.save_screenshot(screenshot_path)
         log.info("'Logged In Successfully' text is visible.")
     else:
         driver.save_screenshot(screenshot_path)
         log.error("'Logged In Successfully' text is NOT visible.")
         raise AssertionError("'Logged In Successfully' text is not visible.")
 
-@then("Logout from PTA application.")
-def logout_from_pta(login_result):
+@then("the user logs out from the PTA application")
+def logout(context):
+    log.info("STEP 06: Logging out.")
     try:
-        log.info("STEP 02: Logout from PTA application.")
-        login_result["common"].pta_logout()
+        context["common"].pta_logout()
         log.info("Logout completed successfully.")
     except Exception as e:
         log.error(f"Logout Exception: {e}")

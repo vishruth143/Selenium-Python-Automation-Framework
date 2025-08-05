@@ -113,16 +113,12 @@ class Common:
         env_config = ui_test_env_config.get(region.upper(), {})
 
         # Extract username and password
-        self.pta_login_url = env_config.get("url")
         self.pta_login_username = env_config.get("username")
         self.pta_login_password = env_config.get("password")
 
-        self.driver.get(self.pta_login_url)
-        time.sleep(5)
-
         # Log in using credentials
-        self.loginpage.enter_username(self.pta_login_username)
-        self.loginpage.enter_password(self.pta_login_password)
+        self.loginpage.type_username_input(self.pta_login_username)
+        self.loginpage.type_password_input(self.pta_login_password)
         self.loginpage.click_submit_btn()
 
     def pta_logout(self):

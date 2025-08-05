@@ -4,13 +4,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from framework.pages.base_page import BasePage
 
-class LoginPage(BasePage):
+class ContactPage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------
     #                                                  Element locators
     # ------------------------------------------------------------------------------------------------------------------
     # ---------------------------------------------------Input Fields---------------------------------------------------
-    _username_input = (By.ID, "username")
-    _password_input = (By.ID, "password")
+    _first_name_input = (By.XPATH, "//input[@id='wpforms-161-field_0']")
+    _Last_name_input = (By.XPATH, "//input[@id='wpforms-161-field_0-last']")
+    _email_input = (By.XPATH, "//input[@id='wpforms-161-field_1']")
+    _comment_or_message_input = (By.XPATH, "//textarea[@id='wpforms-161-field_2']")
+    _submit_btn = (By.XPATH, "//button[@id='wpforms-submit-161']")
 
     # -----------------------------------------------------Buttons------------------------------------------------------
     _submit_btn = (By.ID, "submit")
@@ -18,10 +21,6 @@ class LoginPage(BasePage):
 
     # ------------------------------------------------------Texts-------------------------------------------------------
     _logged_in_successfully_txt = (By.XPATH, "//h1[normalize-space()='Logged In Successfully']")
-
-    # ------------------------------------------------------Links-------------------------------------------------------
-    _test_login_page_lnk = (By.XPATH, "//a[normalize-space()='Test Login Page']")
-    _test_exceptions_lnk = (By.XPATH, "//a[normalize-space()='Test Exceptions']")
 
 
 
@@ -47,15 +46,6 @@ class LoginPage(BasePage):
     def logged_in_successfully_txt(self):
         return self.find_element(*self._logged_in_successfully_txt, EC.visibility_of_element_located)
 
-    # ------------------------------------------------------Links-------------------------------------------------------
-    @property
-    def test_login_page_lnk(self):
-        return self.find_element(*self._test_login_page_lnk, EC.element_to_be_clickable)
-
-    @property
-    def test_exceptions_lnk(self):
-        return self.find_element(*self._test_exceptions_lnk, EC.element_to_be_clickable)
-
 
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -69,10 +59,10 @@ class LoginPage(BasePage):
         return self.is_element_visible(*self._logged_in_successfully_txt)
 
     # -----------------------------------------------------Enter/Type------------------------------------------------------
-    def type_username_input(self, username):
+    def enter_username(self, username):
         self.type_text(*self._username_input, text=username)
 
-    def type_password_input(self, password):
+    def enter_password(self, password):
         self.type_text(*self._password_input, text=password)
 
     # -----------------------------------------------------Click------------------------------------------------------
@@ -81,9 +71,3 @@ class LoginPage(BasePage):
 
     def click_logout_btn(self):
         self.click(*self._logout_btn)
-
-    def click_test_login_page_lnk(self):
-        self.click(*self._test_login_page_lnk)
-
-    def click_test_exception_lnk(self):
-        self.click(*self._test_exceptions_lnk)
