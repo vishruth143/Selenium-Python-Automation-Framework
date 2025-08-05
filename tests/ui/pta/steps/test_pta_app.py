@@ -1,7 +1,8 @@
 # pylint: disable=[missing-module-docstring, missing-function-docstring, logging-fstring-interpolation]
+# pylint: disable=[redefined-outer-name, line-too-long]
 
 import pytest
-from pytest_bdd import scenarios, given, when, then, parsers
+from pytest_bdd import scenarios, given, when, then
 
 from config.config_parser import ConfigParser
 from framework.utilities.common import Common
