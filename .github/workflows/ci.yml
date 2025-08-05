@@ -7,7 +7,6 @@ on:
       - 'config/**'
       - 'framework/**'
       - 'tests/**'
-      - 'Dockerfile'
       - 'pytest.ini'
       - 'requirements.txt'
     branches:
@@ -53,33 +52,37 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
 
+    env:
+      APP_NAME: PTA
+      SERVICE_NAME: REQRES
+      REGION: qa
+      BROWSER: CHROME
+      HEADLESS: Y
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.3'
 
-      - name: Build Docker Image
-        run: docker build -t selenium-tests .
-
-      - name: Run Pytest in Docker
-        run: |          
-          docker run --name test-container\
-            -e APP_NAME=PTA \
-            -e SERVICE_NAME=REQRES \
-            -e REGION=qa \
-            -e BROWSER=CHROME \
-            -e HEADLESS=Y \
-            selenium-tests \
-            sh -c "pytest -vvv -m "pta or reqres" --html=output/reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests"
-
-      - name: Copy Allure Results  and Screenshots from Container
+      - name: Install Dependencies
         run: |
-          docker cp test-container:/app/output/allure-results ./allure-results || echo "No allure-results"
-          docker cp test-container:/app/output/screenshots ./screenshots || echo "No screenshots"
-          docker cp test-container:/app/output/logs ./logs || echo "No logs" 
-          docker cp test-container:/app/output/reports ./reports || echo "No HTML report"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Run Pytest with HTML and Allure Reporting
+        run: |
+          mkdir -p output/allure-results output/screenshots output/logs output/reports
+          pytest -vvv -m "pta or reqres" \
+            --html=output/reports/pta_report.html \
+            --self-contained-html \
+            --capture=tee-sys \
+            --alluredir=output/allure-results \
+            --durations=10 \
+            tests
 
       - name: Install Allure CLI (Manual)
         run: |
@@ -100,25 +103,25 @@ jobs:
           path: allure-report
 
       - name: Upload Screenshots as Artifact
-        if: always()  # Always attempt to upload even if tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-            name: screenshots
-            path: screenshots
+          name: screenshots
+          path: output/screenshots
 
       - name: Upload Logs as Artifact
-        if: always()  # Always attempt to upload even if tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: logs
-          path: logs
+          path: output/logs
 
       - name: Upload HTML Report as Artifact
-        if: always()  # Always attempt to upload even if tests fail
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reports
-          path: reports
+          path: output/reports
 
   notify-teams:
     name: Notify Teams
