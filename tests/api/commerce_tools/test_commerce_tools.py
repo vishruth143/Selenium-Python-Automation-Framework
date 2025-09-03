@@ -9,7 +9,7 @@ from config.config_parser import ConfigParser
 from framework.utilities.custom_logger import Logger
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
-darden_commerce_tools_api_test_data = ConfigParser.load_config('darden_commerce_tools_api_test_data_config')
+darden_commerce_tools_api_test_data = ConfigParser.load_config('commerce_tools_api_test_data_config')
 
 @pytest.mark.darden_commerce_tools
 class TestDardenCommercetools:

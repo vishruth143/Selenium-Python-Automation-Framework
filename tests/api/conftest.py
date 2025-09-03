@@ -24,8 +24,8 @@ def api_client():
         env_config = reqres_api_test_env_config.get(region, {})
         base_url = env_config.get("base_url")
         headers["x-api-key"] = "reqres-free-v1"
-    elif service_name == "DARDEN_COMMERCE_TOOLS":
-        darden_commerce_tools_api_test_env_config = ConfigParser.load_config("darden_commerce_tools_api_test_env_config")
+    elif service_name == "COMMERCE_TOOLS":
+        darden_commerce_tools_api_test_env_config = ConfigParser.load_config("commerce_tools_api_test_env_config")
         env_config = darden_commerce_tools_api_test_env_config.get(region, {})
 
         auth_url = env_config.get("auth_url")

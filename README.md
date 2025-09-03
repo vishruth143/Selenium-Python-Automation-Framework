@@ -152,9 +152,9 @@ Selenium-Python-Automation-Framework/
     pytest -vvv -m "pta or reqres" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 ```bash
-    $env:SERVICE_NAME="DARDEN_COMMERCE_TOOLS"
+    $env:SERVICE_NAME="COMMERCE_TOOLS"
     $env:REGION="qa"    
-    pytest -vvv -m "darden_commerce_tools" -n 4 --reruns 3 --html=output/reports/darden_commerce_tools_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "commerce_tools" -n 4 --reruns 3 --html=output/reports/darden_commerce_tools_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 ---
 ## 🖥️ To see all the environment variables currently set, you can run:
