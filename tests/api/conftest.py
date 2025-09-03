@@ -24,5 +24,23 @@ def api_client():
         env_config = reqres_api_test_env_config.get(region, {})
         base_url = env_config.get("base_url")
         headers["x-api-key"] = "reqres-free-v1"
+    elif service_name == "DARDEN_COMMERCE_TOOLS":
+        darden_commerce_tools_api_test_env_config = ConfigParser.load_config("darden_commerce_tools_api_test_env_config")
+        env_config = darden_commerce_tools_api_test_env_config.get(region, {})
+
+        auth_url = env_config.get("auth_url")
+        client_id = env_config.get("client_id")
+        client_secret = env_config.get("client_secret")
+
+        base_url = env_config.get("base_url")
+
+        client = APIClient(base_url=base_url)
+
+        # 🔑 Step 1: Get OAuth token
+        token = client.get_oauth_token(auth_url, client_id, client_secret)
+
+        # 🔑 Step 2: Update session headers with Bearer token
+        client.session.headers.update({"Authorization": f"Bearer {token}"})
+        return client
 
     return APIClient(base_url=base_url, headers=headers)

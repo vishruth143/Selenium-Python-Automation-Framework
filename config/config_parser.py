@@ -17,6 +17,8 @@ class ConfigParser:
         'pta_ui_test_excel_data_config': 'ui/pta/ui_test_excel_data_config.xlsx',
         'reqres_api_test_env_config': 'api/reqres/api_test_env_config.yml',
         'reqres_api_test_data_config': 'api/reqres/api_test_data_config.json',
+        'darden_commerce_tools_api_test_env_config': 'api/darden_commerce_tools/api_test_env_config.yml',
+        'darden_commerce_tools_api_test_data_config': 'api/darden_commerce_tools/api_test_data_config.json',
     }
 
     @staticmethod

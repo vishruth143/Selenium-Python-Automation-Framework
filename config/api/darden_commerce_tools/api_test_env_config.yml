@@ -1,0 +1,21 @@
+---
+DEV:
+  auth_url: https://auth.us-central1.gcp.commercetools.com
+  client_id:
+  client_secret:
+  base_url: https://api.us-central1.gcp.commercetools.com
+QA:
+  auth_url: https://auth.us-central1.gcp.commercetools.com
+  client_id: Waayc6YxZCqqk9nzXGB0-Cfm
+  client_secret: lyppe4XIqEfonGHModZgUcaJvjVEZ84g
+  base_url: https://api.us-central1.gcp.commercetools.com
+STAGE:
+  auth_url: https://auth.us-central1.gcp.commercetools.com
+  client_id:
+  client_secret:
+  base_url: https://api.us-central1.gcp.commercetools.com
+PROD:
+  auth_url: https://auth.us-central1.gcp.commercetools.com
+  client_id:
+  client_secret:
+  base_url: https://api.us-central1.gcp.commercetools.com

@@ -61,21 +61,21 @@ class LoginPage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Actions
     # ------------------------------------------------------------------------------------------------------------------
-    # -----------------------------------------------------Is Visible------------------------------------------------------
+    # -----------------------------------------------------Is Visible---------------------------------------------------
     def username_input_visible(self):
         return self.is_element_visible(*self._username_input)
 
     def logged_in_successfully_txt_visible(self):
         return self.is_element_visible(*self._logged_in_successfully_txt)
 
-    # -----------------------------------------------------Enter/Type------------------------------------------------------
+    # -----------------------------------------------------Enter/Type---------------------------------------------------
     def type_username_input(self, username):
         self.type_text(*self._username_input, text=username)
 
     def type_password_input(self, password):
         self.type_text(*self._password_input, text=password)
 
-    # -----------------------------------------------------Click------------------------------------------------------
+    # -----------------------------------------------------Click--------------------------------------------------------
     def click_submit_btn(self):
         self.click(*self._submit_btn)
 

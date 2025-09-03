@@ -1,9 +1,29 @@
 # 🧪 Selenium-Python-Automation-Framework
 
-A robust and scalable test automation framework using **Python**, **Selenium WebDriver**, **Pytest**, and **Pytest BDD**. 
-Supports both UI and API testing with environment-driven configuration and Docker integration.
+A scalable and maintainable test automation framework built with Python, leveraging Selenium WebDriver, Pytest, and Pytest-BDD.
+It supports both UI and API test automation, with environment-driven configuration for flexibility.
+The framework is fully integrated with Docker for containerized execution, GitHub Actions for CI/CD pipelines, and Microsoft Teams for real-time execution notifications.
 
 ![img.png](architecture_diagram.png)
+
+## Features
+- 🎭 Selenium-Python-Pytest Test Automation framework - Done
+- 🔧 Python programming support - Done
+- 🌐 Cross-browser UI Automation testing (Chrome, Firefox, Edge) - Done
+- 🧪 API testing support with Requests library - Done
+- 📊 HTML and Allure test reports - Done
+- 🎯 Auto-wait, parallel execution and retry mechanisms - Done
+- 🔧 CI/CD integration with GitHub Actions - Done
+- 📥 Docker containerization - Done
+- 📢 Microsoft Teams notifications - Done
+- 🧩 BDD support with Pytest-BDD - Done
+- 📂 Data-driven testing with JSON and Excel - Done
+- 🗂️ Page Object Model (POM) design pattern - Done
+- 🧑‍💻 Custom logging and screenshot capture on failures - Done
+- ⚙️ Environment-driven configuration management - Done
+- 📱 Mobile testing support - Planned
+- 🎥 Video recording of test executions - Planned
+- 🧪 Playwright integration - Planned
 
 ---
 ## 🚀 Project Folder Structure
@@ -60,11 +80,20 @@ Selenium-Python-Automation-Framework/
 │
 ├── tests/                                                  # Test suite
 │   ├── api/
+│   │   └── darden_commerce_tools/
+│   │   │   ├── __init__.py
+│   │   │   └── test_darden_commerce_tools.py               # API test cases for Darden Commerce Tools
 │   │   └── reqres/
-│   │       ├── __init__.py
-│   │       └── test_reqres.py                              # API test cases for Reqres
+│   │   │   ├── __init__.py
+│   │   │   └── test_reqres.py                              # API test cases for Reqres
 │   │   ├── __init__.py
 │   │   └── conftest.py                                     # API-specific fixtures
+│   │
+│   ├── snippet/                                            # Code snippets for reuse
+│   │   ├── __init__.py
+│   │   ├── test_excel.py                                   # Excel data handling snippet
+│   │   ├── test_parametrize_mechanism.py                   # Parametrization snippet
+│   │   └── test_retry_mechanism.py                         # Retry mechanism snippet
 │   │
 │   ├── ui/
 │   │   └── pta/
@@ -72,12 +101,13 @@ Selenium-Python-Automation-Framework/
 │   │       │   ├── pta_app.feature                         # Gherkin feature file for PTA
 │   │       ├── pages/
 │   │       │   ├── __init__.py
-│   │       │   └── login_page.py                           # Page object for login
+│   │       │   └── contact_page.py                         # Page object for contact page
+│   │       │   └── home_page.py                            # Page object for home page
+│   │       │   └── login_page.py                           # Page object for login page
 │   │       ├── steps/
 │   │       │   ├── __init__.py
 │   │       │   └── test_pta_app.py                         #  Step definitions for PTA
 │   │       ├── __init__.py
-│   │       ├── test_excel.py                               # Excel-driven UI test
 │   │       └── test_pta.py                                 # PTA functional tests
 │   │   ├── __init__.py
 │   │   └── conftest.py                                     # UI-specific fixtures
@@ -87,12 +117,11 @@ Selenium-Python-Automation-Framework/
 │
 ├── .gitignore                                              # Files to ignore in git
 ├── architecture_diagram.png                                # Framework architecture diagram
-├── conftest.py                                             # Global fixtures (root scope)
 ├── Dockerfile                                              # Docker container setup
 ├── pytest.ini                                              # Pytest configuration
 ├── README.md                                               # Framework documentation
-├── requirements.txt                                        # Python dependencies
-├── __init__.py
+├──requirements.txt                                         # Python dependencies
+└── UI API Automation Architecture.drawio                   # Draw.io diagram file
 ```
 ---
 ## 🚀 Environment Variables
@@ -114,12 +143,33 @@ Selenium-Python-Automation-Framework/
 
 ---
 ## 🖥️ Running Tests from Command Line (PowerShell)
+```bash
     $env:APP_NAME="PTA"
     $env:SERVICE_NAME="REQRES"
-    $env:REGION="qa"
+    $env:REGION="QA"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
-    pytest -vvv -m "pta or reqres" -n 4 --html=output/reports/pta_report.html --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "pta or reqres" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+```bash
+    $env:SERVICE_NAME="DARDEN_COMMERCE_TOOLS"
+    $env:REGION="qa"    
+    pytest -vvv -m "darden_commerce_tools" -n 4 --reruns 3 --html=output/reports/darden_commerce_tools_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+---
+## 🖥️ To see all the environment variables currently set, you can run:
+```bash
+  Get-ChildItem Env:
+```
+or
+```bash
+  gci env:
+```
+---
+## 🖥️ If you want to filter and see only the ones you set (APP_NAME, SERVICE_NAME, etc.), you can do:
+```bash
+    Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME","REGION","BROWSER","HEADLESS") }
+```
 ---
 ### Explanation of Flags
 | Variable                | Description                                                            |
@@ -179,16 +229,31 @@ Selenium-Python-Automation-Framework/
 ---
 ## 🖥️ Notification to MS Team
 ### On MS Teams
+```text
 1. Create a Team with Channel in MS Team.
 2. Click on the ... beside the channel you want the notifications to be sent and select 'Manage channel'.
 3. Under 'Connectors' section Click 'Edit'.
 4. Search for 'Incoming Webhook' and click 'Add'.
 5. Provide the name for the 'Incoming Webhook' and click on 'Create'.
 6. Copy the Webhook URL.
+```
 
 ### On GitHub
+```text
 1. Go to your workflow and click on the Settings.
 2. On the left side panel under 'Secrets and variables' click on 'Actions'.
 3. Click on the 'New repository secret'.
 4. Provide Name=TEAMS_WEBHOOK_URL Secret="<Webhook URL from the MS Teams>".
 5. Click on 'Add secret'.
+```
+
+### Playwright Integration
+```text
+1. Install Playwright and its dependencies by running:
+   pip install pytest-playwright
+   playwright install
+2. Import Playwright in your test files and use it alongside Selenium as needed.
+```
+
+Happy testing! 🎭
+---

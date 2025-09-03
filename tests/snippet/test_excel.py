@@ -5,10 +5,10 @@ import pytest
 from config.config_parser import ConfigParser
 from framework.utilities.common import save_excel
 
-@pytest.mark.pta
+@pytest.mark.excel
 class TestPTA:
     """
-    Test cases for PTA Application
+    Read/Write data from/to an 'Excel file'.
     """
     def test_excel(self):
         """
