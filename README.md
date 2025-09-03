@@ -35,9 +35,9 @@ Selenium-Python-Automation-Framework/
 │
 ├── config/                                                 # Configuration files
 │   ├── api/
-│   │   └── reqres/
-│   │   │    ├── api_test_data_config.json                   # COMMERCE_TOOLS API test data
-│   │   │    └── api_test_env_config.yml                     # COMMERCE_TOOLS API environment config
+│   │   └── commerce_tools/
+│   │   │    ├── api_test_data_config.json                  # COMMERCE_TOOLS API test data
+│   │   │    └── api_test_env_config.yml                    # COMMERCE_TOOLS API environment config
 │   │   │
 │   │   └── reqres/
 │   │       ├── api_test_data_config.json                   # REQRES API test data
@@ -86,7 +86,7 @@ Selenium-Python-Automation-Framework/
 │   ├── api/
 │   │   └── commerce_tools/
 │   │   │   ├── __init__.py
-│   │   │   └── test_commerce_tools.py               # API test cases for Darden Commerce Tools
+│   │   │   └── test_commerce_tools.py                      # API test cases for Commerce Tools
 │   │   └── reqres/
 │   │   │   ├── __init__.py
 │   │   │   └── test_reqres.py                              # API test cases for Reqres
