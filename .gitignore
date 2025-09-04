@@ -3,10 +3,5 @@ __pycache__
 .pytest_cache
 .venv
 .DS_Store
-output
 tests/__pycache__
 tests/pytest_cache
-screenshots
-reports
-allure-results
-allure-report
