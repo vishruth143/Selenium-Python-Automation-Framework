@@ -1,12 +1,12 @@
 # pylint: disable=[unused-argument, missing-module-docstring, missing-module-docstring, unspecified-encoding]
-# pylint: disable=[missing-function-docstring, line-too-long]
+# pylint: disable=[missing-function-docstring, line-too-long, import-outside-toplevel, deprecated-argument]
+# pylint: disable=[broad-exception-caught]
 
 import os
 import shutil
+import stat
 
 def _on_rm_error(func, path, exc_info):
-    import errno
-    import stat
     # Try to remove read-only or locked files
     try:
         os.chmod(path, stat.S_IWRITE)

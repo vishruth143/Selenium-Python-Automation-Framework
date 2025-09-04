@@ -1,8 +1,12 @@
 # pylint: disable=[missing-function-docstring, import-error, invalid-name, global-variable-undefined, ungrouped-imports]
 # pylint: disable=[line-too-long, missing-module-docstring, unnecessary-lambda, unused-argument, unspecified-encoding]
 # pylint: disable=[missing-module-docstring, missing-function-docstring, redefined-outer-name, ungrouped-imports]
+# pylint: disable=[logging-fstring-interpolation, import-outside-toplevel, protected-access, too-many-nested-blocks]
+# pylint: disable=[broad-exception-caught]
 
 import os
+import time
+import logging
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -86,14 +90,11 @@ def pytest_runtest_makereport(item, call):
     """
     Capture screenshot and retain video only for failed UI test cases.
     """
-    import time
-    import logging
     outcome = yield
     rep = outcome.get_result()
     if rep.when == "call":
         driver = item.funcargs.get("driver", None)
         # Always stop video recording and get the final path
-        from framework.utilities.screen_recording_utils import stop_video_recording
         video_path = stop_video_recording() or getattr(item, "_video_path", None)
         logging.info(f"Video recording stopped for test: {item.name}, path: {video_path}")
         if rep.failed:

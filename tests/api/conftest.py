@@ -1,7 +1,6 @@
-# pylint: disable=[missing-module-docstring, missing-function-docstring]
+# pylint: disable=[missing-module-docstring, missing-function-docstring, line-too-long]
 
 import os
-
 import pytest
 
 from config.config_parser import ConfigParser
@@ -25,8 +24,8 @@ def api_client():
         base_url = env_config.get("base_url")
         headers["x-api-key"] = "reqres-free-v1"
     elif service_name == "COMMERCE_TOOLS":
-        darden_commerce_tools_api_test_env_config = ConfigParser.load_config("commerce_tools_api_test_env_config")
-        env_config = darden_commerce_tools_api_test_env_config.get(region, {})
+        commerce_tools_api_test_env_config = ConfigParser.load_config("commerce_tools_api_test_env_config")
+        env_config = commerce_tools_api_test_env_config.get(region, {})
 
         auth_url = env_config.get("auth_url")
         client_id = env_config.get("client_id")

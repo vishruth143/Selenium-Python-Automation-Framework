@@ -1,3 +1,5 @@
+# pylint: disable=[missing-module-docstring, missing-function-docstring, wrong-import-order]
+
 import pytest
 import random
 import time

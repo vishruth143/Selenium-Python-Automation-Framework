@@ -1,6 +1,7 @@
 # pylint: disable=[duplicate-code, line-too-long, attribute-defined-outside-init, missing-module-docstring]
 # pylint: disable=[no-else-continue, invalid-name, logging-fstring-interpolation, import-error]
 # pylint: disable=[too-many-statements, too-many-branches, unused-variable, too-many-locals, unsubscriptable-object]
+# pylint: disable=[f-string-without-interpolation, broad-exception-caught]
 # pylint: disable=C0302
 
 import pytest
