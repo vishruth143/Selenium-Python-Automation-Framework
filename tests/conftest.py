@@ -26,10 +26,13 @@ def pytest_sessionstart(session):
     else:
         print(f"Output directory does not exist, no cleanup needed: {output_dir}")
 
-    results_dir = os.path.join(os.getcwd(), 'output/allure-results')
-    os.makedirs(results_dir, exist_ok=True)
+    # Create all required output subdirectories
+    os.makedirs(os.path.join(output_dir, 'allure-results'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir, 'screenshots'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir, 'logs'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir, 'reports'), exist_ok=True)
 
-    env_file_path = os.path.join(results_dir, 'environment.properties')
+    env_file_path = os.path.join(output_dir, 'allure-results', 'environment.properties')
     with open(env_file_path, 'w') as f:
         f.write(f"REGION={os.getenv('REGION', 'QA')}")
         f.write(f"\nBROWSER={os.getenv('BROWSER', 'CHROME')}")
