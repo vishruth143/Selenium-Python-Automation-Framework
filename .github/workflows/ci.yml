@@ -77,9 +77,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
+      - name: Ensure output directories exist
+        run: |
+          mkdir -p output/allure-results
+          mkdir -p output/screenshots
+          mkdir -p output/logs
+          mkdir -p output/reports
+
       - name: Run Pytest with HTML and Allure Reporting
         run: |
-          mkdir -p output/allure-results output/screenshots output/logs output/reports
           pytest -vvv -m "pta or reqres" \
             -n 4 \
             --html=output/reports/pta_report.html \
