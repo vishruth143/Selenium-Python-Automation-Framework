@@ -31,6 +31,7 @@ def pytest_sessionstart(session):
     os.makedirs(os.path.join(output_dir, 'screenshots'), exist_ok=True)
     os.makedirs(os.path.join(output_dir, 'logs'), exist_ok=True)
     os.makedirs(os.path.join(output_dir, 'reports'), exist_ok=True)
+    os.makedirs(os.path.join(output_dir, 'videos'), exist_ok=True)
 
     env_file_path = os.path.join(output_dir, 'allure-results', 'environment.properties')
     with open(env_file_path, 'w') as f:

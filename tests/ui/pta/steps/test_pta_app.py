@@ -68,14 +68,10 @@ def enter_credentials(context):
 def verify_login_success(context):
     log.info("STEP 05: Verify login success.")
     login_page = context["login_page"]
-    driver = context["driver"]
-    screenshot_path = context["screenshot_path"]
 
     if login_page.logged_in_successfully_txt_visible():
-        driver.save_screenshot(screenshot_path)
         log.info("'Logged In Successfully' text is visible.")
     else:
-        driver.save_screenshot(screenshot_path)
         log.error("'Logged In Successfully' text is NOT visible.")
         raise AssertionError("'Logged In Successfully' text is not visible.")
 

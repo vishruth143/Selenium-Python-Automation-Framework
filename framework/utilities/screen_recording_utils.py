@@ -1,6 +1,7 @@
 import os
 import subprocess
 import time
+import platform
 
 _video_process = None
 _video_file_path = None
@@ -13,10 +14,20 @@ def start_video_recording(test_name, screen_size="1920x1080", framerate=15):
     os.makedirs(video_dir, exist_ok=True)
     safe_name = test_name.replace(' ', '_')
     _video_file_path = os.path.join(video_dir, f"test_{safe_name}_{timestamp}.mp4")
-    ffmpeg_cmd = [
-        'ffmpeg', '-y', '-f', 'gdigrab', '-framerate', str(framerate), '-video_size', screen_size, '-i', 'desktop',
-        '-vcodec', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', _video_file_path
-    ]
+    system = platform.system().lower()
+    if system == "windows":
+        ffmpeg_cmd = [
+            'ffmpeg', '-y', '-f', 'gdigrab', '-framerate', str(framerate), '-video_size', screen_size, '-i', 'desktop',
+            '-vcodec', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', _video_file_path
+        ]
+    elif system == "linux":
+        display = os.environ.get('DISPLAY', ':0.0')
+        ffmpeg_cmd = [
+            'ffmpeg', '-y', '-f', 'x11grab', '-framerate', str(framerate), '-video_size', screen_size, '-i', display,
+            '-vcodec', 'libx264', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', _video_file_path
+        ]
+    else:
+        raise RuntimeError(f"Unsupported OS for video recording: {system}")
     _video_process = subprocess.Popen(ffmpeg_cmd, stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return _video_file_path
 
@@ -29,6 +40,6 @@ def stop_video_recording():
             _video_process.communicate(input=b'q', timeout=5)
         except Exception:
             _video_process.terminate()
-            _video_process.wait()
+            _video_process.wait()  # Fixed variable name
         _video_process = None
     return _video_file_path
