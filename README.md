@@ -23,7 +23,6 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - ⚙️ Environment-driven configuration management - Done
 - 📱 Mobile testing support - Planned
 - 🎥 Video recording of test executions - Planned
-- 🧪 Playwright integration - Planned
 
 ---
 ## 🚀 Project Folder Structure
@@ -257,6 +256,15 @@ or
    pip install pytest-playwright
    playwright install
 2. Import Playwright in your test files and use it alongside Selenium as needed.
+```
+
+### Video Recording of Test Executions
+```text
+1. Download and Install ffmpeg from: https://ffmpeg.org/download.html
+2. For Windows, click on the “Windows” logo and choose a build (e.g., from gyan.dev or BtbN).
+3. Download the “release full” zip file.
+4. Extract the zip file and add the bin folder to your system PATH i.e. C:\ffmpeg\bin
+5. Verify the installation by running `ffmpeg -version` in your command prompt.
 ```
 
 Happy testing! 🎭

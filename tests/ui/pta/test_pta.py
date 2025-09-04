@@ -11,7 +11,6 @@ from framework.utilities.common import Common
 from framework.utilities.custom_logger import Logger
 from tests.ui.pta.pages.home_page import HomePage
 from tests.ui.pta.pages.login_page import LoginPage
-from framework.utilities.screenshot_utils import get_screenshot_path
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 ui_test_env_config = ConfigParser.load_config("pta_ui_test_env_config")
@@ -36,7 +35,6 @@ class TestPTA:
         06) Logout of PTA application.
         """
         test_name = request.node.name.rsplit("[", 1)[0]
-        screenshot_path = get_screenshot_path(test_name)
         self.driver = driver
         # Get the correct env block based on the region
         env_config = ui_test_env_config.get(region.upper(), {})
@@ -69,11 +67,9 @@ class TestPTA:
 
             log.info("STEP 05: Verify 'Logged In Successfully' text is visible.")
             if self.loginpage.logged_in_successfully_txt_visible():
-                self.driver.save_screenshot(screenshot_path)
                 log.info("'Logged In Successfully' text is visible.")
                 log.info("Login to PTA application - Completed Successfully.")
             else:
-                self.driver.save_screenshot(screenshot_path)
                 log.info("'Logged In Successfully' text is not visible.")
                 log.info("Test #01 : Verify PTA Application Login. - Failed")
 
@@ -82,7 +78,6 @@ class TestPTA:
             common.pta_logout()
             log.info("Logout from PTA application - Completed Successfully.")
         except Exception as e:
-            self.driver.save_screenshot(screenshot_path)
             log.error(f"Error: {e}")
             log.info("Test #01 : Verify PTA Application Login. - Failed")
             raise

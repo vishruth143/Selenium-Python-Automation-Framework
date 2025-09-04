@@ -11,6 +11,7 @@ from selenium.webdriver.support.events import EventFiringWebDriver
 
 from framework.listeners.event_listeners import MyEventListener
 from config.config_parser import ConfigParser
+from framework.utilities.screenshot_utils import get_screenshot_path
 
 @pytest.fixture(scope="session")
 def testdata():
@@ -49,7 +50,6 @@ def driver(request):
         print('-' * 10 + ' Driver - Teardown ' + '-' * 10)
         driver_instance.close()
         driver_instance.quit()
-
     request.addfinalizer(teardown)
     return driver_instance
 
@@ -72,3 +72,17 @@ def create_firefox_options(headless: bool, binary_path: str):
     options.binary_location = binary_path
     options.add_argument("window-size=1920,1080")
     return options
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """
+    Capture screenshot only once for failed UI test cases.
+    """
+    outcome = yield
+    rep = outcome.get_result()
+    if rep.when == "call" and rep.failed:
+        driver = item.funcargs.get("driver", None)
+        if driver:
+            test_name = item.name
+            screenshot_path = get_screenshot_path(test_name)
+            driver.save_screenshot(screenshot_path)
