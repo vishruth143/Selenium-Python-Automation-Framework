@@ -12,7 +12,7 @@ from selenium.webdriver.support.events import EventFiringWebDriver
 from framework.listeners.event_listeners import MyEventListener
 from config.config_parser import ConfigParser
 from framework.utilities.screenshot_utils import get_screenshot_path
-from framework.utilities.video_recording_utils import start_video_recording, stop_video_recording
+from framework.utilities.screen_recording_utils import start_video_recording, stop_video_recording
 
 @pytest.fixture(scope="session")
 def testdata():
@@ -93,7 +93,7 @@ def pytest_runtest_makereport(item, call):
     if rep.when == "call":
         driver = item.funcargs.get("driver", None)
         # Always stop video recording and get the final path
-        from framework.utilities.video_recording_utils import stop_video_recording
+        from framework.utilities.screen_recording_utils import stop_video_recording
         video_path = stop_video_recording() or getattr(item, "_video_path", None)
         logging.info(f"Video recording stopped for test: {item.name}, path: {video_path}")
         if rep.failed:

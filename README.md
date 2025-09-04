@@ -22,7 +22,7 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - 🧑‍💻 Custom logging and screenshot capture on failures - Done
 - ⚙️ Environment-driven configuration management - Done
 - 📱 Mobile testing support - Planned
-- 🎥 Video recording of test executions - Planned
+- 🎥 Video recording of test executions - Done
 
 ---
 ## 🚀 Project Folder Structure
@@ -70,7 +70,8 @@ Selenium-Python-Automation-Framework/
 │   │   ├── common.py                                       # General helpers
 │   │   ├── custom_logger.py                                # Logger setup
 │   │   ├── loaders.py                                      # Data/config loaders
-│   │   └── screenshot_utils.py                             # Screenshot helper
+│   │   ├── screenshot_utils.py                             # Screenshot helper
+│   │   └── screen_recording_utils.py                       # Screen recording helper
 │   │
 │   └── __init__.py
 │
