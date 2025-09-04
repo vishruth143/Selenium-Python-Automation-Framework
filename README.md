@@ -251,15 +251,7 @@ or
 5. Click on 'Add secret'.
 ```
 
-### Playwright Integration
-```text
-1. Install Playwright and its dependencies by running:
-   pip install pytest-playwright
-   playwright install
-2. Import Playwright in your test files and use it alongside Selenium as needed.
-```
-
-### Video Recording of Test Executions
+### Screen Recording for failed UI tests
 ```text
 1. Download and Install ffmpeg from: https://ffmpeg.org/download.html
 2. For Windows, click on the “Windows” logo and choose a build (e.g., from gyan.dev or BtbN).
