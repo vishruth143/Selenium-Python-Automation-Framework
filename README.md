@@ -14,7 +14,7 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - 🧪 API testing support with Requests library - Done
 - 📊 HTML and Allure test reports - Done
 - 🎯 Auto-wait, parallel execution and retry mechanisms - Done
-- 🔧 CI/CD integration with GitHub Actions - Done
+- 🔧 CI/CD integration with Jenkins and GitHub Actions - Done
 - 📥 Docker containerization - Done
 - 📢 Microsoft Teams notifications - Done
 - 🧩 BDD support with Pytest-BDD - Done
