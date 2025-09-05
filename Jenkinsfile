@@ -83,10 +83,5 @@ pipeline {
         always {
             archiveArtifacts artifacts: 'output/**', allowEmptyArchive: true
         }
-        failure {
-            // mail to: 'your-team@company.com',
-            //      subject: "Jenkins Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            //      body: "Check Jenkins for details: ${env.BUILD_URL}"
-        }
     }
 }
