@@ -117,12 +117,12 @@ jobs:
           name: allure-report
           path: allure-report
 
-      - name: Upload Screenshots as Artifact
+      - name: Upload HTML Report as Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots
-          path: output/screenshots
+          name: reports
+          path: output/reports
 
       - name: Upload Logs as Artifact
         if: always()
@@ -131,12 +131,19 @@ jobs:
           name: logs
           path: output/logs
 
-      - name: Upload HTML Report as Artifact
+      - name: Upload Screenshots as Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: reports
-          path: output/reports
+          name: screenshots
+          path: output/screenshots
+
+      - name: Upload Videos as Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: videos
+          path: output/videos
 
   # Notification job: sends CI status to Microsoft Teams via webhook
   notify-teams:

@@ -6,6 +6,7 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 
 ![img.png](architecture_diagram.png)
 
+---
 ## Features
 - 🎭 Selenium-Python-Pytest Test Automation framework - Done
 - 🔧 Python programming support - Done
@@ -24,6 +25,42 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - 📱 Mobile testing support - Planned
 - 🎥 Video recording of test executions - Done
 
+---
+## ⚡ Quick Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/vishruth143/Selenium-Python-Automation-Framework.git
+   cd Selenium-Python-Automation-Framework
+   ```
+2. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Set environment variables:**
+   ```bash
+   # Example for UI and API test
+   $env:APP_NAME="PTA"
+   $env:SERVICE_NAME="REQRES"
+   $env:REGION="QA"
+   $env:BROWSER="CHROME"
+   $env:HEADLESS="N"
+   ```
+4. **Run tests:**
+   ```bash
+   pytest -vvv -m "pta or reqres" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+   ```
+5. **Generate Allure report:**
+   ```bash
+   allure generate output/allure-results --clean -o output/allure-report
+   ```
+6. **View HTML/Allure report:**
+   - Open `output/reports/pta_report.html` in browser
+   - Or serve Allure report:
+     ```bash
+     python -m http.server 8000
+     # Visit http://localhost:8000/output/allure-report
+     ```
 ---
 ## 🚀 Project Folder Structure
 ```
@@ -260,5 +297,4 @@ or
 5. Verify the installation by running `ffmpeg -version` in your command prompt.
 ```
 
-Happy testing! 🎭
----
+# Happy testing! 🎭
