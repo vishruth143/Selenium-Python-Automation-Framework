@@ -62,10 +62,10 @@ pipeline {
         stage('Generate Allure Report') {
             steps {
                 bat '''
-                if not exist "C:\allure\bin\allure.bat" (
+                if not exist "C:\\allure\\bin\\allure.bat" (
                     powershell -Command "Invoke-WebRequest -Uri https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.zip -OutFile allure.zip"
-                    powershell -Command "Expand-Archive -Path allure.zip -DestinationPath C:\allure"
-                    setx PATH "%PATH%;C:\allure\bin"
+                    powershell -Command "Expand-Archive -Path allure.zip -DestinationPath C:\\allure"
+                    setx PATH "%PATH%;C:\\allure\\bin"
                 )
                 allure generate output/allure-results --clean -o output/allure-report
                 '''
@@ -90,4 +90,3 @@ pipeline {
         }
     }
 }
-
