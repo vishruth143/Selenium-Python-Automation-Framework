@@ -93,20 +93,35 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
     if rep.when == "call":
+        # Try to get driver from funcargs, fallback to request.getfixturevalue if possible
         driver = item.funcargs.get("driver", None)
-        # Always stop video recording and get the final path
+        if not driver:
+            try:
+                driver = item._request.getfixturevalue("driver")
+                logging.info(f"Driver fixture retrieved via getfixturevalue for test: {item.name}")
+            except Exception as e:
+                logging.warning(f"Could not retrieve driver fixture via getfixturevalue for test: {item.name}: {e}")
         video_path = stop_video_recording() or getattr(item, "_video_path", None)
         logging.info(f"Video recording stopped for test: {item.name}, path: {video_path}")
         if rep.failed:
             if driver:
                 test_name = item.name
                 screenshot_path = get_screenshot_path(test_name)
-                driver.save_screenshot(screenshot_path)
+                logging.info(f"Test failed: {test_name}. Attempting to save screenshot to: {screenshot_path}")
+                try:
+                    success = driver.save_screenshot(screenshot_path)
+                    if success:
+                        logging.info(f"Screenshot successfully captured for failed test: {test_name}, path: {screenshot_path}")
+                    else:
+                        logging.error(f"driver.save_screenshot returned False for test: {test_name}")
+                except Exception as e:
+                    logging.error(f"Exception during screenshot capture for test {test_name}: {e}")
+            else:
+                logging.warning(f"Test failed and driver fixture could not be found for test: {item.name}. Screenshot not captured.")
             # Video is already saved, do nothing
         else:
             # Delete video for passed tests
             if video_path:
-                # Wait for file to exist (in case recording is async or file is locked)
                 deleted = False
                 for i in range(10):
                     if os.path.exists(video_path):
@@ -122,3 +137,28 @@ def pytest_runtest_makereport(item, call):
                         time.sleep(0.5)
                 if not deleted:
                     logging.warning(f"Video file not found or could not be deleted for: {video_path}")
+
+def pytest_bdd_after_scenario(request, feature, scenario):
+    """
+    Capture screenshot for failed pytest-bdd scenarios with robust logging and error handling.
+    """
+    logging.info(f"pytest_bdd_after_scenario called for scenario: {scenario.name}")
+    failed = getattr(scenario, "_pytest_bdd_failed", False)
+    logging.info(f"Scenario failed status: {failed}")
+    if failed:
+        try:
+            driver = request.getfixturevalue("driver")
+            screenshot_path = get_screenshot_path(scenario.name)
+            logging.info(f"Attempting to save screenshot to: {screenshot_path}")
+            if hasattr(driver, "save_screenshot"):
+                success = driver.save_screenshot(screenshot_path)
+                if success:
+                    logging.info(f"Screenshot successfully captured for failed scenario: {scenario.name}, path: {screenshot_path}")
+                else:
+                    logging.error(f"driver.save_screenshot returned False for scenario: {scenario.name}")
+            else:
+                logging.warning(f"Driver does not support save_screenshot for scenario: {scenario.name}")
+        except Exception as e:
+            logging.error(f"Exception during screenshot capture for scenario {scenario.name}: {e}")
+    else:
+        logging.info(f"Scenario passed, no screenshot needed: {scenario.name}")
