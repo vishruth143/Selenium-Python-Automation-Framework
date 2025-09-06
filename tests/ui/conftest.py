@@ -2,7 +2,7 @@
 # pylint: disable=[line-too-long, missing-module-docstring, unnecessary-lambda, unused-argument, unspecified-encoding]
 # pylint: disable=[missing-module-docstring, missing-function-docstring, redefined-outer-name, ungrouped-imports]
 # pylint: disable=[logging-fstring-interpolation, import-outside-toplevel, protected-access, too-many-nested-blocks]
-# pylint: disable=[broad-exception-caught]
+# pylint: disable=[broad-exception-caught, too-many-branches]
 
 import os
 import time
