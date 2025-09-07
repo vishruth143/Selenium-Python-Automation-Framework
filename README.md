@@ -14,7 +14,7 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - 🧪 API testing support with Requests library - Done
 - 📊 HTML and Allure test reports - Done
 - 🎯 Auto-wait, parallel execution and retry mechanisms - Done
-- 🔧 CI/CD integration with Jenkins and GitHub Actions - Done
+- 🔧 CI/CD integration with Jenkins - Planned and GitHub Actions - Done
 - 📥 Docker containerization - Done
 - 📢 Microsoft Teams notifications - Done
 - 🧩 BDD support with Pytest-BDD - Done
@@ -22,8 +22,10 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - 🗂️ Page Object Model (POM) design pattern - Done
 - 🧑‍💻 Custom logging and screenshot capture on failures - Done
 - ⚙️ Environment-driven configuration management - Done
-- 📱 Mobile testing support - Planned
-- 🎥 Video recording of test executions - Done
+- 🎥 Screen capture and Video recording of failed UI tests - Done
+- 📱 Mobile testing support with Appium - Planned
+- 🧪 Performance testing integration with Locust - Planned
+- 🧑‍💻 Data Testing - Planned
 
 ---
 ## ⚡ Quick Setup
@@ -223,8 +225,14 @@ or
 | `--self-contained-html` | Embed CSS/JS into the report (no external files)                       |
 | `--capture=tee-sys`     | Shows print() and log output in both terminal & HTML report            |
 | `--durations=10`        | Shows top 10 slowest tests (for optimization)                          |
+| `--maxfail=1`           | Stop after first failure                                               |
+| `--disable-warnings`    | Disable warning output                                                 |
+| `--log-cli-level=INFO`  | Set log level for console output (e.g., DEBUG, INFO, WARNING, ERROR)   |
+| `-n 4`                  | Run tests in parallel using 4 CPU cores                                |
+| `--reruns 3`            | Rerun failed tests up to 3 times                                       |
 | `tests`                 | Path to your test suite root                                           | 
 
+   
 ---
 ## 🐳 To run on docker container: (PowerShell)
 
@@ -297,4 +305,4 @@ or
 5. Verify the installation by running `ffmpeg -version` in your command prompt.
 ```
 
-# Happy testing! 🎭
+# 🎭 Happy testing! 🎭
