@@ -177,42 +177,12 @@ Selenium-Python-Automation-Framework/
 | `BROWSER`   | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)         | `CHROME`      | `Optional`        |
 | `HEADLESS`  | Run in headless mode (`Y` or `N`)                             | `N`           | `Optional`        |
 
-
 ### 🔹 API Testing
 | Variable       | Description                                                   | Default | Required/Optional |
 |----------------|---------------------------------------------------------------|---------|-------------------|
 | `SERVICE_NAME` | Short name of service under test (AUT)                        | `None`  | `Required`        |
 | `REGION`       | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`    | `Optional`        |
 
----
-## 🖥️ Running Tests from Command Line (PowerShell)
-```bash
-    $env:APP_NAME="PTA"
-    $env:SERVICE_NAME="REQRES"
-    $env:REGION="QA"
-    $env:BROWSER="CHROME"
-    $env:HEADLESS="N"
-    pytest -vvv -m "pta or reqres" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
-```
-```bash
-    $env:SERVICE_NAME="COMMERCE_TOOLS"
-    $env:REGION="qa"    
-    pytest -vvv -m "commerce_tools" -n 4 --reruns 3 --html=output/reports/darden_commerce_tools_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
-```
----
-## 🖥️ To see all the environment variables currently set, you can run:
-```bash
-  Get-ChildItem Env:
-```
-or
-```bash
-  gci env:
-```
----
-## 🖥️ If you want to filter and see only the ones you set (APP_NAME, SERVICE_NAME, etc.), you can do:
-```bash
-    Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME","REGION","BROWSER","HEADLESS") }
-```
 ---
 ### Explanation of Flags
 | Variable                | Description                                                            |
@@ -232,21 +202,49 @@ or
 | `--reruns 3`            | Rerun failed tests up to 3 times                                       |
 | `tests`                 | Path to your test suite root                                           | 
 
-   
+---
+## 🖥️ Running Tests from Command Line (PowerShell)
+```bash
+    $env:APP_NAME="PTA"
+    $env:SERVICE_NAME="REQRES"
+    $env:REGION="QA"
+    $env:BROWSER="CHROME"
+    $env:HEADLESS="N"
+    pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+```bash
+    $env:SERVICE_NAME="COMMERCE_TOOLS"
+    $env:REGION="qa"    
+    pytest -vvv -m "commerce_tools" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+---
+## 🖥️ To see all the environment variables currently set, you can run:
+```bash
+  Get-ChildItem Env:
+```
+or
+```bash
+  gci env:
+```
+---
+## 🖥️ If you want to filter and see only the ones you set (APP_NAME, SERVICE_NAME, etc.), you can do:
+```bash
+    Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME","REGION","BROWSER","HEADLESS") }
+```   
 ---
 ## 🐳 To run on docker container: (PowerShell)
 
     # To build docker image
-    docker build -t selenium-tests .
+    docker build -t selenium-python-automation .
     
     # To run on Chrome browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
     
     # To run on Firefox browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
     
     # To run on Edge browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 
 ---
 ## 🖥️ To generate Allure Results
