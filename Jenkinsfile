@@ -9,7 +9,7 @@ pipeline {
         REGION = 'qa'
         HEADLESS = 'Y'
         DOCKER_IMAGE = 'selenium-python-automation'
-        OUTPUT_DIR = "${env.WORKSPACE}/output"
+        OUTPUT_CONTAINER = 'selenium_test_container'
     }
     stages {
         stage('Checkout') {
@@ -24,8 +24,13 @@ pipeline {
         }
         stage('Run Tests in Docker') {
             steps {
-                bat 'if not exist output mkdir output'
-                bat 'docker run --rm -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=%BROWSER% -e HEADLESS=%HEADLESS% -v %OUTPUT_DIR%:/app/output %DOCKER_IMAGE% pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
+                bat 'docker rm -f %OUTPUT_CONTAINER% 2>nul'
+                bat 'docker run --name %OUTPUT_CONTAINER% --rm -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=${params.BROWSER} -e HEADLESS=%HEADLESS% %DOCKER_IMAGE% pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
+            }
+        }
+        stage('Copy Results from Container') {
+            steps {
+                bat 'docker cp %OUTPUT_CONTAINER%:/app/output %WORKSPACE%'
             }
         }
     }
