@@ -1,58 +1,36 @@
 pipeline {
     agent any
-
-    environment {
-        APP_NAME = 'PTA'
-        SERVICE_NAME = 'REQRES'
-        REGION = 'qa'
-        BROWSER = 'CHROME'
-        HEADLESS = 'Y'
-        PYTHON_VERSION = '3.13.3'
-        IMAGE_NAME = 'selenium-python-automation'
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
-        stage('Build Docker Image') {
+        stage('Set Environment Variables') {
             steps {
-                bat "docker build -t %IMAGE_NAME% ."
+                bat 'set APP_NAME=PTA'
+                bat 'set SERVICE_NAME=REQRES'
+                bat 'set REGION=QA'
+                bat 'set BROWSER=CHROME'
+                bat 'set HEADLESS=N'
             }
         }
-
-        stage('Run Tests in Docker') {
+        stage('Install Python Dependencies') {
             steps {
-                bat "docker run --rm -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=%BROWSER% -e HEADLESS=%HEADLESS% -e PYTHON_VERSION=%PYTHON_VERSION% -e API_BASE_URL=https://reqres.in -v %cd%/output:/app/output %IMAGE_NAME% pytest -vvv -m \"pta or reqres\" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests"
+                bat 'pip install --upgrade pip'
+                bat 'pip install -r requirements.txt'
             }
         }
-
-        stage('Generate Allure Report') {
+        stage('Run Pytest') {
             steps {
-                bat '''
-                if not exist "C:\\allure\\bin\\allure.bat" (
-                    powershell -Command "Invoke-WebRequest -Uri https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.zip -OutFile allure.zip"
-                    powershell -Command "Expand-Archive -Path allure.zip -DestinationPath C:\\allure"
-                )
-                set PATH=%PATH%;C:\\allure\\bin
-                C:\\allure\\bin\\allure.bat generate output/allure-results --clean -o output/allure-report
-                '''
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                archiveArtifacts artifacts: 'output/**', allowEmptyArchive: true
+                bat 'pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
             }
         }
     }
-
     post {
         always {
-            archiveArtifacts artifacts: 'output/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'output/reports/report.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'output/allure-results/**', allowEmptyArchive: true
         }
     }
 }
