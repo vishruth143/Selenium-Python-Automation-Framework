@@ -36,9 +36,9 @@ pipeline {
                 if not exist "C:\\allure\\bin\\allure.bat" (
                     powershell -Command "Invoke-WebRequest -Uri https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.zip -OutFile allure.zip"
                     powershell -Command "Expand-Archive -Path allure.zip -DestinationPath C:\\allure"
-                    setx PATH "%PATH%;C:\\allure\\bin"
                 )
-                allure generate output/allure-results --clean -o output/allure-report
+                set PATH=%PATH%;C:\\allure\\bin
+                C:\\allure\\bin\\allure.bat generate output/allure-results --clean -o output/allure-report
                 '''
             }
         }
