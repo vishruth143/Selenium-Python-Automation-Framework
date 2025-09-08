@@ -11,7 +11,6 @@ pipeline {
         APP_NAME = 'PTA'
         SERVICE_NAME = 'REQRES'
         REGION = 'qa'
-        BROWSER = 'CHROME' // Default browser, overridden by parameter
         HEADLESS = 'Y'
         DOCKER_IMAGE = 'selenium-python-automation' // Docker image name
         OUTPUT_CONTAINER = 'selenium_test_container' // Container name for test run
@@ -33,8 +32,11 @@ pipeline {
             steps {
                 // Remove any previous container with the same name
                 bat 'docker rm -f %OUTPUT_CONTAINER% 2>nul'
+                // Set BROWSER environment variable from Jenkins parameter
+                bat 'set BROWSER=%BROWSER%'
                 // Run tests inside Docker container, passing environment variables
-                bat 'docker run --name %OUTPUT_CONTAINER% -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=${params.BROWSER} -e HEADLESS=%HEADLESS% %DOCKER_IMAGE% pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
+                // Note: Use %BROWSER% to pass the correct value, not ${params.BROWSER}
+                bat 'docker run --name %OUTPUT_CONTAINER% -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=%BROWSER% -e HEADLESS=%HEADLESS% %DOCKER_IMAGE% pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
             }
         }
         stage('Copy Results from Container') {
