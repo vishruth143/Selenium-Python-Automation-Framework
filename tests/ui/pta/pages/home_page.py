@@ -1,7 +1,7 @@
 # pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from framework.pages.base_page import BasePage
 
 class HomePage(BasePage):
@@ -34,23 +34,23 @@ class HomePage(BasePage):
     # ------------------------------------------------------Links-------------------------------------------------------
     @property
     def home_lnk(self):
-        return self.find_element(*self._home_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._home_lnk, ec.element_to_be_clickable)
 
     @property
     def practice_lnk(self):
-        return self.find_element(*self._practice_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._practice_lnk, ec.element_to_be_clickable)
 
     @property
     def courses_lnk(self):
-        return self.find_element(*self._courses_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._courses_lnk, ec.element_to_be_clickable)
 
     @property
     def blog_lnk(self):
-        return self.find_element(*self._blog_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._blog_lnk, ec.element_to_be_clickable)
 
     @property
     def contact_lnk(self):
-        return self.find_element(*self._contact_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._contact_lnk, ec.element_to_be_clickable)
 
 
 

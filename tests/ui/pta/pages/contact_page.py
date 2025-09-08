@@ -1,7 +1,7 @@
 # pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from framework.pages.base_page import BasePage
 
 class ContactPage(BasePage):
@@ -26,24 +26,24 @@ class ContactPage(BasePage):
     # ---------------------------------------------------Input Fields---------------------------------------------------
     @property
     def first_name_input(self):
-        return self.find_element(*self._first_name_input, EC.presence_of_element_located)
+        return self.find_element(*self._first_name_input, ec.presence_of_element_located)
 
     @property
     def last_name_input(self):
-        return self.find_element(*self._last_name_input, EC.presence_of_element_located)
+        return self.find_element(*self._last_name_input, ec.presence_of_element_located)
 
     @property
     def email_input(self):
-        return self.find_element(*self._email_input, EC.presence_of_element_located)
+        return self.find_element(*self._email_input, ec.presence_of_element_located)
 
     @property
     def comment_or_message_input(self):
-        return self.find_element(*self._comment_or_message_input, EC.presence_of_element_located)
+        return self.find_element(*self._comment_or_message_input, ec.presence_of_element_located)
 
     # -----------------------------------------------------Buttons------------------------------------------------------
     @property
     def submit_btn(self):
-        return self.find_element(*self._submit_btn, EC.element_to_be_clickable)
+        return self.find_element(*self._submit_btn, ec.element_to_be_clickable)
 
     # -----------------------------------------------------texts--------------------------------------------------------
 

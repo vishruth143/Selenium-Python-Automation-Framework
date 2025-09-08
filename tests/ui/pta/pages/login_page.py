@@ -1,7 +1,7 @@
 # pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from framework.pages.base_page import BasePage
 
 class LoginPage(BasePage):
@@ -31,30 +31,30 @@ class LoginPage(BasePage):
     # ---------------------------------------------------Input Fields---------------------------------------------------
     @property
     def username_input(self):
-        return self.find_element(*self._username_input, EC.presence_of_element_located)
+        return self.find_element(*self._username_input, ec.presence_of_element_located)
 
     @property
     def password_input(self):
-        return self.find_element(*self._password_input, EC.presence_of_element_located)
+        return self.find_element(*self._password_input, ec.presence_of_element_located)
 
     # -----------------------------------------------------Buttons------------------------------------------------------
     @property
     def submit_btn(self):
-        return self.find_element(*self._submit_btn, EC.element_to_be_clickable)
+        return self.find_element(*self._submit_btn, ec.element_to_be_clickable)
 
     # -----------------------------------------------------texts------------------------------------------------------
     @property
     def logged_in_successfully_txt(self):
-        return self.find_element(*self._logged_in_successfully_txt, EC.visibility_of_element_located)
+        return self.find_element(*self._logged_in_successfully_txt, ec.visibility_of_element_located)
 
     # ------------------------------------------------------Links-------------------------------------------------------
     @property
     def test_login_page_lnk(self):
-        return self.find_element(*self._test_login_page_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._test_login_page_lnk, ec.element_to_be_clickable)
 
     @property
     def test_exceptions_lnk(self):
-        return self.find_element(*self._test_exceptions_lnk, EC.element_to_be_clickable)
+        return self.find_element(*self._test_exceptions_lnk, ec.element_to_be_clickable)
 
 
 

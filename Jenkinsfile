@@ -8,6 +8,7 @@ pipeline {
         BROWSER = 'CHROME'
         HEADLESS = 'Y'
         PYTHON_VERSION = '3.13.3'
+        IMAGE_NAME = 'selenium-python-automation'
     }
 
     stages {
@@ -17,44 +18,27 @@ pipeline {
             }
         }
 
-        stage('Setup Python') {
+        stage('Build Docker Image') {
             steps {
-                bat 'python --version'
+                bat "docker build -t %IMAGE_NAME% ."
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                bat 'python -m pip install --upgrade pip'
-                bat 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Install ffmpeg') {
+        stage('Run Tests in Docker') {
             steps {
                 bat '''
-                if not exist "C:\ffmpeg\bin\ffmpeg.exe" (
-                    powershell -Command "Invoke-WebRequest -Uri https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-full.7z -OutFile ffmpeg.7z"
-                    powershell -Command "Expand-7ZipArchive -Path ffmpeg.7z -DestinationPath C:\ffmpeg"
-                    setx PATH "%PATH%;C:\ffmpeg\bin"
-                )
-                ffmpeg -version
-                '''
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                bat '''
-                pytest -vvv -m "pta or reqres" ^
-                  -n 4 ^
-                  --reruns 3 ^
-                  --html=output/reports/pta_report.html ^
-                  --alluredir=output/allure-results ^
-                  --self-contained-html ^
-                  --capture=tee-sys ^
-                  --durations=10 ^
-                  tests
+                docker run --rm ^
+                  -v %cd%\output:/app/output ^
+                  %IMAGE_NAME% ^
+                  pytest -vvv -m "pta or reqres" ^
+                    -n 4 ^
+                    --reruns 3 ^
+                    --html=output/reports/pta_report.html ^
+                    --alluredir=output/allure-results ^
+                    --self-contained-html ^
+                    --capture=tee-sys ^
+                    --durations=10 ^
+                    tests
                 '''
             }
         }
