@@ -26,20 +26,7 @@ pipeline {
 
         stage('Run Tests in Docker') {
             steps {
-                bat '''
-                docker run --rm ^
-                  -v %cd%\output:/app/output ^
-                  %IMAGE_NAME% ^
-                  pytest -vvv -m "pta or reqres" ^
-                    -n 4 ^
-                    --reruns 3 ^
-                    --html=output/reports/pta_report.html ^
-                    --alluredir=output/allure-results ^
-                    --self-contained-html ^
-                    --capture=tee-sys ^
-                    --durations=10 ^
-                    tests
-                '''
+                bat "docker run --rm -v %cd%/output:/app/output %IMAGE_NAME% pytest -vvv -m \"pta or reqres\" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests"
             }
         }
 
