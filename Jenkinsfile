@@ -26,17 +26,7 @@ pipeline {
 
         stage('Run Tests in Docker') {
             steps {
-                bat "docker run --rm ^
-                  -e APP_NAME=%APP_NAME% ^
-                  -e SERVICE_NAME=%SERVICE_NAME% ^
-                  -e REGION=%REGION% ^
-                  -e BROWSER=%BROWSER% ^
-                  -e HEADLESS=%HEADLESS% ^
-                  -e PYTHON_VERSION=%PYTHON_VERSION% ^
-                  -e API_BASE_URL=https://reqres.in ^
-                  -v %cd%/output:/app/output ^
-                  %IMAGE_NAME% ^
-                  pytest -vvv -m \"pta or reqres\" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests"
+                bat "docker run --rm -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=%BROWSER% -e HEADLESS=%HEADLESS% -e PYTHON_VERSION=%PYTHON_VERSION% -e API_BASE_URL=https://reqres.in -v %cd%/output:/app/output %IMAGE_NAME% pytest -vvv -m \"pta or reqres\" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests"
             }
         }
 
