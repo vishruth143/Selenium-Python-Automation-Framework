@@ -1,3 +1,6 @@
+# pylint: disable = [line-too-long, missing-module-docstring, logging-fstring-interpolation, unused-variable]
+# pylint: disable = [attribute-defined-outside-init, ungrouped-imports]
+
 import pytest
 from framework.utilities.common import Common
 from framework.utilities.custom_logger import Logger
@@ -10,9 +13,9 @@ from framework.utilities.screenshot_utils import get_screenshot_path
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 
 @pytest.mark.kwa
-class TestKWADemo:
+class TestKWAAPP:
     """
-    Test cases for C2L Application
+    Test cases for KWA Demo Mobile Application
     """
 
     #@pytest.mark.skip

@@ -81,6 +81,11 @@ Selenium-Python-Automation-Framework/
 │   │       ├── api_test_data_config.json                   # REQRES API test data
 │   │       └── api_test_env_config.yml                     # REQRES API environment config
 │   │
+│   ├── mobile/
+│   │   └── kwa/
+│   │       ├── mobile_test_data_config.yml                 # Mobile test data
+│   │       └── mobile_test_env_config.yml                  # Mobile environment config
+│   │
 │   ├── ui/
 │   │   └── pta/
 │   │       ├── ui_test_data_config.yml                     # UI test data
@@ -108,19 +113,20 @@ Selenium-Python-Automation-Framework/
 │   │   ├── __init__.py
 │   │   ├── common.py                                       # General helpers
 │   │   ├── custom_logger.py                                # Logger setup
+│   │   ├── emulator_launcher.py                            # Mobile emulator helper
 │   │   ├── loaders.py                                      # Data/config loaders
-│   │   ├── screenshot_utils.py                             # Screenshot helper
-│   │   └── screen_recording_utils.py                       # Screen recording helper
+│   │   ├── screen_recording_utils.py                       # Screen recording helper
+│   │   └── screenshot_utils.py                             # Screenshot helper
 │   │
 │   └── __init__.py
 │
 │   ├── output/                                             # Output directory
 │   │   ├── allure-results/                                 # Allure results directory
 │   │   ├── logs                                            # Log files directory
-│   │       └── test_execution.log                          # Execution log file
+│   │   │   └── test_execution.log                          # Execution log file
 │   │   ├── reports/                                        # Reports directory
-│   │   ├── screenshots/                                    # Screenshots directory
-│
+│   └── └── screenshots/                                    # Screenshots directory
+│          
 ├── tests/                                                  # Test suite
 │   ├── api/
 │   │   └── commerce_tools/
@@ -131,6 +137,18 @@ Selenium-Python-Automation-Framework/
 │   │   │   └── test_reqres.py                              # API test cases for Reqres
 │   │   ├── __init__.py
 │   │   └── conftest.py                                     # API-specific fixtures
+│   │
+│   ├── mobile/
+│   │   └── kwa/
+│   │       ├── pages/
+│   │       │   ├── __init__.py
+│   │       │   └── contact_us_form_page.py                 # Page object for contact us form page
+│   │       │   └── enter_some_value_page.py                # Page object for enter some value page
+│   │       │   └── home_page.py                            # Page object for home page
+│   │       ├── __init__.py
+│   │       └── test_kwa.py                                 # KWA functional tests
+│   │   ├── __init__.py
+│   │   └── conftest.py                                     # MOBILE-specific fixtures
 │   │
 │   ├── snippet/                                            # Code snippets for reuse
 │   │   ├── __init__.py
@@ -161,6 +179,7 @@ Selenium-Python-Automation-Framework/
 ├── .gitignore                                              # Files to ignore in git
 ├── architecture_diagram.png                                # Framework architecture diagram
 ├── Dockerfile                                              # Docker container setup
+├── Jenkinsfile                                             # Jenkins CI pipeline
 ├── pytest.ini                                              # Pytest configuration
 ├── README.md                                               # Framework documentation
 ├──requirements.txt                                         # Python dependencies

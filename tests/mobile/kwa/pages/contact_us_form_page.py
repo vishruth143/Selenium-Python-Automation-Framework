@@ -1,3 +1,6 @@
+# pylint: disable = [line-too-long, missing-function-docstring, missing-module-docstring, property-with-parameters]
+# pylint: disable = [missing-class-docstring, unused-argument, wrong-import-order]
+
 from appium.webdriver.common.appiumby import AppiumBy
 from framework.pages.mobile.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as ec

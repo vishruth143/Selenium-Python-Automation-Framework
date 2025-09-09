@@ -1,3 +1,5 @@
+# pylint: disable = [line-too-long, missing-module-docstring, missing-function-docstring, possibly-used-before-assignment, ungrouped-imports]
+
 import os
 import pytest
 from appium.webdriver.appium_service import AppiumService

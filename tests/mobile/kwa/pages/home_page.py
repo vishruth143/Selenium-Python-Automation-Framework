@@ -1,3 +1,5 @@
+# pylint: disable = [line-too-long, missing-module-docstring, missing-function-docstring, missing-class-docstring, wrong-import-order]
+
 from appium.webdriver.common.appiumby import AppiumBy
 from framework.pages.mobile.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as ec
@@ -52,4 +54,3 @@ class HomePage(BasePage):
 
     def click_contact_us_form_btn(self):
         self.click(*self._contact_us_form_btn)
-
