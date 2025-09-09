@@ -1,0 +1,18 @@
+---
+RUN_ON_CLOUD : false
+CLOUD_PROVIDER : lambdatest
+
+# Lambdatest
+IS_VIRTUAL_DEVICE : true
+LAMBDATEST_USERNAME : <Your user name>
+LAMBDATEST_ACCESS_KEY : <Your access key>
+APP : <Your app id>
+KWA:
+  PLATFORM_NAME : Android
+  DEVICE_NAME : Pixel 8 Pro
+  APPIUM_VERSION : 2.16.2
+  PLATFORM_VERSION : 16
+  UDID : emulator-5554
+  APP_PACKAGE : com.code2lead.kwad
+  APP_ACTIVITY : com.code2lead.kwad.MainActivity
+  APP_PATH : ./framework/app_apk/Android_Demo_App.apk

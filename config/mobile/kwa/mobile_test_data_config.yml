@@ -1,0 +1,9 @@
+---
+test_kwa_enter_some_value:
+  text : Vishva
+
+test_kwa_contact_us_form:
+  Name : Testing
+  Email : test@test.com
+  Address : Testing Address
+  Mobile No : 8888888888

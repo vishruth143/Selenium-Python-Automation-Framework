@@ -24,7 +24,6 @@ def testdata():
         return ConfigParser.load_config("pta_ui_test_data_config")
     return None
 
-
 @pytest.fixture(scope="session")
 def region():
     region = os.environ.get("REGION", "QA").upper()

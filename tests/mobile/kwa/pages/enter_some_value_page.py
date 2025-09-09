@@ -1,23 +1,20 @@
-# pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
-
-from selenium.webdriver.common.by import By
+from appium.webdriver.common.appiumby import AppiumBy
+from framework.pages.mobile.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as ec
-from framework.pages.ui.base_page import BasePage
 
-class ContactPage(BasePage):
+class EnterSomeValuePage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------
     #                                                  Element locators
     # ------------------------------------------------------------------------------------------------------------------
     # ---------------------------------------------------Input Fields---------------------------------------------------
-    _first_name_input = (By.XPATH, "//input[@id='wpforms-161-field_0']")
-    _last_name_input = (By.XPATH, "//input[@id='wpforms-161-field_0-last']")
-    _email_input = (By.XPATH, "//input[@id='wpforms-161-field_1']")
-    _comment_or_message_input = (By.XPATH, "//textarea[@id='wpforms-161-field_2']")
+    _enter_some_value_txt = (AppiumBy.ID, "com.code2lead.kwad:id/Et1")
 
     # -----------------------------------------------------Buttons------------------------------------------------------
-    _submit_btn = (By.XPATH, "//button[@id='wpforms-submit-161']")
+    _submit_btn = (AppiumBy.ID, "com.code2lead.kwad:id/Btn1")
 
     # ------------------------------------------------------Texts-------------------------------------------------------
+    _result_txt = (AppiumBy.ID, "com.code2lead.kwad:id/Tv1")
+
 
 
     # ------------------------------------------------------------------------------------------------------------------
@@ -25,20 +22,8 @@ class ContactPage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------
     # ---------------------------------------------------Input Fields---------------------------------------------------
     @property
-    def first_name_input(self):
-        return self.find_element(*self._first_name_input, ec.presence_of_element_located)
-
-    @property
-    def last_name_input(self):
-        return self.find_element(*self._last_name_input, ec.presence_of_element_located)
-
-    @property
-    def email_input(self):
-        return self.find_element(*self._email_input, ec.presence_of_element_located)
-
-    @property
-    def comment_or_message_input(self):
-        return self.find_element(*self._comment_or_message_input, ec.presence_of_element_located)
+    def enter_some_value_txt(self):
+        return self.find_element(*self._enter_some_value_txt, ec.presence_of_element_located)
 
     # -----------------------------------------------------Buttons------------------------------------------------------
     @property
@@ -46,27 +31,25 @@ class ContactPage(BasePage):
         return self.find_element(*self._submit_btn, ec.element_to_be_clickable)
 
     # -----------------------------------------------------texts--------------------------------------------------------
-
-
+    @property
+    def result_txt(self):
+        return self.find_element(*self._result_txt, ec.visibility_of_element_located)
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Actions
     # ------------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------Is Visible---------------------------------------------------
 
+
     # -----------------------------------------------------Enter/Type---------------------------------------------------
-    def type_first_name_input(self, first_name):
-        self.type_text(*self._first_name_input, text=first_name)
+    def type_enter_some_value_txt(self, text):
+        self.type_text(*self._enter_some_value_txt, text)
 
-    def type_last_name_input(self, last_name):
-        self.type_text(*self._last_name_input, text=last_name)
 
-    def type_email_input(self, email):
-        self.type_text(*self._email_input, text=email)
-
-    def type_comment_or_message_input(self, comment_or_message):
-        self.type_text(*self._comment_or_message_input, text=comment_or_message)
-
-    # -----------------------------------------------------Click--------------------------------------------------------
+    # -------------------------------------------------------Click------------------------------------------------------
     def click_submit_btn(self):
         self.click(*self._submit_btn)
+
+    # ------------------------------------------------------Get text----------------------------------------------------
+    def get_result_txt(self):
+        return self.get_text(*self._result_txt)

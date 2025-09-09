@@ -2,7 +2,7 @@
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
-from framework.pages.base_page import BasePage
+from framework.pages.ui.base_page import BasePage
 
 class HomePage(BasePage):
     # ------------------------------------------------------------------------------------------------------------------

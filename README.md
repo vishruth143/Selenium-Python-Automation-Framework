@@ -1,7 +1,7 @@
 # 🧪 Selenium-Python-Automation-Framework
 
-A scalable and maintainable test automation framework built with Python, leveraging Selenium WebDriver, Pytest, and Pytest-BDD.
-It supports both UI and API test automation, with environment-driven configuration for flexibility.
+A scalable and maintainable test automation framework built with Python, leveraging Selenium WebDriver, Pytest, Pytest-BDD and Appium-Python-Client.
+It supports both UI, API and Mobile test automation, with environment-driven configuration for flexibility.
 The framework is fully integrated with Docker for containerized execution, GitHub Actions for CI/CD pipelines, and Microsoft Teams for real-time execution notifications.
 
 ![img.png](architecture_diagram.png)
@@ -23,7 +23,7 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - 🧑‍💻 Custom logging and screenshot capture on failures - Done
 - ⚙️ Environment-driven configuration management - Done
 - 🎥 Screen capture and Video recording of failed UI tests - Done
-- 📱 Mobile testing support with Appium - Planned
+- 📱 Mobile testing support with Appium - Done
 - 🧪 Performance testing integration with Locust - Planned
 - 🧑‍💻 Data Testing - Planned
 
@@ -203,7 +203,7 @@ Selenium-Python-Automation-Framework/
 | `tests`                 | Path to your test suite root                                           | 
 
 ---
-## 🖥️ Running Tests from Command Line (PowerShell)
+## 🖥️ Running UI Tests from Command Line (PowerShell)
 ```bash
     $env:APP_NAME="PTA"
     $env:SERVICE_NAME="REQRES"
@@ -212,10 +212,17 @@ Selenium-Python-Automation-Framework/
     $env:HEADLESS="N"
     pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
+
+## 🖥️ Running API Tests from Command Line (PowerShell)
 ```bash
     $env:SERVICE_NAME="COMMERCE_TOOLS"
     $env:REGION="qa"    
     pytest -vvv -m "commerce_tools" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+## 🖥️ Running Mobile Tests from Command Line (PowerShell)
+```bash
+    $env:MOBILE_APP_NAME="KWA"       
+    pytest -vvv -m "kwa" --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 ---
 ## 🖥️ To see all the environment variables currently set, you can run:
