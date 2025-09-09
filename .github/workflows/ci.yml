@@ -58,6 +58,7 @@ jobs:
 
     env:
       APP_NAME: PTA
+      MOBILE_APP_NAME: KWA
       SERVICE_NAME: REQRES
       REGION: qa
       BROWSER: CHROME

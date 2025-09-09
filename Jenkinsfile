@@ -9,6 +9,7 @@ pipeline {
     environment {
         // Set environment variables for the test run
         APP_NAME = 'PTA'
+        MOBILE_APP_NAME = 'KWA'
         SERVICE_NAME = 'REQRES'
         REGION = 'qa'
         HEADLESS = 'Y'

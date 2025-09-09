@@ -43,6 +43,7 @@ The framework is fully integrated with Docker for containerized execution, GitHu
    ```bash
    # Example for UI and API test
    $env:APP_NAME="PTA"
+   $env:MOBILE_APP_NAME="KWA"
    $env:SERVICE_NAME="REQRES"
    $env:REGION="QA"
    $env:BROWSER="CHROME"
@@ -225,6 +226,7 @@ Selenium-Python-Automation-Framework/
 ## 🖥️ Running UI Tests from Command Line (PowerShell)
 ```bash
     $env:APP_NAME="PTA"
+    $env:MOBILE_APP_NAME="KWA"
     $env:SERVICE_NAME="REQRES"
     $env:REGION="QA"
     $env:BROWSER="CHROME"
