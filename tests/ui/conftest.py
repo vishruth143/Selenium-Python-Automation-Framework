@@ -20,7 +20,7 @@ from framework.utilities.screen_recording_utils import start_video_recording, st
 
 @pytest.fixture(scope="session")
 def testdata():
-    if os.environ["APP_NAME"].upper() == "PTA":
+    if os.environ.get("APP_NAME", "").upper() == "PTA":
         return ConfigParser.load_config("pta_ui_test_data_config")
     return None
 

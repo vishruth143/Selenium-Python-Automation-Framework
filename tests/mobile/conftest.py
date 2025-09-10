@@ -11,7 +11,7 @@ from framework.listeners.event_listeners import MyEventListener
 from config.config_parser import ConfigParser
 from framework.utilities.emulator_launcher import launch_emulator
 
-if os.environ["MOBILE_APP_NAME"].upper() == "KWA":
+if os.environ.get("MOBILE_APP_NAME", "").upper() == "KWA":
     mobile_test_env_config = ConfigParser.load_config("kwa_mobile_test_env_config")
     platform_name = mobile_test_env_config['KWA'].get("PLATFORM_NAME", "Android")
     automation_name = mobile_test_env_config['KWA'].get("AUTOMATION_NAME", "uiautomator2")
@@ -23,7 +23,7 @@ if os.environ["MOBILE_APP_NAME"].upper() == "KWA":
 
 @pytest.fixture(scope="session")
 def testdata():
-    if os.environ["MOBILE_APP_NAME"].upper() == "KWA":
+    if os.environ.get("MOBILE_APP_NAME", "").upper() == "KWA":
         return ConfigParser.load_config("kwa_mobile_test_data_config")
     return None
 
