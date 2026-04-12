@@ -16,7 +16,7 @@ log = Logger(file_id=__name__.rsplit(".", 1)[1])
 ui_test_env_config = ConfigParser.load_config("pta_ui_test_env_config")
 
 @pytest.mark.pta
-class TestPTA1:
+class TestPTACleanVersion:
 
     """
     Test cases for PTA Application

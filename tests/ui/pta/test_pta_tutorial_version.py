@@ -153,7 +153,7 @@ ui_test_env_config = ConfigParser.load_config("pta_ui_test_env_config")
 # automatically inherits the "pta" tag — you don't need to repeat
 # it on each individual test.
 @pytest.mark.pta
-class TestPTA:
+class TestPTATutorialVersion:
 
     """
     Test Suite for the PTA (Practice Test Automation) web application.
