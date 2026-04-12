@@ -331,4 +331,76 @@ or
 5. Verify the installation by running `ffmpeg -version` in your command prompt.
 ```
 
+---
+## 📝 Conventional Commit Message Reference
+
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/) specification for all commit messages.
+
+### ✅ Format
+```
+<type>(<optional scope>): <short summary>
+
+<optional body — explains WHAT and WHY>
+
+<optional footer — e.g. BREAKING CHANGE, closes #issue>
+```
+
+### 🏷️ Commit Type Prefixes
+
+| Prefix | When to use | Example |
+|--------|-------------|---------|
+| `feat` | A new feature is added | `feat(login): add remember-me checkbox` |
+| `fix` | A bug fix | `fix(logger): release file handlers before output cleanup` |
+| `chore` | Routine tasks, dependency updates, tooling — no production logic change | `chore(deps): bump selenium 4.41.0 → 4.43.0` |
+| `docs` | Documentation changes only | `docs(readme): add conventional commits reference` |
+| `style` | Code formatting, whitespace, missing semicolons — no logic change | `style: reformat imports in conftest.py` |
+| `refactor` | Code restructured without fixing a bug or adding a feature | `refactor(common): extract login steps into helper method` |
+| `test` | Adding or updating tests | `test(pta): add test_pta1.py for login flow` |
+| `perf` | Performance improvement | `perf(conftest): load config once at session scope` |
+| `ci` | Changes to CI/CD pipeline files (GitHub Actions, Jenkinsfile, Dockerfile) | `ci: add headless flag to GitHub Actions workflow` |
+| `build` | Changes that affect the build system or external dependencies | `build: upgrade to Python 3.13` |
+| `revert` | Reverts a previous commit | `revert: revert "feat(login): add remember-me checkbox"` |
+
+### 🔍 Scope (optional)
+The scope is a short noun describing the section of the codebase affected.  
+Place it in parentheses after the type: `fix(conftest):`, `feat(login):`, `chore(deps):`
+
+Common scopes used in this project:
+
+| Scope | Refers to |
+|-------|-----------|
+| `deps` | `requirements.txt` dependency changes |
+| `conftest` | `tests/conftest.py` or any `conftest.py` |
+| `logger` | `framework/utilities/custom_logger.py` |
+| `common` | `framework/utilities/common.py` |
+| `config` | `config/` directory |
+| `pta` | PTA UI test suite |
+| `reqres` | Reqres API test suite |
+| `kwa` | KWA mobile test suite |
+| `ci` | `.github/workflows/`, `Jenkinsfile`, `Dockerfile` |
+| `readme` | `README.md` |
+
+### ⚠️ Breaking Changes
+If a commit introduces a breaking change, add `BREAKING CHANGE:` in the footer or append `!` after the type:
+```
+feat(config)!: rename region key from 'qa' to 'QA' in env config
+
+BREAKING CHANGE: all config YAML files must now use uppercase region keys.
+```
+
+### 💡 Quick Examples Used in This Project
+
+```
+feat(pta): add test_pta_clean_version.py with clean login test without tutorial comments
+
+fix(conftest): release log handlers before rmtree to fix Windows file lock
+
+chore(deps): bump pytest 8.4.2 → 9.0.3, selenium 4.41.0 → 4.43.0, faker 40.11.1 → 40.13.0, requests 2.33.0 → 2.33.1
+
+docs(readme): add conventional commits reference section
+
+test(pta): add detailed tutorial comments to test_pta.py for onboarding
+```
+
+---
 # 🎭 Happy testing! 🎭
