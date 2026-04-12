@@ -1,0 +1,81 @@
+# pylint: disable=[duplicate-code, line-too-long, attribute-defined-outside-init, missing-module-docstring]
+# pylint: disable=[no-else-continue, invalid-name, logging-fstring-interpolation, import-error, too-few-public-methods]
+# pylint: disable=[too-many-statements, too-many-branches, unused-variable, too-many-locals, unsubscriptable-object]
+# pylint: disable=[ungrouped-imports]
+# pylint: disable=C0302
+
+import pytest
+
+from config.config_parser import ConfigParser
+from framework.utilities.common import Common
+from framework.utilities.custom_logger import Logger
+from tests.ui.pta.pages.home_page import HomePage
+from tests.ui.pta.pages.login_page import LoginPage
+
+log = Logger(file_id=__name__.rsplit(".", 1)[1])
+ui_test_env_config = ConfigParser.load_config("pta_ui_test_env_config")
+
+@pytest.mark.pta
+class TestPTA1:
+
+    """
+    Test cases for PTA Application
+    """
+
+    # @pytest.mark.skip
+    def test_pta_login(self, driver, request, testdata, region):
+        """
+        Test #01 : Verify PTA Application Login.
+        Steps:
+        01) Navigate to PTA application 'Home' page.
+        02) Click on 'PRACTICE' link.
+        03) Click on 'Test Login Page' link.
+        04) Login to PTA application with sample credentials.
+        05) Verify 'Logged In Successfully' text is visible.
+        06) Logout of PTA application.
+        """
+        test_name = request.node.name.rsplit("[", 1)[0]
+        self.driver = driver
+        env_config = ui_test_env_config.get(region.upper(), {})
+
+        common = Common(self.driver, testdata)
+
+        self.homepage = HomePage(self.driver)
+        self.loginpage = LoginPage(self.driver)
+
+        try:
+            log.info(50 * '*')
+            log.info("Test #01 : Verify login to PTA application.")
+            log.info(50 * '*')
+
+            log.info("STEP 01: Navigate to PTA application 'Home' page.")
+            driver.get(env_config["url"])
+
+            log.info("STEP 02: Click on 'PRACTICE' link.")
+            self.homepage.click_practice_lnk()
+
+            log.info("STEP 03: Click on 'Test Login Page' link.")
+            self.loginpage.click_test_login_page_lnk()
+
+            log.info("STEP 04: Login to PTA application with sample credentials.")
+            log.info("Login to PTA application - Started.")
+            common.pta_login(region)
+
+            log.info("STEP 05: Verify 'Logged In Successfully' text is visible.")
+            if self.loginpage.logged_in_successfully_txt_visible():
+                log.info("'Logged In Successfully' text is visible.")
+                log.info("Login to PTA application - Completed Successfully.")
+            else:
+                log.info("'Logged In Successfully' text is not visible.")
+                log.info("Test #01 : Verify PTA Application Login. - Failed")
+
+            log.info("STEP 06: Logout of PTA application.")
+            log.info("Logout from PTA application - Started.")
+            common.pta_logout()
+            log.info("Logout from PTA application - Completed Successfully.")
+
+        except Exception as e:
+            log.error(f"Error: {e}")
+            log.info("Test #01 : Verify PTA Application Login. - Failed")
+            raise
+

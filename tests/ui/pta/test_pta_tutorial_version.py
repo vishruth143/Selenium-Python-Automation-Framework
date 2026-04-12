@@ -1,6 +1,6 @@
 # =============================================================================================================================
-# FILE: test_pta.py
-# LOCATION: tests/ui/pta/test_pta.py
+# FILE: test_pta_tutorial_version.py
+# LOCATION: tests/ui/pta/test_pta_tutorial_version.py
 #
 # PURPOSE:
 #   This file contains automated UI test cases for the PTA (Practice Test Automation) web application.
@@ -14,7 +14,7 @@
 #
 # HOW TO RUN:
 #   From the project root directory, execute:
-#       pytest tests/ui/pta/test_pta.py -m pta
+#       pytest tests/ui/pta/test_pta_tutorial_version.py -m pta
 #   Environment variables you can set before running:
 #       REGION   - Target environment (e.g. QA, STAGING, PROD). Defaults to QA.
 #       BROWSER  - Browser to use (CHROME, FIREFOX, EDGE). Defaults to CHROME.
@@ -22,7 +22,7 @@
 #
 # FRAMEWORK ARCHITECTURE (high-level):
 #   ┌──────────────────────────────────────────────────────────┐
-#   │  test_pta.py  ←─ You are here                           │
+#   │  test_pta_tutorial_version.py  ←─ You are here                           │
 #   │      │                                                    │
 #   │      ├── Page Objects  (tests/ui/pta/pages/)             │
 #   │      │       HomePage    – actions on the home page       │
