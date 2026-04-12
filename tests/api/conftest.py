@@ -9,6 +9,8 @@ from framework.interfaces.api_client import APIClient
 @pytest.fixture(scope="session")
 def api_client():
     service_name = os.environ.get("SERVICE_NAME", "").upper()
+    if not service_name:
+        raise ValueError("SERVICE_NAME environment variable must be set and non-blank.")
 
     # Set default region to 'QA' if REGION env variable is not set
     region = os.environ.get("REGION", "QA").upper()
@@ -41,5 +43,7 @@ def api_client():
         # 🔑 Step 2: Update session headers with Bearer token
         client.session.headers.update({"Authorization": f"Bearer {token}"})
         return client
+    else:
+        raise ValueError(f"Unsupported SERVICE_NAME: '{service_name}'.")
 
     return APIClient(base_url=base_url, headers=headers)

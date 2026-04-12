@@ -4,6 +4,8 @@
 # pylint: disable=[f-string-without-interpolation, broad-exception-caught]
 # pylint: disable=C0302
 
+import os
+import json
 import pytest
 
 from config.config_parser import ConfigParser
@@ -12,12 +14,12 @@ from framework.utilities.custom_logger import Logger
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 darden_commerce_tools_api_test_data = ConfigParser.load_config('commerce_tools_api_test_data_config')
 
-@pytest.mark.darden_commerce_tools
-class TestDardenCommercetools:
+@pytest.mark.commerce_tools
+class TestCommercetools:
     """
-    Test cases for Darden Commercetools API
+    Test cases for Commercetools API
     """
-    def test_query_products(self, api_client):
+    def test_query_products(self, api_client, request):
         """
         Test #01 : Verify GET /{project-key}/products
         Steps:
@@ -25,6 +27,7 @@ class TestDardenCommercetools:
         02) Verify status code is 200.
         03) Validate response structure (must contain 'results').
         """
+        test_name = request.node.name.rsplit("[", 1)[0]
         endpoint = f"/darden/products"
 
         try:
@@ -58,12 +61,19 @@ class TestDardenCommercetools:
                 assert "masterData" in product, "Product missing 'masterData'"
                 log.info("First product validated successfully.")
 
+            # Save response to output/response/test_get_product_by_id.json
+            output_dir = "output/response"
+            os.makedirs(output_dir, exist_ok=True)
+            output_path = os.path.join(output_dir, test_name+'.json')
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(json_data, f, indent=2)
+
             log.info("Test #01 : Verify GET /{project-key}/products - Completed Successfully.")
         except Exception as e:
             log.error(f"Exception occurred: {e}")
             log.info("Test #01 : Verify GET /{project-key}/products - Failed")
 
-    def test_get_product_by_id(self, api_client):
+    def test_get_product_by_id(self, api_client, request):
         """
         Test #01 : Verify GET /{project-key}/products/{product-id}
         Steps:
@@ -71,6 +81,7 @@ class TestDardenCommercetools:
         02) Verify status code is 200.
         03) Validate response structure (must contain 'results').
         """
+        test_name = request.node.name.rsplit("[", 1)[0]
         product_id = darden_commerce_tools_api_test_data.get("get_product_by_id").get("product_id")
         endpoint = f"/darden/products/"+ f"{product_id}"
 
@@ -91,6 +102,13 @@ class TestDardenCommercetools:
             log.info("STEP 03: Validating response body structure and content.")
             json_data = response.json()
             assert "masterData" in json_data, "Missing 'masterData' key in the response"
+
+            # Save response to output/response/test_get_product_by_id.json
+            output_dir = "output/response"
+            os.makedirs(output_dir, exist_ok=True)
+            output_path = os.path.join(output_dir, test_name+'.json')
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(json_data, f, indent=2)
 
             log.info("Test #01 : Verify GET /{project-key}/products/{product-id} - Completed Successfully.")
         except Exception as e:
