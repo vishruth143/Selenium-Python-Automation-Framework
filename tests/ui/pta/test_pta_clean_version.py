@@ -78,4 +78,3 @@ class TestPTACleanVersion:
             log.error(f"Error: {e}")
             log.info("Test #01 : Verify PTA Application Login. - Failed")
             raise
-

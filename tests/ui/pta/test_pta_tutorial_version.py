@@ -114,7 +114,7 @@ from tests.ui.pta.pages.login_page import LoginPage
 #
 # `__name__` is the fully-qualified module name (e.g.
 # "tests.ui.pta.test_pta").  `rsplit(".", 1)[1]` extracts just
-# the last part ("test_pta") which is used as the logger's name /
+# the last part ("test_pta_tutorial_version") which is used as the logger's name /
 # file_id so log messages are easy to trace back to this file.
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 
