@@ -1,0 +1,10 @@
+---
+DEV:
+  url: https://the-internet.herokuapp.com
+QA:
+  url: https://the-internet.herokuapp.com
+STAGE:
+  url: https://the-internet.herokuapp.com
+PROD:
+  url: https://the-internet.herokuapp.com
+
