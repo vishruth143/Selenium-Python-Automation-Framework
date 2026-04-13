@@ -170,7 +170,8 @@ Selenium-Python-Automation-Framework/
 │   │       │   ├── __init__.py
 │   │       │   └── test_pta_app.py                         #  Step definitions for PTA
 │   │       ├── __init__.py
-│   │       └── test_pta.py                                 # PTA functional tests
+│   │       ├── test_pta_clean_version.py                   # PTA functional tests with minimal comments for experienced testers
+│   │       └── test_pta_tutorial_version.py                # PTA functional tests with tutorial like comments
 │   │   ├── __init__.py
 │   │   └── conftest.py                                     # UI-specific fixtures
 │   │

@@ -66,3 +66,17 @@ class BasePage:
             )
         except TimeoutException as e:
             raise Exception(f"Element not clickable: ({by}, {locator}) | Exception: {str(e)}")
+
+    def get_current_url(self):
+        return self.driver.current_url
+
+    def get_page_title(self):
+        return self.driver.title
+
+    def is_url_contains(self, partial_url):
+        try:
+            return WebDriverWait(self.driver, self.timeout).until(
+                EC.url_contains(partial_url)
+            )
+        except TimeoutException:
+            return False

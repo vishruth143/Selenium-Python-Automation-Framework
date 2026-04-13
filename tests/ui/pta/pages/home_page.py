@@ -58,6 +58,20 @@ class HomePage(BasePage):
     #                                                      Actions
     # ------------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------Is Visible------------------------------------------------------
+    def is_on_home_page(self):
+        return self.is_url_contains("/") and "practicetestautomation.com" in self.get_current_url()
+
+    def is_on_practice_page(self):
+        return self.is_url_contains("/practice/")
+
+    def is_on_courses_page(self):
+        return self.is_url_contains("/courses/")
+
+    def is_on_blog_page(self):
+        return self.is_url_contains("/blog/")
+
+    def is_on_contact_page(self):
+        return self.is_url_contains("/contact/")
 
     # -----------------------------------------------------Enter/Type------------------------------------------------------
 
