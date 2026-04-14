@@ -19,6 +19,10 @@ class LandingPage(BasePage):
     # ------------------------------------------------------Links-------------------------------------------------------
     # All example links listed on the landing page
     _all_example_lnks = (By.XPATH, "//ul/li/a")
+    _ab_testing_lnk = (By.XPATH, "//a[normalize-space()='A/B Testing']")
+    _add_remove_elements_lnk = (By.XPATH, "//a[normalize-space()='Add/Remove Elements']")
+    _basic_auth_lnk = (By.XPATH, "//a[normalize-space()='Basic Auth']")
+    _broken_images_lnk = (By.XPATH, "//a[normalize-space()='Broken Images']")
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Elements
@@ -32,6 +36,22 @@ class LandingPage(BasePage):
     @property
     def all_example_lnks(self):
         return self.find_elements(*self._all_example_lnks)
+
+    @property
+    def ab_testing_lnk(self):
+        return self.find_element(*self._ab_testing_lnk, ec.element_to_be_clickable)
+
+    @property
+    def add_remove_elements_lnk(self):
+        return self.find_element(*self._add_remove_elements_lnk, ec.element_to_be_clickable)
+
+    @property
+    def basic_auth_lnk(self):
+        return self.find_element(*self._basic_auth_lnk, ec.element_to_be_clickable)
+
+    @property
+    def broken_images_lnk(self):
+        return self.find_element(*self._broken_images_lnk, ec.element_to_be_clickable)
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Actions
@@ -55,4 +75,17 @@ class LandingPage(BasePage):
             if href:
                 links.append({"text": text, "href": href})
         return links
+
+    # -----------------------------------------------------Click-------------------------------------------------------
+    def click_ab_testing_lnk(self):
+        self.click(*self._ab_testing_lnk)
+
+    def click_add_remove_elements_lnk(self):
+        self.click(*self._add_remove_elements_lnk)
+
+    def click_basic_auth_lnk(self):
+        self.click(*self._basic_auth_lnk)
+
+    def click_broken_images_lnk(self):
+        self.click(*self._broken_images_lnk)
 

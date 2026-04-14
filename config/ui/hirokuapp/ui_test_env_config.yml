@@ -1,10 +1,17 @@
 ---
 DEV:
   url: https://the-internet.herokuapp.com
+  basic_auth_username: admin
+  basic_auth_password: admin
 QA:
   url: https://the-internet.herokuapp.com
+  basic_auth_username: admin
+  basic_auth_password: admin
 STAGE:
   url: https://the-internet.herokuapp.com
+  basic_auth_username: admin
+  basic_auth_password: admin
 PROD:
   url: https://the-internet.herokuapp.com
-
+  basic_auth_username: admin
+  basic_auth_password: admin

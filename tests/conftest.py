@@ -62,3 +62,11 @@ def pytest_sessionstart(session):
         f.write(f"REGION={os.getenv('REGION', 'QA')}")
         f.write(f"\nBROWSER={os.getenv('BROWSER', 'CHROME')}")
         f.write(f"\nHEADLESS={os.getenv('HEADLESS', 'N')}")
+
+    # Copy categories.json into allure-results so the Allure "Categories" tab
+    # groups failures into meaningful buckets (Product Defects, Test Defects, etc.)
+    categories_src = os.path.join(os.getcwd(), 'config', 'categories.json')
+    categories_dst = os.path.join(output_dir, 'allure-results', 'categories.json')
+    if os.path.exists(categories_src):
+        shutil.copy2(categories_src, categories_dst)
+        print(f"Copied categories.json to: {categories_dst}")

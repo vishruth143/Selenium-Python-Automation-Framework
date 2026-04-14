@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Product Defects",
+    "description": "Test failed due to an assertion error — likely a real application bug.",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "Test Defects",
+    "description": "Test broke with an unexpected exception — likely a test code issue.",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "Flaky Tests",
+    "description": "Tests that are known to be unstable and may pass on retry.",
+    "matchedStatuses": ["failed", "broken"],
+    "flaky": true
+  },
+  {
+    "name": "Infrastructure / Timeout Issues",
+    "description": "Failures caused by timeouts, WebDriver crashes, or network issues.",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*(TimeoutException|WebDriverException|ConnectionError|RemoteDisconnected).*"
+  },
+  {
+    "name": "Element Not Found",
+    "description": "Failures due to missing or stale elements on the page.",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*(NoSuchElementException|StaleElementReferenceException|ElementNotInteractableException).*"
+  }
+]
+

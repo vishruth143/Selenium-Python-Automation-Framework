@@ -88,9 +88,13 @@ Selenium-Python-Automation-Framework/
 │   │       └── mobile_test_env_config.yml                  # Mobile environment config
 │   │
 │   ├── ui/
+│   │   ├── hirokuapp/
+│   │   │   ├── ui_test_data_config.yml                     # Herokuapp UI test data
+│   │   │   └── ui_test_env_config.yml                      # Herokuapp UI environment config
+│   │   │
 │   │   └── pta/
-│   │       ├── ui_test_data_config.yml                     # UI test data
-│   │       ├── ui_test_env_config.yml                      # UI environment config
+│   │       ├── ui_test_data_config.yml                     # PTA UI test data
+│   │       ├── ui_test_env_config.yml                      # PTA UI environment config
 │   │       ├── ui_test_excel_data_config.xlsx              # Excel input data
 │   │       └── ui_test_excel_data_config_output.xlsx       # Excel output
 │   │
@@ -158,6 +162,17 @@ Selenium-Python-Automation-Framework/
 │   │   └── test_retry_mechanism.py                         # Retry mechanism snippet
 │   │
 │   ├── ui/
+│   │   ├── hirokuapp/
+│   │   │   ├── pages/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── landing_page.py                         # Page object for the Herokuapp landing page
+│   │   │   │   ├── ab_test_page.py                         # Page object for the A/B Testing page
+│   │   │   │   ├── add_remove_elements_page.py             # Page object for the Add/Remove Elements page
+│   │   │   │   ├── basic_auth_page.py                      # Page object for the Basic Auth page
+│   │   │   │   └── broken_images_page.py                   # Page object for the Broken Images page
+│   │   │   ├── __init__.py
+│   │   │   └── test_hirokuapp.py                           # Herokuapp functional tests (broken links, A/B test, add/remove elements, basic auth, broken images)
+│   │   │
 │   │   └── pta/
 │   │       ├── features/
 │   │       │   ├── pta_app.feature                         # Gherkin feature file for PTA
@@ -168,7 +183,7 @@ Selenium-Python-Automation-Framework/
 │   │       │   └── login_page.py                           # Page object for login page
 │   │       ├── steps/
 │   │       │   ├── __init__.py
-│   │       │   └── test_pta_app.py                         #  Step definitions for PTA
+│   │       │   └── test_pta_app.py                         # Step definitions for PTA
 │   │       ├── __init__.py
 │   │       ├── test_pta_clean_version.py                   # PTA functional tests with minimal comments for experienced testers
 │   │       └── test_pta_tutorial_version.py                # PTA functional tests with tutorial like comments
@@ -193,7 +208,7 @@ Selenium-Python-Automation-Framework/
 ### 🔹 UI Testing
 | Variable    | Description                                                   | Default Value | Required/Optional |
 |-------------|---------------------------------------------------------------|---------------|-------------------|
-| `APP_NAME`  | Short name of application under test (AUT)                    | `None`        | `Required`        | 
+| `APP_NAME`  | Short name of application under test (AUT) (`PTA`, `HIROKUAPP`) | `None`      | `Required`        | 
 | `REGION`    | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`          | `Optional`        | 
 | `BROWSER`   | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)         | `CHROME`      | `Optional`        |
 | `HEADLESS`  | Run in headless mode (`Y` or `N`)                             | `N`           | `Optional`        |
@@ -227,12 +242,19 @@ Selenium-Python-Automation-Framework/
 ## 🖥️ Running UI Tests from Command Line (PowerShell)
 ```bash
     $env:APP_NAME="PTA"
-    $env:MOBILE_APP_NAME="KWA"
-    $env:SERVICE_NAME="REQRES"
     $env:REGION="QA"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
     pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+
+## 🖥️ Running Herokuapp Tests from Command Line (PowerShell)
+```bash
+    $env:APP_NAME="HIROKUAPP"
+    $env:REGION="QA"
+    $env:BROWSER="CHROME"
+    $env:HEADLESS="N"
+    pytest -vvv -m "hirokuapp" --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/hirokuapp_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 
 ## 🖥️ Running API Tests from Command Line (PowerShell)
@@ -258,7 +280,7 @@ or
 ---
 ## 🖥️ If you want to filter and see only the ones you set (APP_NAME, SERVICE_NAME, etc.), you can do:
 ```bash
-    Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME","REGION","BROWSER","HEADLESS") }
+    Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME", "MOBILE_APP_NAME", "REGION","BROWSER","HEADLESS") }
 ```   
 ---
 ## 🐳 To run on docker container: (PowerShell)
@@ -376,6 +398,7 @@ Common scopes used in this project:
 | `common` | `framework/utilities/common.py` |
 | `config` | `config/` directory |
 | `pta` | PTA UI test suite |
+| `hirokuapp` | The Internet Herokuapp UI test suite |
 | `reqres` | Reqres API test suite |
 | `kwa` | KWA mobile test suite |
 | `ci` | `.github/workflows/`, `Jenkinsfile`, `Dockerfile` |
