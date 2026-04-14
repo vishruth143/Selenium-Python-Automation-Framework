@@ -6,6 +6,8 @@ import os
 import shutil
 import stat
 import logging
+import json
+import platform
 
 def _on_rm_error(func, path, exc_info):
     # Try to remove read-only or locked files
@@ -70,3 +72,51 @@ def pytest_sessionstart(session):
     if os.path.exists(categories_src):
         shutil.copy2(categories_src, categories_dst)
         print(f"Copied categories.json to: {categories_dst}")
+
+    # Generate executor.json so the Allure "Executors" widget shows
+    # who/what ran the tests (CI server or local machine).
+    executor_data = _build_executor_info()
+    executor_path = os.path.join(output_dir, 'allure-results', 'executor.json')
+    with open(executor_path, 'w') as f:
+        json.dump(executor_data, f, indent=2)
+    print(f"Generated executor.json: {executor_data.get('name')}")
+
+
+def _build_executor_info():
+    """
+    Return an executor dict for Allure.
+    Detects GitHub Actions, Jenkins, or falls back to local machine info.
+    """
+    # --- GitHub Actions ---
+    if os.getenv('GITHUB_ACTIONS') == 'true':
+        server_url = os.getenv('GITHUB_SERVER_URL', 'https://github.com')
+        repo = os.getenv('GITHUB_REPOSITORY', '')
+        run_id = os.getenv('GITHUB_RUN_ID', '')
+        run_number = os.getenv('GITHUB_RUN_NUMBER', '0')
+        build_url = f"{server_url}/{repo}/actions/runs/{run_id}"
+        return {
+            "name": "GitHub Actions",
+            "type": "github",
+            "buildName": f"Run #{run_number}",
+            "buildUrl": build_url,
+            "buildOrder": int(run_number),
+            "reportUrl": build_url,
+        }
+
+    # --- Jenkins ---
+    if os.getenv('JENKINS_URL'):
+        return {
+            "name": "Jenkins",
+            "type": "jenkins",
+            "buildName": os.getenv('BUILD_DISPLAY_NAME', os.getenv('BUILD_NUMBER', 'N/A')),
+            "buildUrl": os.getenv('BUILD_URL', ''),
+            "buildOrder": int(os.getenv('BUILD_NUMBER', '0')),
+            "reportUrl": os.getenv('BUILD_URL', ''),
+        }
+
+    # --- Local machine ---
+    return {
+        "name": f"Local ({platform.node()})",
+        "type": "local",
+        "buildName": f"{platform.system()} {platform.release()}",
+    }
