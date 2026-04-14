@@ -270,17 +270,36 @@ Selenium-Python-Automation-Framework/
 ```
 ---
 ## 🖥️ To see all the environment variables currently set, you can run:
-```bash
-  Get-ChildItem Env:
+
+**PowerShell:**
+```powershell
+Get-ChildItem Env:
+# or shorthand
+gci env:
 ```
-or
+
+**Bash (Git Bash / Linux / macOS):**
 ```bash
-  gci env:
+env
+# or
+printenv
+```
+
+**CMD (Command Prompt):**
+```cmd
+set
 ```
 ---
 ## 🖥️ If you want to filter and see only the ones you set (APP_NAME, SERVICE_NAME, etc.), you can do:
+
+**PowerShell:**
+```powershell
+Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME", "MOBILE_APP_NAME", "REGION","BROWSER","HEADLESS") }
+```
+
+**Bash (Git Bash / Linux / macOS):**
 ```bash
-    Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME", "MOBILE_APP_NAME", "REGION","BROWSER","HEADLESS") }
+env | grep -E "^(APP_NAME|SERVICE_NAME|MOBILE_APP_NAME|REGION|BROWSER|HEADLESS)="
 ```   
 ---
 ## 🐳 To run on docker container: (PowerShell)
