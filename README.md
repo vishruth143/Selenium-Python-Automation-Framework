@@ -446,4 +446,118 @@ test(pta): add detailed tutorial comments to test_pta.py for onboarding
 ```
 
 ---
+## 🤖 MCP Servers Configuration
+
+This project uses [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) servers to extend GitHub Copilot with additional tools (browser automation, file system access, REST API testing, database queries, Excel, and Word document manipulation).
+
+The configuration file is located at:
+```
+%LOCALAPPDATA%\github-copilot\intellij\mcp.json
+```
+
+### `mcp.json`
+```json
+{
+  "servers": {
+    "github": {
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "selenium": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@angiejones/mcp-selenium"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\<your-username>\\files_claude"
+      ]
+    },
+    "excel": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "--yes",
+        "@negokaz/excel-mcp-server"
+      ],
+      "env": {
+        "EXCEL_MCP_PAGING_CELLS_LIMIT": "4000"
+      }
+    },
+    "rest-api": {
+      "command": "node",
+      "args": [
+        "C:\\Users\\<your-username>\\AppData\\Roaming\\npm\\node_modules\\dkmaker-mcp-rest-api\\build\\index.js"
+      ],
+      "env": {
+        "REST_BASE_URL": "https://rahulshettyacademy.com/",
+        "HEADER_Accept": "application/json"
+      }
+    },
+    "mysql": {
+      "command": "C:\\Python\\3.13.7\\Scripts\\uv.exe",
+      "args": [
+        "--directory",
+        "C:\\Python\\3.13.7\\Lib\\site-packages",
+        "run",
+        "mysql_mcp_server"
+      ],
+      "env": {
+        "MYSQL_HOST": "localhost",
+        "MYSQL_PORT": "3306",
+        "MYSQL_USER": "root",
+        "MYSQL_PASSWORD": "root",
+        "MYSQL_DATABASE": "rahulshettyacademy"
+      }
+    },
+    "word-document-server": {
+      "command": "uvx",
+      "args": ["--from", "office-word-mcp-server", "word_mcp_server"]
+    }
+  }
+}
+```
+
+### MCP Server Reference
+
+| Server | Package | Purpose |
+|--------|---------|---------|
+| `github` | GitHub Copilot MCP (remote) | GitHub repo, PR, issue, and search management |
+| `playwright` | `@playwright/mcp@latest` | Browser automation — navigate, click, screenshot, snapshot |
+| `selenium` | `@angiejones/mcp-selenium` | Selenium WebDriver interactions for browser testing |
+| `filesystem` | `@modelcontextprotocol/server-filesystem` | Read/write files within allowed local directories |
+| `excel` | `@negokaz/excel-mcp-server` | Read, write, and format Excel workbooks |
+| `rest-api` | `dkmaker-mcp-rest-api` | Test REST API endpoints (base URL: `https://rahulshettyacademy.com/`) |
+| `mysql` | `mysql_mcp_server` (via `uv`) | Execute SQL queries against a local MySQL database |
+| `word-document-server` | `office-word-mcp-server` (via `uvx`) | Create and manipulate Word `.docx` documents |
+
+### Prerequisites
+
+```bash
+# Node.js (for npx-based servers)
+node --version   # v18+ recommended
+
+# Python uv (for mysql_mcp_server and word-document-server)
+pip install uv
+# or
+winget install astral-sh.uv
+
+# Install the REST API MCP server globally
+npm install -g dkmaker-mcp-rest-api
+```
+
+> **Note:** Replace `<your-username>` in the paths above with your actual Windows username before using the config.
+
+---
 # 🎭 Happy testing! 🎭
