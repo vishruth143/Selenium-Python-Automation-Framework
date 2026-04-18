@@ -1,9 +1,0 @@
----
-DEV:
-  base_url: https://reqres.in
-QA:
-  base_url: https://reqres.in
-STAGE:
-  base_url: https://reqres.in
-PROD:
-  base_url: https://reqres.in

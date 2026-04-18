@@ -1,0 +1,10 @@
+---
+DEV:
+  base_url: https://jsonplaceholder.typicode.com
+QA:
+  base_url: https://jsonplaceholder.typicode.com
+STAGE:
+  base_url: https://jsonplaceholder.typicode.com
+PROD:
+  base_url: https://jsonplaceholder.typicode.com
+

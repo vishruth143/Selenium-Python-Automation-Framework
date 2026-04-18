@@ -15,8 +15,11 @@ class APIClient:
     def post(self, endpoint: str, data=None, json=None, **kwargs):
         return self.session.post(f"{self.base_url}{endpoint}", data=data, json=json, **kwargs)
 
-    def put(self, endpoint: str, data=None, **kwargs):
-        return self.session.put(f"{self.base_url}{endpoint}", data=data, **kwargs)
+    def put(self, endpoint: str, data=None, json=None, **kwargs):
+        return self.session.put(f"{self.base_url}{endpoint}", data=data, json=json, **kwargs)
+
+    def patch(self, endpoint: str, data=None, json=None, **kwargs):
+        return self.session.patch(f"{self.base_url}{endpoint}", data=data, json=json, **kwargs)
 
     def delete(self, endpoint: str, **kwargs):
         return self.session.delete(f"{self.base_url}{endpoint}", **kwargs)

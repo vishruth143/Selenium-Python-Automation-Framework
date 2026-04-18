@@ -1,0 +1,23 @@
+{
+  "CreatePost": {
+    "title": "foo",
+    "body": "bar",
+    "userId": 1
+  },
+  "UpdatePost": {
+    "id": 1,
+    "title": "updated title",
+    "body": "updated body",
+    "userId": 1
+  },
+  "PatchPost": {
+    "title": "patched title"
+  },
+  "CreateComment": {
+    "postId": 1,
+    "name": "test comment",
+    "email": "test@example.com",
+    "body": "This is a test comment."
+  }
+}
+

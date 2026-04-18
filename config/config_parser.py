@@ -17,10 +17,8 @@ class ConfigParser:
         'pta_ui_test_excel_data_config': 'ui/pta/ui_test_excel_data_config.xlsx',
         'kwa_mobile_test_env_config': 'mobile/kwa/mobile_test_env_config.yml',
         'kwa_mobile_test_data_config': 'mobile/kwa/mobile_test_data_config.yml',
-        'reqres_api_test_env_config': 'api/reqres/api_test_env_config.yml',
-        'reqres_api_test_data_config': 'api/reqres/api_test_data_config.json',
-        'commerce_tools_api_test_env_config': 'api/commerce_tools/api_test_env_config.yml',
-        'commerce_tools_api_test_data_config': 'api/commerce_tools/api_test_data_config.json',
+        'jsonplaceholder_api_test_env_config': 'api/jsonplaceholder/api_test_env_config.yml',
+        'jsonplaceholder_api_test_data_config': 'api/jsonplaceholder/api_test_data_config.json',
         'hirokuapp_ui_test_env_config': 'ui/hirokuapp/ui_test_env_config.yml',
         'hirokuapp_ui_test_data_config': 'ui/hirokuapp/ui_test_data_config.yml',
     }

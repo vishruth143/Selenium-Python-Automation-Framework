@@ -44,14 +44,14 @@ The framework is fully integrated with Docker for containerized execution, GitHu
    # Example for UI and API test
    $env:APP_NAME="PTA"
    $env:MOBILE_APP_NAME="KWA"
-   $env:SERVICE_NAME="REQRES"
+   $env:SERVICE_NAME="JSONPLACEHOLDER"
    $env:REGION="QA"
    $env:BROWSER="CHROME"
    $env:HEADLESS="N"
    ```
 4. **Run tests:**
    ```bash
-   pytest -vvv -m "pta or reqres" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "pta" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
    ```
 5. **Generate Allure report:**
    ```bash
@@ -74,13 +74,9 @@ Selenium-Python-Automation-Framework/
 │
 ├── config/                                                 # Configuration files
 │   ├── api/
-│   │   └── commerce_tools/
-│   │   │    ├── api_test_data_config.json                  # COMMERCE_TOOLS API test data
-│   │   │    └── api_test_env_config.yml                    # COMMERCE_TOOLS API environment config
-│   │   │
-│   │   └── reqres/
-│   │       ├── api_test_data_config.json                   # REQRES API test data
-│   │       └── api_test_env_config.yml                     # REQRES API environment config
+│   │   └── jsonplaceholder/
+│   │       ├── api_test_data_config.json                  # JSONPLACEHOLDER API test data
+│   │       └── api_test_env_config.yml                    # JSONPLACEHOLDER API environment config
 │   │
 │   ├── mobile/
 │   │   └── kwa/
@@ -134,12 +130,9 @@ Selenium-Python-Automation-Framework/
 │          
 ├── tests/                                                  # Test suite
 │   ├── api/
-│   │   └── commerce_tools/
+│   │   └── jsonplaceholder/
 │   │   │   ├── __init__.py
-│   │   │   └── test_commerce_tools.py                      # API test cases for Commerce Tools
-│   │   └── reqres/
-│   │   │   ├── __init__.py
-│   │   │   └── test_reqres.py                              # API test cases for Reqres
+│   │   │   └── test_jsonplaceholder.py                     # API test cases for JSONPlaceholder
 │   │   ├── __init__.py
 │   │   └── conftest.py                                     # API-specific fixtures
 │   │
@@ -226,7 +219,7 @@ Selenium-Python-Automation-Framework/
 | `-v`                    | Verbose output (shows test names and status)                           |
 | `-vv`                   | More verbose output (adds captured output, fixture info, etc.)         |
 | `-vvv`                  | Most verbose output (adds internal debug logs, detailed fixture steps) |
-| `-m <expression>`       | Run tests matching the given marker expression (e.g., `pta or reqres`) |
+| `-m <expression>`       | Run tests matching the given marker expression (e.g., `pta or jsonplaceholder`) |
 | `--html=...`            | Save HTML report to specified path                                     |
 | `--self-contained-html` | Embed CSS/JS into the report (no external files)                       |
 | `--capture=tee-sys`     | Shows print() and log output in both terminal & HTML report            |
@@ -239,16 +232,16 @@ Selenium-Python-Automation-Framework/
 | `tests`                 | Path to your test suite root                                           | 
 
 ---
-## 🖥️ Running UI Tests from Command Line (PowerShell)
+## 🖥️ Running PTA UI Tests from Command Line (PowerShell)
 ```bash
     $env:APP_NAME="PTA"
     $env:REGION="QA"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
-    pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "pta" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 
-## 🖥️ Running Herokuapp Tests from Command Line (PowerShell)
+## 🖥️ Running Herokuapp UI Tests from Command Line (PowerShell)
 ```bash
     $env:APP_NAME="HIROKUAPP"
     $env:REGION="QA"
@@ -259,9 +252,9 @@ Selenium-Python-Automation-Framework/
 
 ## 🖥️ Running API Tests from Command Line (PowerShell)
 ```bash
-    $env:SERVICE_NAME="COMMERCE_TOOLS"
-    $env:REGION="qa"    
-    pytest -vvv -m "commerce_tools" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    $env:SERVICE_NAME="JSONPLACEHOLDER"
+    $env:REGION="QA"    
+    pytest -vvv -m "jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 ## 🖥️ Running Mobile Tests from Command Line (PowerShell)
 ```bash
@@ -308,13 +301,13 @@ env | grep -E "^(APP_NAME|SERVICE_NAME|MOBILE_APP_NAME|REGION|BROWSER|HEADLESS)=
     docker build -t selenium-python-automation .
     
     # To run on Chrome browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
     
     # To run on Firefox browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
     
     # To run on Edge browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=REQRES -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 
 ---
 ## 🖥️ To generate Allure Results
@@ -418,7 +411,7 @@ Common scopes used in this project:
 | `config` | `config/` directory |
 | `pta` | PTA UI test suite |
 | `hirokuapp` | The Internet Herokuapp UI test suite |
-| `reqres` | Reqres API test suite |
+| `jsonplaceholder` | JSONPlaceholder API test suite |
 | `kwa` | KWA mobile test suite |
 | `ci` | `.github/workflows/`, `Jenkinsfile`, `Dockerfile` |
 | `readme` | `README.md` |
