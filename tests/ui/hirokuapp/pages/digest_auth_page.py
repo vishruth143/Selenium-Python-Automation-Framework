@@ -1,4 +1,4 @@
-# pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
+# pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long, duplicate-code]
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -41,4 +41,3 @@ class DigestAuthPage(BasePage):
     def is_authenticated(self):
         """Returns True if the success message 'Congratulations! ...' is visible."""
         return self.is_element_visible(*self._success_msg_txt)
-

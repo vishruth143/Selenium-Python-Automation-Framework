@@ -104,4 +104,3 @@ class LandingPage(BasePage):
 
     def click_digest_auth_lnk(self):
         self.click(*self._digest_auth_lnk)
-

@@ -414,4 +414,3 @@ class TestJsonPlaceholder:
             log.error(f"Exception occurred: {e}")
             log.info("Test #09 : Verify GET /users/1/todos - Failed")
             raise
-

@@ -1,4 +1,5 @@
 # pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring, line-too-long]
+# pylint: disable=[broad-exception-caught]
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -64,4 +65,3 @@ class AddRemoveElementsPage(BasePage):
 
     def click_first_delete_btn(self):
         self.find_element(*self._delete_btns, ec.element_to_be_clickable).click()
-

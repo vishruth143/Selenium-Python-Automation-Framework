@@ -68,4 +68,3 @@ class BrokenImagesPage(BasePage):
                 valid.append(entry)
 
         return broken, valid
-

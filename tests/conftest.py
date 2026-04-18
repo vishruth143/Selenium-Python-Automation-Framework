@@ -1,6 +1,6 @@
 # pylint: disable=[unused-argument, missing-module-docstring, missing-module-docstring, unspecified-encoding]
 # pylint: disable=[missing-function-docstring, line-too-long, import-outside-toplevel, deprecated-argument]
-# pylint: disable=[broad-exception-caught]
+# pylint: disable=[broad-exception-caught, unused-variable]
 
 import os
 import shutil

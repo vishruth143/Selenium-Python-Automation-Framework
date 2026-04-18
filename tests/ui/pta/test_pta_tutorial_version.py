@@ -1,28 +1,31 @@
-# =============================================================================================================================
+# =============================================================
 # FILE: test_pta_tutorial_version.py
 # LOCATION: tests/ui/pta/test_pta_tutorial_version.py
 #
 # PURPOSE:
-#   This file contains automated UI test cases for the PTA (Practice Test Automation) web application.
-#   It is built on top of the Selenium + pytest framework maintained in this repository.
+#   This file contains automated UI test cases for the PTA
+#   (Practice Test Automation) web application.
+#   It is built on top of the Selenium + pytest framework.
 #
 # HOW TO READ THIS FILE (for beginners):
-#   1. The pylint disable comments at the top are just linting suppressions — they don't affect runtime behaviour.
-#   2. Imports pull in the tools (pytest, config, pages, logger) that the tests need.
-#   3. A single class `TestPTA` groups all PTA-related test cases together.
-#   4. Each `test_*` method inside the class is ONE test case that pytest will discover and run automatically.
+#   1. The pylint disable comments at the top are just linting
+#      suppressions — they don't affect runtime behaviour.
+#   2. Imports pull in the tools (pytest, config, pages, logger).
+#   3. A single class `TestPTA` groups all PTA-related tests.
+#   4. Each `test_*` method is ONE test case that pytest will
+#      discover and run automatically.
 #
 # HOW TO RUN:
 #   From the project root directory, execute:
 #       pytest tests/ui/pta/test_pta_tutorial_version.py -m pta
 #   Environment variables you can set before running:
-#       REGION   - Target environment (e.g. QA, STAGING, PROD). Defaults to QA.
-#       BROWSER  - Browser to use (CHROME, FIREFOX, EDGE). Defaults to CHROME.
-#       HEADLESS - Run without a visible browser window (Y/N). Defaults to N.
+#       REGION   - Target environment (QA, STAGING, PROD). Default: QA.
+#       BROWSER  - Browser to use (CHROME, FIREFOX, EDGE). Default: CHROME.
+#       HEADLESS - Run without a visible window (Y/N). Default: N.
 #
 # FRAMEWORK ARCHITECTURE (high-level):
 #   ┌──────────────────────────────────────────────────────────┐
-#   │  test_pta_tutorial_version.py  ←─ You are here                           │
+#   │  test_pta_tutorial_version.py  ←─ You are here           │
 #   │      │                                                    │
 #   │      ├── Page Objects  (tests/ui/pta/pages/)             │
 #   │      │       HomePage    – actions on the home page       │
@@ -33,14 +36,12 @@
 #   │      │       pta_logout() – shared logout helper          │
 #   │      │                                                    │
 #   │      ├── Config  (config/config_parser.py)               │
-#   │      │       Loads YAML/JSON config files so tests don't  │
-#   │      │       hard-code URLs or credentials.               │
+#   │      │       Loads YAML/JSON configs — no hard-coded URLs │
 #   │      │                                                    │
 #   │      └── Logger  (framework/utilities/custom_logger.py)  │
-#   │              Writes structured log messages to console    │
-#   │              and to output/logs/test_execution.log.       │
+#   │              Writes structured logs to console and file.  │
 #   └──────────────────────────────────────────────────────────┘
-# =============================================================================================================================
+# =============================================================
 
 # -----------------------------------------------------------
 # PYLINT DISABLE DIRECTIVES
