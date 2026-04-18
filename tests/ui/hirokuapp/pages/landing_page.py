@@ -23,6 +23,8 @@ class LandingPage(BasePage):
     _add_remove_elements_lnk = (By.XPATH, "//a[normalize-space()='Add/Remove Elements']")
     _basic_auth_lnk = (By.XPATH, "//a[normalize-space()='Basic Auth']")
     _broken_images_lnk = (By.XPATH, "//a[normalize-space()='Broken Images']")
+    _challenging_dom_lnk = (By.XPATH, "//a[normalize-space()='Challenging DOM']")
+    _digest_auth_lnk = (By.XPATH, "//a[normalize-space()='Digest Authentication']")
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Elements
@@ -52,6 +54,14 @@ class LandingPage(BasePage):
     @property
     def broken_images_lnk(self):
         return self.find_element(*self._broken_images_lnk, ec.element_to_be_clickable)
+
+    @property
+    def challenging_dom_lnk(self):
+        return self.find_element(*self._challenging_dom_lnk, ec.element_to_be_clickable)
+
+    @property
+    def digest_auth_lnk(self):
+        return self.find_element(*self._digest_auth_lnk, ec.element_to_be_clickable)
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Actions
@@ -88,4 +98,10 @@ class LandingPage(BasePage):
 
     def click_broken_images_lnk(self):
         self.click(*self._broken_images_lnk)
+
+    def click_challenging_dom_lnk(self):
+        self.click(*self._challenging_dom_lnk)
+
+    def click_digest_auth_lnk(self):
+        self.click(*self._digest_auth_lnk)
 

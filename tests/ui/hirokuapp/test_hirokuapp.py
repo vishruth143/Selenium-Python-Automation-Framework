@@ -5,7 +5,9 @@
 # pylint: disable=C0302
 
 import requests
+import requests.auth
 import pytest
+from selenium.common.exceptions import WebDriverException
 
 from config.config_parser import ConfigParser
 from framework.utilities.custom_logger import Logger
@@ -14,6 +16,8 @@ from tests.ui.hirokuapp.pages.ab_test_page import ABTestPage
 from tests.ui.hirokuapp.pages.add_remove_elements_page import AddRemoveElementsPage
 from tests.ui.hirokuapp.pages.basic_auth_page import BasicAuthPage
 from tests.ui.hirokuapp.pages.broken_images_page import BrokenImagesPage
+from tests.ui.hirokuapp.pages.challenging_dom_page import ChallengingDomPage
+from tests.ui.hirokuapp.pages.digest_auth_page import DigestAuthPage
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 ui_test_env_config = ConfigParser.load_config("hirokuapp_ui_test_env_config")
@@ -437,4 +441,287 @@ class TestHirokuApp:
             log.error(f"Error: {e}")
             log.info("Test #05 : Verify broken images on the Broken Images page. - Failed")
             raise
+
+    # @pytest.mark.skip
+    def test_challenging_dom(self, driver, region):
+        """
+        Test #06 : Verify the Challenging DOM page.
+        Steps:
+        01) Navigate to the Herokuapp landing page.
+        02) Verify the landing page has loaded successfully.
+        03) Click on the 'Challenging DOM' link.
+        04) Verify the page URL contains '/challenging_dom'.
+        05) Verify the 'Challenging DOM' page heading is visible.
+        06) Verify the table is rendered with the expected column headers.
+        07) Verify the table body contains at least one row.
+        08) Verify the answer canvas element is visible.
+        09) Click the blue button and verify the canvas answer value changes.
+        10) Click the red button and verify the canvas answer value changes again.
+        11) Click the green button and verify the canvas answer value changes again.
+        """
+        self.driver = driver
+        env_config = ui_test_env_config.get(region.upper(), {})
+
+        self.landingpage = LandingPage(self.driver)
+        self.challengingdompage = ChallengingDomPage(self.driver)
+
+        try:
+            log.info(50 * '*')
+            log.info("Test #06 : Verify the Challenging DOM page.")
+            log.info(50 * '*')
+
+            log.info("STEP 01: Navigate to the Herokuapp landing page.")
+            driver.get(env_config["url"])
+
+            log.info("STEP 02: Verify the landing page has loaded successfully.")
+            if not self.landingpage.is_landing_page_loaded():
+                raise AssertionError("Landing page did not load — heading 'Welcome to the-internet' not visible.")
+            log.info("Landing page loaded successfully.")
+
+            log.info("STEP 03: Click on the 'Challenging DOM' link.")
+            self.landingpage.click_challenging_dom_lnk()
+
+            log.info("STEP 04: Verify the page URL contains '/challenging_dom'.")
+            if self.challengingdompage.is_url_contains("/challenging_dom"):
+                log.info(f"Challenging DOM page URL verified. Current URL: {self.challengingdompage.get_current_url()}")
+            else:
+                raise AssertionError(
+                    f"URL did not contain '/challenging_dom'. "
+                    f"Current URL: {self.challengingdompage.get_current_url()}"
+                )
+
+            log.info("STEP 05: Verify the 'Challenging DOM' page heading is visible.")
+            if self.challengingdompage.is_page_loaded():
+                log.info("'Challenging DOM' page heading is visible.")
+            else:
+                raise AssertionError("'Challenging DOM' page heading is not visible.")
+
+            log.info("STEP 06: Verify the table is rendered with the expected column headers.")
+            expected_headers = ["Lorem", "Ipsum", "Dolor", "Sit", "Amet", "Diceret", "Action"]
+            actual_headers = self.challengingdompage.get_table_headers()
+            log.info(f"Table headers found: {actual_headers}")
+            for header in expected_headers:
+                if header not in actual_headers:
+                    raise AssertionError(
+                        f"Expected table header '{header}' not found. "
+                        f"Actual headers: {actual_headers}"
+                    )
+            log.info(f"All expected table headers are present: {expected_headers}")
+
+            log.info("STEP 07: Verify the table body contains at least one row.")
+            row_count = self.challengingdompage.get_table_row_count()
+            if row_count > 0:
+                log.info(f"Table body contains {row_count} row(s).")
+            else:
+                raise AssertionError("Table body contains no rows — expected at least one row.")
+
+            log.info("STEP 08: Capture initial button IDs before any button click.")
+            initial_blue_id = self.challengingdompage.get_blue_btn_id()
+            initial_red_id = self.challengingdompage.get_red_btn_id()
+            initial_green_id = self.challengingdompage.get_green_btn_id()
+            log.info(f"  Initial blue btn id : '{initial_blue_id}'")
+            log.info(f"  Initial red  btn id : '{initial_red_id}'")
+            log.info(f"  Initial green btn id: '{initial_green_id}'")
+
+            log.info("STEP 09: Click the blue button; verify DOM regenerates — button ID changes and table becomes stale.")
+            stale_row = self.challengingdompage.find_element(*self.challengingdompage._first_row_first_cell)
+            self.challengingdompage.click_blue_btn()
+            if not self.challengingdompage.wait_for_table_to_regenerate(stale_row):
+                raise AssertionError("Table did not regenerate after clicking the blue button (stale element not detected).")
+            blue_id_after = self.challengingdompage.get_blue_btn_id()
+            log.info(f"  Blue btn id after click : '{blue_id_after}'")
+            if blue_id_after == initial_blue_id:
+                raise AssertionError(
+                    f"Blue button ID did not change after click — DOM may not have regenerated. "
+                    f"Before: '{initial_blue_id}', After: '{blue_id_after}'"
+                )
+            log.info("  DOM regenerated after blue button click — button ID changed and table was re-rendered.")
+
+            log.info("STEP 10: Click the red button; verify DOM regenerates again.")
+            stale_row = self.challengingdompage.find_element(*self.challengingdompage._first_row_first_cell)
+            self.challengingdompage.click_red_btn()
+            if not self.challengingdompage.wait_for_table_to_regenerate(stale_row):
+                raise AssertionError("Table did not regenerate after clicking the red button.")
+            red_id_after = self.challengingdompage.get_red_btn_id()
+            log.info(f"  Red btn id after click  : '{red_id_after}'")
+            if red_id_after == blue_id_after:
+                raise AssertionError(
+                    f"Red button ID did not change after click — DOM may not have regenerated. "
+                    f"Before: '{blue_id_after}', After: '{red_id_after}'"
+                )
+            log.info("  DOM regenerated after red button click — button ID changed and table was re-rendered.")
+
+            log.info("STEP 11: Click the green button; verify DOM regenerates again.")
+            stale_row = self.challengingdompage.find_element(*self.challengingdompage._first_row_first_cell)
+            self.challengingdompage.click_green_btn()
+            if not self.challengingdompage.wait_for_table_to_regenerate(stale_row):
+                raise AssertionError("Table did not regenerate after clicking the green button.")
+            green_id_after = self.challengingdompage.get_green_btn_id()
+            log.info(f"  Green btn id after click: '{green_id_after}'")
+            if green_id_after == red_id_after:
+                raise AssertionError(
+                    f"Green button ID did not change after click — DOM may not have regenerated. "
+                    f"Before: '{red_id_after}', After: '{green_id_after}'"
+                )
+            log.info("  DOM regenerated after green button click — button ID changed and table was re-rendered.")
+
+            log.info("Test #06 : Verify the Challenging DOM page. - Passed")
+
+        except Exception as e:
+            log.error(f"Error: {e}")
+            log.info("Test #06 : Verify the Challenging DOM page. - Failed")
+            raise
+
+    # @pytest.mark.skip
+    def test_digest_auth(self, driver, region):
+        """
+        Test #07 : Verify Digest Authentication.
+
+        Unlike Basic Auth, Digest Auth uses a server challenge-response mechanism —
+        the browser cannot be pre-authenticated via a URL-embedded credential trick.
+        The test therefore uses a two-pronged strategy:
+
+          HTTP level  — Python `requests` library with HTTPDigestAuth verifies
+                        that the endpoint correctly enforces authentication.
+          Browser level — Chrome DevTools Protocol (CDP) is used to replay the
+                          pre-computed Authorization header from the successful
+                          requests session so the browser can render the page.
+
+        Steps:
+        01) Read Digest Auth credentials (username / password) from the env config.
+        02) Send an unauthenticated GET to /digest_auth and verify a 401 response
+            is returned with a 'WWW-Authenticate: Digest' challenge header.
+        03) Send an authenticated GET using HTTPDigestAuth with CORRECT credentials
+            and verify a 200 OK response is returned.
+        04) Send an authenticated GET using HTTPDigestAuth with WRONG credentials
+            and verify a 401 Unauthorized response is returned.
+        05) Navigate to the Herokuapp landing page in the browser.
+        06) Verify the landing page has loaded successfully.
+        07) Use CDP to inject the Authorization header computed from the successful
+            requests session, then navigate directly to /digest_auth in the browser.
+        08) Verify the page URL contains '/digest_auth'.
+        09) Verify the 'Digest Auth' page heading is visible.
+        10) Verify the success message is visible — confirming the browser rendered
+            the authenticated page correctly.
+        """
+        self.driver = driver
+        env_config = ui_test_env_config.get(region.upper(), {})
+
+        self.digestauthpage = DigestAuthPage(self.driver)
+
+        try:
+            log.info(50 * '*')
+            log.info("Test #07 : Verify Digest Authentication.")
+            log.info(50 * '*')
+
+            log.info("STEP 01: Read Digest Auth credentials from env config.")
+            username = env_config.get("digest_auth_username")
+            password = env_config.get("digest_auth_password")
+            base_url = env_config.get("url", "").rstrip("/")
+            digest_url = f"{base_url}/digest_auth"
+            log.info(f"  Digest Auth URL : {digest_url}")
+            log.info(f"  Username        : {username}")
+
+            log.info("STEP 02: Verify unauthenticated request returns 401 with Digest challenge.")
+            resp_no_auth = requests.get(digest_url, timeout=10)
+            if resp_no_auth.status_code != 401:
+                raise AssertionError(
+                    f"Expected 401 for unauthenticated request, got {resp_no_auth.status_code}."
+                )
+            www_auth_header = resp_no_auth.headers.get("WWW-Authenticate", "")
+            if "Digest" not in www_auth_header:
+                raise AssertionError(
+                    f"Expected 'WWW-Authenticate: Digest' header, got: '{www_auth_header}'."
+                )
+            log.info(f"  401 returned as expected. WWW-Authenticate: {www_auth_header}")
+
+            log.info("STEP 03: Verify correct credentials return 200 OK via HTTPDigestAuth.")
+            digest_auth = requests.auth.HTTPDigestAuth(username, password)
+            resp_correct = requests.get(digest_url, auth=digest_auth, timeout=10)
+            if resp_correct.status_code != 200:
+                raise AssertionError(
+                    f"Expected 200 with correct credentials, got {resp_correct.status_code}."
+                )
+            log.info(f"  200 OK returned with correct credentials as expected.")
+
+            log.info("STEP 04: Verify wrong credentials return 401 Unauthorized.")
+            wrong_auth = requests.auth.HTTPDigestAuth(username, "wrong_password")
+            resp_wrong = requests.get(digest_url, auth=wrong_auth, timeout=10)
+            if resp_wrong.status_code != 401:
+                raise AssertionError(
+                    f"Expected 401 with wrong credentials, got {resp_wrong.status_code}."
+                )
+            log.info(f"  401 returned with wrong credentials as expected.")
+
+            log.info("STEP 05: Navigate to the Herokuapp landing page in the browser.")
+            driver.get(base_url)
+
+            log.info("STEP 06: Verify the landing page has loaded successfully.")
+            self.landingpage = LandingPage(self.driver)
+            if not self.landingpage.is_landing_page_loaded():
+                raise AssertionError("Landing page did not load — heading 'Welcome to the-internet' not visible.")
+            log.info("Landing page loaded successfully.")
+
+            log.info("STEP 07: Inject the Digest Authorization header via CDP and navigate to /digest_auth.")
+            # Extract the Authorization header that requests computed during the successful
+            # digest handshake — this header is valid for one request but lets the browser
+            # render the page without needing to handle a native auth dialog.
+            auth_header_value = resp_correct.request.headers.get("Authorization", "")
+            if not auth_header_value:
+                raise AssertionError(
+                    "Could not extract Authorization header from the successful digest auth session."
+                )
+            log.info(f"  Authorization header extracted: {auth_header_value[:60]}...")
+
+            # Get the raw ChromeDriver (unwrap EventFiringWebDriver if needed)
+            raw_driver = driver.wrapped_driver if hasattr(driver, "wrapped_driver") else driver
+            raw_driver.execute_cdp_cmd(
+                "Network.enable", {}
+            )
+            raw_driver.execute_cdp_cmd(
+                "Network.setExtraHTTPHeaders",
+                {"headers": {"Authorization": auth_header_value}}
+            )
+            driver.get(digest_url)
+
+            log.info("STEP 08: Verify the page URL contains '/digest_auth'.")
+            if self.digestauthpage.is_url_contains("/digest_auth"):
+                log.info(f"Digest Auth page URL verified. Current URL: {self.digestauthpage.get_current_url()}")
+            else:
+                raise AssertionError(
+                    f"URL did not contain '/digest_auth'. "
+                    f"Current URL: {self.digestauthpage.get_current_url()}"
+                )
+
+            log.info("STEP 09: Verify the 'Digest Auth' page heading is visible.")
+            if self.digestauthpage.is_page_loaded():
+                log.info("'Digest Auth' page heading is visible.")
+            else:
+                raise AssertionError("'Digest Auth' page heading is not visible.")
+
+            log.info("STEP 10: Verify the success message is visible — authenticated page rendered correctly.")
+            if self.digestauthpage.is_authenticated():
+                log.info("Success message 'Congratulations! You must have the proper credentials.' is visible.")
+                log.info("Digest Auth authentication - Completed Successfully.")
+            else:
+                raise AssertionError(
+                    "Success message not visible after injecting Authorization header. "
+                    "The Digest auth header may have been rejected by the server."
+                )
+
+            log.info("Test #07 : Verify Digest Authentication. - Passed")
+
+        except Exception as e:
+            log.error(f"Error: {e}")
+            log.info("Test #07 : Verify Digest Authentication. - Failed")
+            raise
+        finally:
+            # Always clear the injected header so it doesn't bleed into subsequent tests
+            try:
+                raw_driver = driver.wrapped_driver if hasattr(driver, "wrapped_driver") else driver
+                raw_driver.execute_cdp_cmd(
+                    "Network.setExtraHTTPHeaders", {"headers": {}}
+                )
+            except WebDriverException:
+                pass
 
