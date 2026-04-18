@@ -59,7 +59,7 @@ jobs:
     env:
       APP_NAME: PTA
       MOBILE_APP_NAME: KWA
-      SERVICE_NAME: REQRES
+      SERVICE_NAME: JSONPLACEHOLDER
       REGION: qa
       BROWSER: CHROME
       HEADLESS: Y
@@ -91,7 +91,7 @@ jobs:
 
       - name: Run Pytest with HTML and Allure Reporting
         run: |
-          pytest -vvv -m "pta or reqres" \
+          pytest -vvv -m "pta or jsonplaceholder" \
             -n 4 \
             --html=output/reports/pta_report.html \
             --self-contained-html \
