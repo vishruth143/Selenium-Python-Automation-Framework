@@ -1,0 +1,30 @@
+---
+QA:
+  base_url: https://jsonplaceholder.typicode.com
+  users: 10          # number of concurrent users to spawn
+  spawn_rate: 2      # users spawned per second
+  run_time: 60s      # total test duration
+  think_time_min: 1  # minimum wait between tasks (seconds)
+  think_time_max: 3  # maximum wait between tasks (seconds)
+DEV:
+  base_url: https://jsonplaceholder.typicode.com
+  users: 5
+  spawn_rate: 1
+  run_time: 30s
+  think_time_min: 1
+  think_time_max: 2
+STAGE:
+  base_url: https://jsonplaceholder.typicode.com
+  users: 50
+  spawn_rate: 5
+  run_time: 120s
+  think_time_min: 1
+  think_time_max: 5
+PROD:
+  base_url: https://jsonplaceholder.typicode.com
+  users: 100
+  spawn_rate: 10
+  run_time: 300s
+  think_time_min: 1
+  think_time_max: 5
+

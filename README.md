@@ -24,8 +24,8 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 - ⚙️ Environment-driven configuration management - Done
 - 🎥 Screen capture and Video recording of failed UI tests - Done
 - 📱 Mobile testing support with Appium - Done
-- 🧪 Performance testing integration with Locust - Planned
-- 🧑‍💻 Data Testing - Planned
+- 🧪 Performance testing integration with Locust - Done
+- 🧑‍💻 Data Testing with REST Countries API - Done
 
 ---
 ## ⚡ Quick Setup
@@ -78,6 +78,14 @@ Selenium-Python-Automation-Framework/
 │   │       ├── api_test_data_config.json                  # JSONPLACEHOLDER API test data
 │   │       └── api_test_env_config.yml                    # JSONPLACEHOLDER API environment config
 │   │
+│   ├── performance/
+│   │   └── jsonplaceholder/
+│   │       └── perf_test_config.yml                       # Locust performance test config (users, rate, runtime)
+│   │
+│   ├── data/
+│   │   └── restcountries/
+│   │       └── data_validation_config.yml                 # Data validation rules (ranges, expected counts, regions)
+│   │
 │   ├── mobile/
 │   │   └── kwa/
 │   │       ├── mobile_test_data_config.yml                 # Mobile test data
@@ -129,6 +137,17 @@ Selenium-Python-Automation-Framework/
 │   └── └── screenshots/                                    # Screenshots directory
 │          
 ├── tests/                                                  # Test suite
+│   ├── performance/
+│   │   ├── __init__.py
+│   │   └── locustfile.py                                  # Locust performance test (JSONPlaceholder)
+│   │
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── conftest.py                                    # Data test fixtures (session-scoped API fetch, DataFrame)
+│   │   └── restcountries/
+│   │       ├── __init__.py
+│   │       └── test_data_restcountries.py                 # 25 data quality tests (REST Countries API)
+│   │
 │   ├── api/
 │   │   └── jsonplaceholder/
 │   │   │   ├── __init__.py
@@ -260,6 +279,21 @@ Selenium-Python-Automation-Framework/
 ```bash
     $env:MOBILE_APP_NAME="KWA"       
     pytest -vvv -m "kwa" --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+```
+## 🦗 Running Performance Tests with Locust (PowerShell)
+```bash
+    # With web UI — open http://localhost:8089 to start/monitor the test
+    $env:REGION="QA"
+    locust -f tests/performance/locustfile.py
+
+    # Headless (CI/CD)
+    $env:REGION="QA"
+    locust -f tests/performance/locustfile.py --headless --host=https://jsonplaceholder.typicode.com -u 10 -r 2 --run-time 60s --html=output/reports/performance_report.html
+```
+## 🗄️ Running Data Quality Tests (PowerShell)
+```bash
+    $env:REGION="QA"
+    pytest -vvv -m "restcountries_data" tests/data/ --html=output/reports/data_report.html --self-contained-html --alluredir=output/allure-results tests
 ```
 ---
 ## 🖥️ To see all the environment variables currently set, you can run:
@@ -412,6 +446,8 @@ Common scopes used in this project:
 | `pta` | PTA UI test suite |
 | `hirokuapp` | The Internet Herokuapp UI test suite |
 | `jsonplaceholder` | JSONPlaceholder API test suite |
+| `performance` | `tests/performance/`, `config/performance/` |
+| `data` | `tests/data/`, `config/data/` |
 | `kwa` | KWA mobile test suite |
 | `ci` | `.github/workflows/`, `Jenkinsfile`, `Dockerfile` |
 | `readme` | `README.md` |
