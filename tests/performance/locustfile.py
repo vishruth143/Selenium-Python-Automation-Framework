@@ -1,5 +1,5 @@
 # pylint: disable=[missing-module-docstring, missing-class-docstring, missing-function-docstring]
-# pylint: disable=[line-too-long, duplicate-code]
+# pylint: disable=[line-too-long, duplicate-code, unused-argument, too-many-arguments, too-many-positional-arguments]
 
 """
 JSONPlaceholder Performance Test Suite — Locust
@@ -200,4 +200,3 @@ def on_request(request_type, name, response_time, response_length,
             f"[FAIL] {request_type} {name} | "
             f"status={response.status_code} | time={response_time:.0f}ms"
         )
-

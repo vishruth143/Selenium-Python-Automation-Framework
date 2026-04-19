@@ -717,4 +717,3 @@ class TestRestCountriesData:
             log.error(f"Error: {e}")
             log.info("Test #25 : Verify subregion count - Failed")
             raise
-
