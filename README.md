@@ -589,4 +589,19 @@ npm install -g dkmaker-mcp-rest-api
 > **Note:** Replace `<your-username>` in the paths above with your actual Windows username before using the config.
 
 ---
+## 🤖 Calude-Github integration
+Open the Claude Code console and execute the below command
+
+```claude
+/install-github-app
+```
+
+### Prerequisites
+Install GitHub CLI from https://cli.github.com/ 
+
+   - macOS: brew install gh
+   - Windows: winget install --id GitHub.cli
+   - Linux: See installation instructions at https://github.com/cli/cli#installation
+   
+---
 # 🎭 Happy testing! 🎭
