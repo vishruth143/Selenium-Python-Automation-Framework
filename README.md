@@ -4,8 +4,9 @@ A scalable and maintainable test automation framework built with Python, leverag
 It supports both UI, API and Mobile test automation, with environment-driven configuration for flexibility.
 The framework is fully integrated with Docker for containerized execution, GitHub Actions for CI/CD pipelines, and Microsoft Teams for real-time execution notifications.
 
-![img.png](architecture_diagram.png)
+![img.png](automation_architecture.png)
 
+![img.png](automation_coverage.png)
 ---
 ## Features
 - 🎭 Selenium-Python-Pytest Test Automation framework - Done
