@@ -112,4 +112,3 @@ class LandingPage(BasePage):
 
     def click_disappearing_elements_lnk(self):
         self.click(*self._disappearing_elements_lnk)
-

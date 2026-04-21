@@ -2,6 +2,7 @@
 # pylint: disable=[no-else-continue, invalid-name, logging-fstring-interpolation, import-error, too-few-public-methods]
 # pylint: disable=[too-many-statements, too-many-branches, unused-variable, too-many-locals, unsubscriptable-object]
 # pylint: disable=[ungrouped-imports, protected-access, f-string-without-interpolation, too-many-instance-attributes]
+# pylint: disable=[unused-argument, no-member]
 # pylint: disable=C0302
 
 import requests
@@ -899,4 +900,3 @@ class TestHeroku:
             log.error(f"Error: {e}")
             log.info("Test #08 : Verify the Disappearing Elements page behaviour. - Failed")
             raise
-
