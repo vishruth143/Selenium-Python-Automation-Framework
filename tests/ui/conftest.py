@@ -64,6 +64,8 @@ from framework.utilities.screen_recording_utils import start_video_recording, st
 def testdata():
     if os.environ.get("APP_NAME", "").upper() == "PTA":
         return ConfigParser.load_config("pta_ui_test_data_config")
+    elif os.environ.get("APP_NAME", "").upper() == "HEROKU":
+        return ConfigParser.load_config("heroku_ui_test_data_config")
     return None
 
 
@@ -135,7 +137,8 @@ def driver(request):
     driver_instance = EventFiringWebDriver(driver_instance, MyEventListener())
 
     # ── Maximize the browser window for consistent element visibility ──
-    driver_instance.maximize_window()
+    if not headless:
+        driver_instance.maximize_window()
 
     # ── Start video recording (ffmpeg captures the desktop) ──
     # The video file is stored at output/videos/test_<name>_<timestamp>.mp4
@@ -180,7 +183,7 @@ def create_chrome_options(headless: bool):
         options.add_experimental_option("prefs", {
             "profile.managed_default_content_settings.images": 2
         })
-    options.add_argument("window-size=1920,1080")
+    options.add_argument("--window-size=1920,1080")
     return options
 
 
@@ -197,7 +200,7 @@ def create_firefox_options(headless: bool, binary_path: str):
     if headless:
         options.add_argument("--headless")
     options.binary_location = binary_path
-    options.add_argument("window-size=1920,1080")
+    options.add_argument("--window-size=1920,1080")
     return options
 
 

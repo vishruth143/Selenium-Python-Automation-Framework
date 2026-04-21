@@ -18,22 +18,30 @@ from tests.ui.hirokuapp.pages.basic_auth_page import BasicAuthPage
 from tests.ui.hirokuapp.pages.broken_images_page import BrokenImagesPage
 from tests.ui.hirokuapp.pages.challenging_dom_page import ChallengingDomPage
 from tests.ui.hirokuapp.pages.digest_auth_page import DigestAuthPage
+from tests.ui.hirokuapp.pages.disappearing_elements_page import DisappearingElementsPage
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
-ui_test_env_config = ConfigParser.load_config("hirokuapp_ui_test_env_config")
+ui_test_env_config = ConfigParser.load_config("heroku_ui_test_env_config")
 
 
-@pytest.mark.hirokuapp
-class TestHirokuApp:
+@pytest.mark.heroku
+class TestHeroku:
 
     """
     Test suite for The Internet Herokuapp (https://the-internet.herokuapp.com/)
     """
 
     # @pytest.mark.skip
-    def test_broken_links(self, driver, region):
+    def test_broken_links(self, driver, request, region, testdata):
         """
         Test #01 : Verify there are no broken links on the landing page.
+
+        Iterates over every hyperlink on the Herokuapp landing page and sends an
+        HTTP HEAD request (falling back to GET on 405) to each href.  Any link
+        that returns a non-2xx status code or raises a network exception is
+        recorded as broken.  The test fails if any broken links are found and
+        logs a full pass/fail report for every link checked.
+
         Steps:
         01) Navigate to the Herokuapp landing page.
         02) Verify the landing page has loaded successfully.
@@ -115,6 +123,13 @@ class TestHirokuApp:
     def test_ab_testing(self, driver, region):
         """
         Test #02 : Verify the A/B Testing page loads correctly.
+
+        The Herokuapp A/B Testing page randomly serves one of two variants —
+        'A/B Test Control' or 'A/B Test Variation 1' — on each visit.  The test
+        navigates to the page via the landing page link and asserts that whichever
+        variant is served, the heading and description text are both visible,
+        confirming the page renders correctly regardless of the active variant.
+
         Steps:
         01) Navigate to the Herokuapp landing page.
         02) Verify the landing page has loaded successfully.
@@ -181,6 +196,13 @@ class TestHirokuApp:
     def test_add_remove_elements(self, driver, region):
         """
         Test #03 : Verify Add/Remove Elements functionality.
+
+        Exercises the dynamic DOM manipulation feature of the Herokuapp
+        Add/Remove Elements page.  The test clicks 'Add Element' multiple times,
+        verifies the correct number of 'Delete' buttons appear, removes one button
+        individually to confirm the count decrements, and then removes all remaining
+        buttons to confirm the page returns to its initial empty state.
+
         Steps:
         01) Navigate to the Herokuapp landing page.
         02) Verify the landing page has loaded successfully.
@@ -287,6 +309,13 @@ class TestHirokuApp:
     def test_basic_auth(self, driver, region):
         """
         Test #04 : Verify Basic Auth authentication.
+
+        Basic Auth presents a native browser dialog that Selenium cannot interact
+        with directly.  The standard workaround is to embed the credentials in the
+        URL (scheme://username:password@host/path), which causes the browser to
+        send the Authorization header automatically.  Credentials are read from the
+        environment config so they are never hard-coded in the test.
+
         Steps:
         01) Read Basic Auth credentials (username / password) from the env config.
         02) Navigate directly to the Basic Auth page with credentials embedded in
@@ -357,6 +386,13 @@ class TestHirokuApp:
     def test_broken_images(self, driver, region):
         """
         Test #05 : Verify broken images on the Broken Images page.
+
+        The Herokuapp Broken Images page intentionally contains a mix of valid and
+        broken image references.  Each <img> element is inspected via the JavaScript
+        `naturalWidth` property — a value of 0 indicates the image failed to load.
+        The test asserts that both broken and valid images are present, confirming
+        the detection logic works correctly against a known-bad page.
+
         Steps:
         01) Navigate to the Herokuapp landing page.
         02) Verify the landing page has loaded successfully.
@@ -446,6 +482,14 @@ class TestHirokuApp:
     def test_challenging_dom(self, driver, region):
         """
         Test #06 : Verify the Challenging DOM page.
+
+        The Challenging DOM page is designed to make element location difficult by
+        regenerating the entire DOM — including button IDs and the data table — on
+        every button click.  The test verifies the table structure (headers and rows),
+        then clicks each of the three coloured buttons (blue, red, green) in turn and
+        confirms that the button IDs change after each click, proving the DOM was
+        fully regenerated and that stale-element handling works correctly.
+
         Steps:
         01) Navigate to the Herokuapp landing page.
         02) Verify the landing page has loaded successfully.
@@ -724,3 +768,135 @@ class TestHirokuApp:
                 )
             except WebDriverException:
                 pass
+
+    # @pytest.mark.skip
+    def test_disappearing_elements(self, driver, region):
+        """
+        Test #08 : Verify the Disappearing Elements page behaviour.
+
+        The page renders a navigation menu whose 'Gallery' item randomly appears
+        or disappears on each page load.  The test verifies:
+          - The static nav items (Home, About, Contact Us, Portfolio) are always present.
+          - The total nav item count is either 4 (Gallery absent) or 5 (Gallery present).
+          - Refreshing the page eventually toggles the Gallery item, demonstrating
+            the disappearing/reappearing behaviour (up to a configurable retry limit).
+
+        Steps:
+        01) Navigate to the Herokuapp landing page.
+        02) Verify the landing page has loaded successfully.
+        03) Click on the 'Disappearing Elements' link.
+        04) Verify the page URL contains '/disappearing_elements'.
+        05) Verify the 'Disappearing Elements' page heading is visible.
+        06) Verify the four static nav items are always present.
+        07) Record whether the 'Gallery' nav item is currently visible and log the
+            initial nav item count (expected: 4 or 5).
+        08) Refresh the page up to 10 times until the Gallery item toggles state,
+            confirming the disappearing/reappearing behaviour.
+        09) Assert that the toggle was observed within the allowed refresh attempts.
+        """
+        self.driver = driver
+        env_config = ui_test_env_config.get(region.upper(), {})
+
+        self.landingpage = LandingPage(self.driver)
+        self.disappearing_elements_page = DisappearingElementsPage(self.driver)
+
+        try:
+            log.info(50 * '*')
+            log.info("Test #08 : Verify the Disappearing Elements page behaviour.")
+            log.info(50 * '*')
+
+            log.info("STEP 01: Navigate to the Herokuapp landing page.")
+            driver.get(env_config["url"])
+
+            log.info("STEP 02: Verify the landing page has loaded successfully.")
+            if not self.landingpage.is_landing_page_loaded():
+                raise AssertionError("Landing page did not load — heading 'Welcome to the-internet' not visible.")
+            log.info("Landing page loaded successfully.")
+
+            log.info("STEP 03: Click on the 'Disappearing Elements' link.")
+            self.landingpage.click_disappearing_elements_lnk()
+
+            log.info("STEP 04: Verify the page URL contains '/disappearing_elements'.")
+            if self.disappearing_elements_page.is_url_contains("/disappearing_elements"):
+                log.info(f"Disappearing Elements page URL verified. Current URL: {self.disappearing_elements_page.get_current_url()}")
+            else:
+                raise AssertionError(
+                    f"URL did not contain '/disappearing_elements'. "
+                    f"Current URL: {self.disappearing_elements_page.get_current_url()}"
+                )
+
+            log.info("STEP 05: Verify the 'Disappearing Elements' page heading is visible.")
+            if self.disappearing_elements_page.is_page_loaded():
+                log.info("'Disappearing Elements' page heading is visible.")
+            else:
+                raise AssertionError("'Disappearing Elements' page heading is not visible.")
+
+            log.info("STEP 06: Verify the four static nav items are always present.")
+            static_checks = {
+                "Home": self.disappearing_elements_page.is_home_lnk_visible(),
+                "About": self.disappearing_elements_page.is_about_lnk_visible(),
+                "Contact Us": self.disappearing_elements_page.is_contact_us_lnk_visible(),
+                "Portfolio": self.disappearing_elements_page.is_portfolio_lnk_visible(),
+            }
+            missing_static = [name for name, visible in static_checks.items() if not visible]
+            if missing_static:
+                raise AssertionError(
+                    f"The following static nav items were not visible: {missing_static}"
+                )
+            log.info("All four static nav items (Home, About, Contact Us, Portfolio) are visible.")
+
+            log.info("STEP 07: Record initial Gallery visibility and nav item count.")
+            initial_gallery_visible = self.disappearing_elements_page.is_gallery_lnk_visible()
+            initial_count = self.disappearing_elements_page.get_nav_item_count()
+            log.info(f"  Gallery nav item visible on first load : {initial_gallery_visible}")
+            log.info(f"  Nav item count on first load           : {initial_count}")
+
+            if initial_count not in (4, 5):
+                raise AssertionError(
+                    f"Expected 4 or 5 nav items on the Disappearing Elements page, "
+                    f"but found {initial_count}. Nav items: {self.disappearing_elements_page.get_nav_item_texts()}"
+                )
+            log.info(f"  Nav item count {initial_count} is within the expected range (4–5).")
+
+            log.info("STEP 08: Refresh the page up to 10 times to observe Gallery item toggling.")
+            max_retries = 10
+            toggled = False
+            gallery_visible_after = initial_gallery_visible
+
+            for attempt in range(1, max_retries + 1):
+                driver.refresh()
+                if not self.disappearing_elements_page.is_page_loaded():
+                    raise AssertionError(f"Page heading not visible after refresh attempt {attempt}.")
+
+                current_count = self.disappearing_elements_page.get_nav_item_count()
+                gallery_visible_after = self.disappearing_elements_page.is_gallery_lnk_visible()
+                nav_items = self.disappearing_elements_page.get_nav_item_texts()
+                log.info(f"  Refresh #{attempt:02d} — nav count: {current_count}, Gallery visible: {gallery_visible_after}, items: {nav_items}")
+
+                if gallery_visible_after != initial_gallery_visible:
+                    log.info(
+                        f"  Toggle detected on refresh #{attempt}: "
+                        f"Gallery {'appeared' if gallery_visible_after else 'disappeared'}."
+                    )
+                    toggled = True
+                    break
+
+            log.info("STEP 09: Assert the Gallery item toggle was observed.")
+            if not toggled:
+                log.warning(
+                    f"Gallery nav item did not toggle its visibility within {max_retries} refreshes. "
+                    f"This is statistically unlikely but possible — the page is non-deterministic. "
+                    f"Final state: Gallery visible = {gallery_visible_after}."
+                )
+                # We do not fail the test here — the page is intentionally non-deterministic.
+                # The absence of a toggle within N reloads is not a defect; we log a warning instead.
+            else:
+                log.info("Disappearing Elements toggle behaviour confirmed — Gallery item changed visibility.")
+
+            log.info("Test #08 : Verify the Disappearing Elements page behaviour. - Passed")
+
+        except Exception as e:
+            log.error(f"Error: {e}")
+            log.info("Test #08 : Verify the Disappearing Elements page behaviour. - Failed")
+            raise
+

@@ -21,8 +21,8 @@ class ConfigParser:
         'jsonplaceholder_api_test_data_config': 'api/jsonplaceholder/api_test_data_config.json',
         'jsonplaceholder_perf_test_config': 'performance/jsonplaceholder/perf_test_config.yml',
         'restcountries_data_validation_config': 'data/restcountries/data_validation_config.yml',
-        'hirokuapp_ui_test_env_config': 'ui/hirokuapp/ui_test_env_config.yml',
-        'hirokuapp_ui_test_data_config': 'ui/hirokuapp/ui_test_data_config.yml',
+        'heroku_ui_test_env_config': 'ui/heroku/ui_test_env_config.yml',
+        'heroku_ui_test_data_config': 'ui/heroku/ui_test_data_config.yml',
     }
 
     @staticmethod

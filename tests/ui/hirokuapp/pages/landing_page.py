@@ -25,6 +25,7 @@ class LandingPage(BasePage):
     _broken_images_lnk = (By.XPATH, "//a[normalize-space()='Broken Images']")
     _challenging_dom_lnk = (By.XPATH, "//a[normalize-space()='Challenging DOM']")
     _digest_auth_lnk = (By.XPATH, "//a[normalize-space()='Digest Authentication']")
+    _disappearing_elements_lnk = (By.XPATH, "//a[normalize-space()='Disappearing Elements']")
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Elements
@@ -62,6 +63,10 @@ class LandingPage(BasePage):
     @property
     def digest_auth_lnk(self):
         return self.find_element(*self._digest_auth_lnk, ec.element_to_be_clickable)
+
+    @property
+    def disappearing_elements_lnk(self):
+        return self.find_element(*self._disappearing_elements_lnk, ec.element_to_be_clickable)
 
     # ------------------------------------------------------------------------------------------------------------------
     #                                                      Actions
@@ -104,3 +109,7 @@ class LandingPage(BasePage):
 
     def click_digest_auth_lnk(self):
         self.click(*self._digest_auth_lnk)
+
+    def click_disappearing_elements_lnk(self):
+        self.click(*self._disappearing_elements_lnk)
+

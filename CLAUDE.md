@@ -29,10 +29,10 @@ SERVICE_NAME=COMMERCE_TOOLS REGION=QA pytest -vvv -m "commerce_tools" tests/
 MOBILE_APP_NAME=KWA pytest -vvv -m "kwa" tests/
 
 # Run a single test file
-APP_NAME=HIROKUAPP pytest -vvv tests/ui/hirokuapp/test_hirokuapp.py
+APP_NAME=HIROKUAPP pytest -vvv tests/ui/heroku/test_heroku.py
 
 # Run a single test by name
-APP_NAME=HIROKUAPP pytest -vvv tests/ui/hirokuapp/test_hirokuapp.py::TestHirokuApp::test_ab_test_page
+APP_NAME=HIROKUAPP pytest -vvv tests/ui/heroku/test_heroku.py::TestHirokuApp::test_ab_test_page
 
 # Parallel execution with retries and HTML report
 APP_NAME=PTA BROWSER=CHROME pytest -vvv -m "pta" -n 4 --reruns 3 \

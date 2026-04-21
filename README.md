@@ -261,13 +261,13 @@ Selenium-Python-Automation-Framework/
     pytest -vvv -m "pta" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 
-## 🖥️ Running Herokuapp UI Tests from Command Line (PowerShell)
+## 🖥️ Running Heroku UI Tests from Command Line (PowerShell)
 ```bash
-    $env:APP_NAME="HIROKUAPP"
+    $env:APP_NAME="HEROKU"
     $env:REGION="QA"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
-    pytest -vvv -m "hirokuapp" --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/hirokuapp_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    pytest -vvv -m "heroku" --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/hirokuapp_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 
 ## 🖥️ Running API Tests from Command Line (PowerShell)
@@ -355,6 +355,12 @@ env | grep -E "^(APP_NAME|SERVICE_NAME|MOBILE_APP_NAME|REGION|BROWSER|HEADLESS)=
     
     # To generate Allure Report
     allure generate output/allure-results --clean -o output/allure-report
+
+    # To execute tests and serve Allure Report
+    cd C:\Selenium-Python-Automation-Framework/executor
+    cmd /c jsonplaceholder_api_tests_executor.bat
+    Default browser will open the http://localhost:8000/output/allure-report/ displaying the allure report
+    Ctrl + C to stop the server when done
 ---
 ## 🖥️ CI / CD
     Any changes made and commit to the

@@ -27,4 +27,3 @@ PROD:
   run_time: 300s
   think_time_min: 1
   think_time_max: 5
-
