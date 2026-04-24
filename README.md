@@ -9,24 +9,27 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 ![img.png](automation_coverage.png)
 ---
 ## Features
-- 🎭 Selenium-Python-Pytest Test Automation framework - Done
-- 🔧 Python programming support - Done
-- 🌐 Cross-browser UI Automation testing (Chrome, Firefox, Edge) - Done
-- 🧪 API testing support with Requests library - Done
-- 📊 HTML and Allure test reports - Done
-- 🎯 Auto-wait, parallel execution and retry mechanisms - Done
-- 🔧 CI/CD integration with Jenkins - Done and GitHub Actions - Done
-- 📥 Docker containerization - Done
-- 📢 Microsoft Teams notifications - Done
-- 🧩 BDD support with Pytest-BDD - Done
-- 📂 Data-driven testing with JSON and Excel - Done
-- 🗂️ Page Object Model (POM) design pattern - Done
-- 🧑‍💻 Custom logging and screenshot capture on failures - Done
-- ⚙️ Environment-driven configuration management - Done
-- 🎥 Screen capture and Video recording of failed UI tests - Done
-- 📱 Mobile testing support with Appium - Done
-- 🧪 Performance testing integration with Locust - Done
-- 🧑‍💻 Data Testing with REST Countries API - Done
+
+| # | Feature | Status |
+|---|---------|--------|
+| 1 | 🎭 Selenium-Python-Pytest Test Automation framework | ✅ Done |
+| 2 | 🔧 Python programming support | ✅ Done |
+| 3 | 🌐 Cross-browser UI Automation testing (Chrome, Firefox, Edge) | ✅ Done |
+| 4 | 🧪 API testing support with Requests library | ✅ Done |
+| 5 | 📊 HTML and Allure test reports | ✅ Done |
+| 6 | 🎯 Auto-wait, parallel execution and retry mechanisms | ✅ Done |
+| 7 | 🔧 CI/CD integration with Jenkins and GitHub Actions | ✅ Done |
+| 8 | 📥 Docker containerization | ✅ Done |
+| 9 | 📢 Microsoft Teams notifications | ✅ Done |
+| 10 | 🧩 BDD support with Pytest-BDD | ✅ Done |
+| 11 | 📂 Data-driven testing with JSON and Excel | ✅ Done |
+| 12 | 🗂️ Page Object Model (POM) design pattern | ✅ Done |
+| 13 | 🧑‍💻 Custom logging and screenshot capture on failures | ✅ Done |
+| 14 | ⚙️ Environment-driven configuration management | ✅ Done |
+| 15 | 🎥 Screen capture and video recording of failed UI tests | ✅ Done |
+| 16 | 📱 Mobile testing support with Appium | ✅ Done |
+| 17 | 🦗 Performance testing integration with Locust | ✅ Done |
+| 18 | 🗄️ Data testing with REST Countries API | ✅ Done |
 
 ---
 ## ⚡ Quick Setup
@@ -69,151 +72,178 @@ The framework is fully integrated with Docker for containerized execution, GitHu
 ## 🚀 Project Folder Structure
 ```
 Selenium-Python-Automation-Framework/
+├── .claude/
+│   └── skills/
+│       └── commit-message/
+│           └── SKILL.md                                    # AI skill: generate conventional commit messages
+│
 ├── .github/
 │   └── workflows/
-│       └── ci.yml                                          # GitHub Actions CI workflow
+│       ├── ci.yml                                          # GitHub Actions CI workflow
+│       ├── claude-code-review.yml                          # Claude AI automated code review workflow
+│       └── claude.yml                                      # Claude AI GitHub integration workflow
 │
 ├── config/                                                 # Configuration files
 │   ├── api/
 │   │   └── jsonplaceholder/
-│   │       ├── api_test_data_config.json                  # JSONPLACEHOLDER API test data
-│   │       └── api_test_env_config.yml                    # JSONPLACEHOLDER API environment config
-│   │
-│   ├── performance/
-│   │   └── jsonplaceholder/
-│   │       └── perf_test_config.yml                       # Locust performance test config (users, rate, runtime)
+│   │       ├── api_test_data_config.json                   # JSONPLACEHOLDER API test data
+│   │       └── api_test_env_config.yml                     # JSONPLACEHOLDER API environment config
 │   │
 │   ├── data/
 │   │   └── restcountries/
-│   │       └── data_validation_config.yml                 # Data validation rules (ranges, expected counts, regions)
+│   │       └── data_validation_config.yml                  # Data validation rules (ranges, expected counts, regions)
 │   │
 │   ├── mobile/
 │   │   └── kwa/
 │   │       ├── mobile_test_data_config.yml                 # Mobile test data
 │   │       └── mobile_test_env_config.yml                  # Mobile environment config
 │   │
+│   ├── performance/
+│   │   └── jsonplaceholder/
+│   │       └── perf_test_config.yml                        # Locust performance test config (users, rate, runtime)
+│   │
 │   ├── ui/
-│   │   ├── hirokuapp/
-│   │   │   ├── ui_test_data_config.yml                     # Herokuapp UI test data
-│   │   │   └── ui_test_env_config.yml                      # Herokuapp UI environment config
+│   │   ├── heroku/
+│   │   │   ├── ui_test_data_config.yml                     # Heroku UI test data
+│   │   │   └── ui_test_env_config.yml                      # Heroku UI environment config
 │   │   │
 │   │   └── pta/
 │   │       ├── ui_test_data_config.yml                     # PTA UI test data
 │   │       ├── ui_test_env_config.yml                      # PTA UI environment config
-│   │       ├── ui_test_excel_data_config.xlsx              # Excel input data
-│   │       └── ui_test_excel_data_config_output.xlsx       # Excel output
+│   │       └── ui_test_excel_data_config.xlsx              # Excel-driven test data
 │   │
+│   ├── categories.json                                     # Allure report failure categories
 │   ├── common_config.yml                                   # Shared config
 │   └── config_parser.py                                    # Centralized config parser
 │
+├── executor/                                               # One-click test + report executor scripts
+│   ├── heroku_ui_tests_executor.bat                        # Run Heroku UI tests → generate + serve Allure report
+│   ├── jsonplaceholder_api_tests_executor.bat              # Run JSONPlaceholder API tests → generate + serve Allure report
+│   └── pta_ui_tests_executor.bat                           # Run PTA UI tests → generate + serve Allure report
+│
 ├── framework/                                              # Core framework
+│   ├── app_apk/
+│   │   └── Android_Demo_App.apk                            # Android APK for mobile testing
+│   │
 │   ├── interfaces/
 │   │   ├── __init__.py
-│   │   └── api_client.py                                   # API client wrapper
+│   │   └── api_client.py                                   # HTTP client wrapper (GET/POST/PUT/PATCH/DELETE + OAuth2)
 │   │
 │   ├── listeners/
 │   │   ├── __init__.py
-│   │   └── event_listeners.py                              # Event hooks (e.g., for Selenium)
+│   │   └── event_listeners.py                              # Selenium EventFiringWebDriver hooks for auto-logging
 │   │
 │   ├── pages/
 │   │   ├── __init__.py
-│   │   └── base_page.py                                    # Common page object base class
+│   │   ├── mobile/                                         # Mobile base page objects
+│   │   └── ui/
+│   │       └── base_page.py                                # BasePage — all shared WebDriver interactions & waits
 │   │
-│   ├── utilities/                                          # Utility functions
+│   ├── utilities/
 │   │   ├── __init__.py
-│   │   ├── common.py                                       # General helpers
-│   │   ├── custom_logger.py                                # Logger setup
-│   │   ├── emulator_launcher.py                            # Mobile emulator helper
-│   │   ├── loaders.py                                      # Data/config loaders
-│   │   ├── screen_recording_utils.py                       # Screen recording helper
-│   │   └── screenshot_utils.py                             # Screenshot helper
+│   │   ├── common.py                                       # General helpers (Faker, data utils)
+│   │   ├── custom_logger.py                                # Rotating file logger with colored console output
+│   │   ├── emulator_launcher.py                            # Android emulator auto-start helper
+│   │   ├── loaders.py                                      # YAML / JSON / Excel config loaders
+│   │   ├── screen_recording_utils.py                       # ffmpeg screen recording (start/stop/delete on pass)
+│   │   └── screenshot_utils.py                             # Screenshot capture on test failure
 │   │
 │   └── __init__.py
 │
-│   ├── output/                                             # Output directory
-│   │   ├── allure-results/                                 # Allure results directory
-│   │   ├── logs                                            # Log files directory
-│   │   │   └── test_execution.log                          # Execution log file
-│   │   ├── reports/                                        # Reports directory
-│   └── └── screenshots/                                    # Screenshots directory
-│          
+├── output/                                                 # Auto-generated test artifacts (cleaned each session)
+│   ├── allure-report/                                      # Generated Allure HTML report
+│   ├── allure-results/                                     # Raw Allure result files (JSON + attachments)
+│   ├── logs/
+│   │   └── test_execution.log                              # Rotating execution log (10 MB / 5 backups)
+│   ├── reports/                                            # pytest-html self-contained HTML reports
+│   ├── screenshots/                                        # PNG screenshots captured on test failure
+│   └── videos/                                             # MP4 screen recordings (kept only on failure)
+│
 ├── tests/                                                  # Test suite
-│   ├── performance/
+│   ├── api/
+│   │   ├── jsonplaceholder/
+│   │   │   ├── __init__.py
+│   │   │   └── test_jsonplaceholder.py                     # JSONPlaceholder API tests (GET/POST/PUT/PATCH/DELETE)
 │   │   ├── __init__.py
-│   │   └── locustfile.py                                  # Locust performance test (JSONPlaceholder)
+│   │   └── conftest.py                                     # API fixtures — APIClient with base URL + optional OAuth2
 │   │
 │   ├── data/
-│   │   ├── __init__.py
-│   │   ├── conftest.py                                    # Data test fixtures (session-scoped API fetch, DataFrame)
-│   │   └── restcountries/
-│   │       ├── __init__.py
-│   │       └── test_data_restcountries.py                 # 25 data quality tests (REST Countries API)
-│   │
-│   ├── api/
-│   │   └── jsonplaceholder/
+│   │   ├── restcountries/
 │   │   │   ├── __init__.py
-│   │   │   └── test_jsonplaceholder.py                     # API test cases for JSONPlaceholder
+│   │   │   └── test_data_restcountries.py                  # 25 data quality tests (REST Countries API)
 │   │   ├── __init__.py
-│   │   └── conftest.py                                     # API-specific fixtures
+│   │   └── conftest.py                                     # Data fixtures (session-scoped API fetch + DataFrame merge)
 │   │
 │   ├── mobile/
-│   │   └── kwa/
-│   │       ├── pages/
-│   │       │   ├── __init__.py
-│   │       │   └── contact_us_form_page.py                 # Page object for contact us form page
-│   │       │   └── enter_some_value_page.py                # Page object for enter some value page
-│   │       │   └── home_page.py                            # Page object for home page
-│   │       ├── __init__.py
-│   │       └── test_kwa.py                                 # KWA functional tests
+│   │   ├── kwa/
+│   │   │   ├── pages/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── contact_us_form_page.py                 # Page object — Contact Us form
+│   │   │   │   ├── enter_some_value_page.py                # Page object — Enter Some Value screen
+│   │   │   │   └── home_page.py                            # Page object — Home screen
+│   │   │   ├── __init__.py
+│   │   │   └── test_kwa.py                                 # KWA mobile functional tests
 │   │   ├── __init__.py
-│   │   └── conftest.py                                     # MOBILE-specific fixtures
+│   │   └── conftest.py                                     # Mobile fixtures — Appium server + desired capabilities
 │   │
-│   ├── snippet/                                            # Code snippets for reuse
+│   ├── performance/
 │   │   ├── __init__.py
-│   │   ├── test_excel.py                                   # Excel data handling snippet
-│   │   ├── test_parametrize_mechanism.py                   # Parametrization snippet
-│   │   └── test_retry_mechanism.py                         # Retry mechanism snippet
+│   │   └── locustfile.py                                   # Locust performance tests — JSONPlaceholder (9 tasks)
+│   │
+│   ├── snippet/                                            # Reusable code snippets and examples
+│   │   ├── __init__.py
+│   │   ├── test_excel.py                                   # Excel data-driven test snippet
+│   │   ├── test_parametrize_mechanism.py                   # @pytest.mark.parametrize snippet
+│   │   └── test_retry_mechanism.py                         # pytest-rerunfailures retry snippet
 │   │
 │   ├── ui/
 │   │   ├── hirokuapp/
 │   │   │   ├── pages/
 │   │   │   │   ├── __init__.py
-│   │   │   │   ├── landing_page.py                         # Page object for the Herokuapp landing page
-│   │   │   │   ├── ab_test_page.py                         # Page object for the A/B Testing page
-│   │   │   │   ├── add_remove_elements_page.py             # Page object for the Add/Remove Elements page
-│   │   │   │   ├── basic_auth_page.py                      # Page object for the Basic Auth page
-│   │   │   │   └── broken_images_page.py                   # Page object for the Broken Images page
+│   │   │   │   ├── ab_test_page.py                         # Page object — A/B Testing page
+│   │   │   │   ├── add_remove_elements_page.py             # Page object — Add/Remove Elements page
+│   │   │   │   ├── basic_auth_page.py                      # Page object — Basic Auth page
+│   │   │   │   ├── broken_images_page.py                   # Page object — Broken Images page
+│   │   │   │   ├── challenging_dom_page.py                 # Page object — Challenging DOM page
+│   │   │   │   ├── digest_auth_page.py                     # Page object — Digest Auth page
+│   │   │   │   ├── disappearing_elements_page.py           # Page object — Disappearing Elements page
+│   │   │   │   └── landing_page.py                         # Page object — Herokuapp landing page
 │   │   │   ├── __init__.py
-│   │   │   └── test_hirokuapp.py                           # Herokuapp functional tests (broken links, A/B test, add/remove elements, basic auth, broken images)
+│   │   │   └── test_heroku.py                              # Heroku UI tests (broken links, A/B, add/remove, auth, images, DOM, digest auth, disappearing elements)
 │   │   │
 │   │   └── pta/
 │   │       ├── features/
-│   │       │   ├── pta_app.feature                         # Gherkin feature file for PTA
+│   │       │   └── pta_app.feature                         # Gherkin feature file for PTA BDD tests
 │   │       ├── pages/
 │   │       │   ├── __init__.py
-│   │       │   └── contact_page.py                         # Page object for contact page
-│   │       │   └── home_page.py                            # Page object for home page
-│   │       │   └── login_page.py                           # Page object for login page
+│   │       │   ├── contact_page.py                         # Page object — Contact page
+│   │       │   ├── home_page.py                            # Page object — Home page
+│   │       │   └── login_page.py                           # Page object — Login page
 │   │       ├── steps/
 │   │       │   ├── __init__.py
-│   │       │   └── test_pta_app.py                         # Step definitions for PTA
+│   │       │   └── test_pta_app.py                         # pytest-bdd step definitions for PTA
 │   │       ├── __init__.py
-│   │       ├── test_pta_clean_version.py                   # PTA functional tests with minimal comments for experienced testers
-│   │       └── test_pta_tutorial_version.py                # PTA functional tests with tutorial like comments
+│   │       ├── test_pta_clean_version.py                   # PTA tests — minimal comments (experienced testers)
+│   │       └── test_pta_tutorial_version.py                # PTA tests — full tutorial comments (onboarding)
 │   │   ├── __init__.py
-│   │   └── conftest.py                                     # UI-specific fixtures
+│   │   └── conftest.py                                     # UI fixtures — WebDriver init/teardown, screenshot & video on failure
 │   │
 │   ├── __init__.py
-│   └── conftest.py                                         # Root-level fixtures
+│   └── conftest.py                                         # Session fixtures — clean output/, write Allure environment.properties
 │
-├── .gitignore                                              # Files to ignore in git
-├── architecture_diagram.png                                # Framework architecture diagram
-├── Dockerfile                                              # Docker container setup
-├── Jenkinsfile                                             # Jenkins CI pipeline
-├── pytest.ini                                              # Pytest configuration
+├── tutorial/
+│   └── tutorial.docx                                       # Framework tutorial document (beginner-to-advanced guide)
+│
+├── .gitignore                                              # Git ignore rules
+├── automation_architecture.png                             # Framework architecture diagram
+├── automation_coverage.png                                 # Test coverage diagram
+├── CLAUDE.md                                               # AI assistant guidance (commands, architecture, patterns)
+├── Dockerfile                                              # Docker container setup for headless test execution
+├── Jenkinsfile                                             # Jenkins declarative CI/CD pipeline
+├── open_allure_report.bat                                  # Standalone: generate + serve existing Allure report
+├── pytest.ini                                              # Pytest markers, config, and plugin settings
 ├── README.md                                               # Framework documentation
-├──requirements.txt                                         # Python dependencies
-└── UI API Automation Architecture.drawio                   # Draw.io diagram file
+└── requirements.txt                                        # Python dependencies
 ```
 ---
 ## 🚀 Environment Variables
@@ -249,7 +279,8 @@ Selenium-Python-Automation-Framework/
 | `--log-cli-level=INFO`  | Set log level for console output (e.g., DEBUG, INFO, WARNING, ERROR)   |
 | `-n 4`                  | Run tests in parallel using 4 CPU cores                                |
 | `--reruns 3`            | Rerun failed tests up to 3 times                                       |
-| `tests`                 | Path to your test suite root                                           | 
+| `-s`                    | Disable output capturing — prints `print()` statements directly to terminal |
+| `tests`                 | Path to your test suite root                                           |
 
 ---
 ## 🖥️ Running PTA UI Tests from Command Line (PowerShell)
@@ -345,39 +376,153 @@ env | grep -E "^(APP_NAME|SERVICE_NAME|MOBILE_APP_NAME|REGION|BROWSER|HEADLESS)=
     docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 
 ---
-## 🖥️ To generate Allure Results
-    pytest --alluredir=output/allure-results tests
-    
-    # To install allure run the below commands in powershell
-    Set-ExecutionPolicy RemoteSigned -scope CurrentUser
-    iwr -useb get.scoop.sh | iex
-    scoop install allure    
-    
-    # To generate Allure Report
-    allure generate output/allure-results --clean -o output/allure-report
+## ⚡ One-Click Executor Scripts (Windows)
 
-    # To execute tests and serve Allure Report
-    cd C:\Selenium-Python-Automation-Framework/executor
-    cmd /c jsonplaceholder_api_tests_executor.bat
-    Default browser will open the http://localhost:8000/output/allure-report/ displaying the allure report
-    Ctrl + C to stop the server when done
+The `executor/` folder contains Windows batch scripts that run the full test suite **and** generate + serve the Allure report in a single step — no manual commands needed.
+
+### Available Executors
+
+| Script | Test Suite | App / Service | Browser |
+|--------|-----------|---------------|---------|
+| `executor/heroku_ui_tests_executor.bat` | Heroku UI tests | `APP_NAME=HEROKU` | Chrome (headless) |
+| `executor/pta_ui_tests_executor.bat` | PTA UI tests | `APP_NAME=PTA` | Chrome (headless) |
+| `executor/jsonplaceholder_api_tests_executor.bat` | JSONPlaceholder API tests | `SERVICE_NAME=JSONPLACEHOLDER` | N/A |
+
+### How to Run
+
+**Option A — Double-click:**
+Navigate to the `executor/` folder in Windows Explorer and double-click the desired `.bat` file.
+
+**Option B — PowerShell terminal:**
+```powershell
+# From the project root
+cmd /c executor\heroku_ui_tests_executor.bat
+cmd /c executor\pta_ui_tests_executor.bat
+cmd /c executor\jsonplaceholder_api_tests_executor.bat
+```
+
+### What Each Script Does
+1. Sets the required environment variables (`APP_NAME` / `SERVICE_NAME`, `REGION`, `BROWSER`, `HEADLESS`)
+2. Runs pytest with `-n 4` parallel workers, Allure results, and HTML report
+3. Validates that `output/allure-results/` exists and is not empty (exits with error if not)
+4. Generates the Allure report via `allure generate output/allure-results --clean -o output/allure-report`
+5. Opens `http://localhost:8000/output/allure-report` in your default browser and starts a local HTTP server
+
+> Press **Ctrl+C** in the terminal to stop the HTTP server when done viewing the report.
+
+### Prerequisites for Executor Scripts
+- Python virtual environment must be activated (`.venv\Scripts\activate`)
+- Allure CLI must be on your PATH — install via:
+  ```powershell
+  Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+  iwr -useb get.scoop.sh | iex
+  scoop install allure
+  ```
+- Google Chrome must be installed (for UI executor scripts)
+
 ---
-## 🖥️ CI / CD
-    Any changes made and commit to the
-    Folder files i.e. '.gihub', 'config', 'framework', 'tests' 
-    or
-    Files i.e. 'Dockerfile', 'pytest.ini' 
-    or 
-    merge any branch to the main branch the git hub action will trigger and build the project.
+## 📊 Allure Report
 
-    After the pipeline ran we can download the allure-report as artifact from the 
-    github actions
+### Step 1 — Install Allure CLI (once)
+```powershell
+Set-ExecutionPolicy RemoteSigned -scope CurrentUser
+iwr -useb get.scoop.sh | iex
+scoop install allure
+```
 
-    To view the allure report extract the downloaded 'allure-report.zip' and git 
-    bash to the folder
-    python -m http.server 8000
-    http://localhost:8000    
+### Step 2 — Run Tests and Collect Results
+```powershell
+pytest --alluredir=output/allure-results tests
+```
+
+### Step 3 — Generate the Allure Report
+```powershell
+allure generate output/allure-results --clean -o output/allure-report
+```
+
+### Step 4 — Serve and View the Report
+```powershell
+python -m http.server 8000
+# Visit http://localhost:8000/output/allure-report
+```
+> Press **Ctrl+C** to stop the server when done.
+
 ---
+
+### ⚡ One-Click: Run Tests + Generate + Open Report
+Use the executor scripts to do all of the above in a single double-click:
+```powershell
+# From the project root
+cmd /c executor\jsonplaceholder_api_tests_executor.bat
+cmd /c executor\pta_ui_tests_executor.bat
+cmd /c executor\heroku_ui_tests_executor.bat
+```
+     The default browser will automatically open `http://localhost:8000/output/allure-report` when the report is ready.
+---
+## 🖥️ CI / CD Integration with GitHub Actions and Jenkins
+
+---
+
+### 🐙 GitHub Actions
+
+The pipeline triggers automatically when changes are pushed or merged to `main` for any of the following:
+
+**Folders:** `.github/`, `config/`, `framework/`, `tests/`  
+**Files:** `Dockerfile`, `pytest.ini`
+
+**Viewing Results:**
+1. Go to the **Actions** tab in GitHub → select the latest workflow run
+2. Download `allure-report.zip` from the **Artifacts** section
+3. Extract the zip, open a terminal in the extracted folder and run:
+   ```powershell
+   python -m http.server 8000
+   # Visit http://localhost:8000
+   ```
+
+---
+
+### 🔧 Jenkins
+
+#### Prerequisites
+- Jenkins installed and running (default: `http://localhost:8080`)
+- Docker installed and accessible to Jenkins
+- This repo connected to Jenkins via SCM (Git)
+
+#### One-Time Setup — Create the Pipeline Job
+1. Open Jenkins → **New Item**
+2. Enter a name (e.g., `Selenium-Python-Automation-Framework`) → select **Pipeline** → click **OK**
+3. Under the **Pipeline** section:
+   - Set **Definition** to `Pipeline script from SCM`
+   - Set **SCM** to `Git`
+   - Enter repo URL: `https://github.com/vishruth143/Selenium-Python-Automation-Framework.git`
+   - Set **Script Path** to `Jenkinsfile`
+4. Click **Save**
+
+#### Running the Pipeline
+1. Open the job → click **Build with Parameters**
+2. Select **BROWSER**: `CHROME`, `FIREFOX`, or `EDGE`
+3. Click **Build**
+
+#### What the Pipeline Does
+
+| Stage | Action |
+|-------|--------|
+| **Checkout** | Pulls latest code from Git |
+| **Build Docker Image** | `docker build -t selenium-python-automation .` |
+| **Run Tests** | Runs `pytest -m "pta or reqres"` inside the container with `HEADLESS=Y` |
+| **Copy Results** | Copies `output/` (reports, logs, screenshots) from container to Jenkins workspace |
+| **Cleanup** | Removes the test container |
+| **Post** | Archives `output/reports/report.html` and `output/allure-results/**` as artifacts |
+
+#### Viewing Results
+1. Click the build number → **Artifacts** → open `output/reports/report.html`
+2. For Allure: download `output/allure-results/`, extract, then run:
+   ```powershell
+   python -m http.server 8000
+   # Visit http://localhost:8000
+   ```
+
+
 ## 🖥️ Notification to MS Team
 ### On MS Teams
 ```text

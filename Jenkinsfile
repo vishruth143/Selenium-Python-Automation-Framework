@@ -10,8 +10,8 @@ pipeline {
         // Set environment variables for the test run
         APP_NAME = 'PTA'
         MOBILE_APP_NAME = 'KWA'
-        SERVICE_NAME = 'REQRES'
-        REGION = 'qa'
+        SERVICE_NAME = 'JSONPLACEHOLDER'
+        REGION = 'QA'
         HEADLESS = 'Y'
         DOCKER_IMAGE = 'selenium-python-automation' // Docker image name
         OUTPUT_CONTAINER = 'selenium_test_container' // Container name for test run

@@ -99,7 +99,7 @@ def region():
 #   3. Wraps the driver in an EventFiringWebDriver so that every navigation,
 #      click, and exception is automatically logged via MyEventListener.
 #   4. Maximizes the browser window for consistent test execution.
-#   5. Starts an ffmpeg video recording of the desktop (saved to output/videos/).
+#   5. Starts a ffmpeg video recording of the desktop (saved to output/videos/).
 #   6. After the test finishes (pass or fail), the teardown:
 #      a. Closes and quits the browser.
 #      b. Stops the video recording.
