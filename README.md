@@ -45,14 +45,12 @@ The framework is fully integrated with Docker for containerized execution, GitHu
    ```
 3. **Set environment variables:**
    ```bash
-   # Example for UI and API test
-   $env:APP_NAME="PTA"
-   $env:MOBILE_APP_NAME="KWA"
-   $env:SERVICE_NAME="JSONPLACEHOLDER"
+   # Optional - defaults are shown
    $env:REGION="QA"
    $env:BROWSER="CHROME"
    $env:HEADLESS="N"
    ```
+   > **Note:** `APP_NAME`, `SERVICE_NAME`, and `MOBILE_APP_NAME` are no longer required. Each app/service/mobile-app has its own `conftest.py` that selects the right config automatically based on the test path being collected (e.g. `pytest -m pta` picks `tests/ui/pta/conftest.py` which loads `pta_ui_test_data_config.yml`).
 4. **Run tests:**
    ```bash
     pytest -vvv -m "pta" -n 4 --reruns 3 --html=output/reports/pta_report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
@@ -248,18 +246,23 @@ Selenium-Python-Automation-Framework/
 ---
 ## 🚀 Environment Variables
 
+> **Note:** `APP_NAME`, `SERVICE_NAME`, and `MOBILE_APP_NAME` were previously required to select which app/service/mobile-app to run. They are **no longer needed** — each app folder under `tests/` has its own `conftest.py` that loads the right config automatically based on the test path being collected. You only need the variables below.
+
 ### 🔹 UI Testing
 | Variable    | Description                                                   | Default Value | Required/Optional |
 |-------------|---------------------------------------------------------------|---------------|-------------------|
-| `APP_NAME`  | Short name of application under test (AUT) (`PTA`, `HIROKUAPP`) | `None`      | `Required`        | 
-| `REGION`    | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`          | `Optional`        | 
+| `REGION`    | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`          | `Optional`        |
 | `BROWSER`   | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)         | `CHROME`      | `Optional`        |
 | `HEADLESS`  | Run in headless mode (`Y` or `N`)                             | `N`           | `Optional`        |
 
 ### 🔹 API Testing
 | Variable       | Description                                                   | Default | Required/Optional |
 |----------------|---------------------------------------------------------------|---------|-------------------|
-| `SERVICE_NAME` | Short name of service under test (AUT)                        | `None`  | `Required`        |
+| `REGION`       | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`    | `Optional`        |
+
+### 🔹 Mobile Testing
+| Variable       | Description                                                   | Default | Required/Optional |
+|----------------|---------------------------------------------------------------|---------|-------------------|
 | `REGION`       | Target region/environment (e.g., `QA`, `DEV`, `STAGE`,`PROD`) | `QA`    | `Optional`        |
 
 ---
@@ -285,7 +288,6 @@ Selenium-Python-Automation-Framework/
 ---
 ## 🖥️ Running PTA UI Tests from Command Line (PowerShell)
 ```bash
-    $env:APP_NAME="PTA"
     $env:REGION="QA"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
@@ -294,7 +296,6 @@ Selenium-Python-Automation-Framework/
 
 ## 🖥️ Running Heroku UI Tests from Command Line (PowerShell)
 ```bash
-    $env:APP_NAME="HEROKU"
     $env:REGION="QA"
     $env:BROWSER="CHROME"
     $env:HEADLESS="N"
@@ -303,13 +304,11 @@ Selenium-Python-Automation-Framework/
 
 ## 🖥️ Running API Tests from Command Line (PowerShell)
 ```bash
-    $env:SERVICE_NAME="JSONPLACEHOLDER"
-    $env:REGION="QA"    
+    $env:REGION="QA"
     pytest -vvv -m "jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 ## 🖥️ Running Mobile Tests from Command Line (PowerShell)
 ```bash
-    $env:MOBILE_APP_NAME="KWA"       
     pytest -vvv -m "kwa" --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 ```
 ## 🦗 Running Performance Tests with Locust (PowerShell)
@@ -349,16 +348,16 @@ printenv
 set
 ```
 ---
-## 🖥️ If you want to filter and see only the ones you set (APP_NAME, SERVICE_NAME, etc.), you can do:
+## 🖥️ If you want to filter and see only the ones you set (REGION, BROWSER, HEADLESS), you can do:
 
 **PowerShell:**
 ```powershell
-Get-ChildItem Env: | Where-Object { $_.Name -in @("APP_NAME","SERVICE_NAME", "MOBILE_APP_NAME", "REGION","BROWSER","HEADLESS") }
+Get-ChildItem Env: | Where-Object { $_.Name -in @("REGION","BROWSER","HEADLESS") }
 ```
 
 **Bash (Git Bash / Linux / macOS):**
 ```bash
-env | grep -E "^(APP_NAME|SERVICE_NAME|MOBILE_APP_NAME|REGION|BROWSER|HEADLESS)="
+env | grep -E "^(REGION|BROWSER|HEADLESS)="
 ```   
 ---
 ## 🐳 To run on docker container: (PowerShell)
@@ -367,13 +366,13 @@ env | grep -E "^(APP_NAME|SERVICE_NAME|MOBILE_APP_NAME|REGION|BROWSER|HEADLESS)=
     docker build -t selenium-python-automation .
     
     # To run on Chrome browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    docker run -e REGION=qa -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
     
     # To run on Firefox browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    docker run -e REGION=qa -e BROWSER=FIREFOX -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
     
     # To run on Edge browser
-    docker run -e APP_NAME=PTA -e SERVICE_NAME=JSONPLACEHOLDER -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+    docker run -e REGION=qa -e BROWSER=EDGE -e HEADLESS=Y selenium-python-automation pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 
 ---
 ## ⚡ One-Click Executor Scripts (Windows)
@@ -382,11 +381,11 @@ The `executor/` folder contains Windows batch scripts that run the full test sui
 
 ### Available Executors
 
-| Script | Test Suite | App / Service | Browser |
-|--------|-----------|---------------|---------|
-| `executor/heroku_ui_tests_executor.bat` | Heroku UI tests | `APP_NAME=HEROKU` | Chrome (headless) |
-| `executor/pta_ui_tests_executor.bat` | PTA UI tests | `APP_NAME=PTA` | Chrome (headless) |
-| `executor/jsonplaceholder_api_tests_executor.bat` | JSONPlaceholder API tests | `SERVICE_NAME=JSONPLACEHOLDER` | N/A |
+| Script | Test Suite | Marker | Browser |
+|--------|-----------|--------|---------|
+| `executor/heroku_ui_tests_executor.bat` | Heroku UI tests | `-m "heroku"` | Chrome (headless) |
+| `executor/pta_ui_tests_executor.bat` | PTA UI tests | `-m "pta"` | Chrome (headless) |
+| `executor/jsonplaceholder_api_tests_executor.bat` | JSONPlaceholder API tests | `-m "jsonplaceholder"` | N/A |
 
 ### How to Run
 
@@ -402,7 +401,7 @@ cmd /c executor\jsonplaceholder_api_tests_executor.bat
 ```
 
 ### What Each Script Does
-1. Sets the required environment variables (`APP_NAME` / `SERVICE_NAME`, `REGION`, `BROWSER`, `HEADLESS`)
+1. Sets the optional environment variables (`REGION`, `BROWSER`, `HEADLESS` where applicable)
 2. Runs pytest with `-n 4` parallel workers, Allure results, and HTML report
 3. Validates that `output/allure-results/` exists and is not empty (exits with error if not)
 4. Generates the Allure report via `allure generate output/allure-results --clean -o output/allure-report`

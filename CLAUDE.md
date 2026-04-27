@@ -10,32 +10,29 @@ pip install -r requirements.txt
 ```
 
 ### Run Tests
-Tests require environment variables to select the app, region, and browser. The `REGION` defaults to `QA`, `BROWSER` defaults to `CHROME`, `HEADLESS` defaults to `N`.
+The right app/service config is selected automatically by the per-app `conftest.py` for the path being collected, so `APP_NAME` / `SERVICE_NAME` / `MOBILE_APP_NAME` are no longer required. `REGION` defaults to `QA`, `BROWSER` defaults to `CHROME`, `HEADLESS` defaults to `N`.
 
 ```bash
-# UI - Herokuapp
-APP_NAME=HIROKUAPP REGION=QA BROWSER=CHROME pytest -vvv -m "hirokuapp" tests/
+# UI - Heroku
+pytest -vvv -m "heroku" tests/
 
 # UI - PTA
-APP_NAME=PTA REGION=QA BROWSER=CHROME pytest -vvv -m "pta" tests/
+pytest -vvv -m "pta" tests/
 
-# API - Reqres
-SERVICE_NAME=REQRES REGION=QA pytest -vvv -m "reqres" tests/
-
-# API - Commerce Tools
-SERVICE_NAME=COMMERCE_TOOLS REGION=QA pytest -vvv -m "commerce_tools" tests/
+# API - JSONPlaceholder
+pytest -vvv -m "jsonplaceholder" tests/
 
 # Mobile - KWA
-MOBILE_APP_NAME=KWA pytest -vvv -m "kwa" tests/
+pytest -vvv -m "kwa" tests/
 
 # Run a single test file
-APP_NAME=HIROKUAPP pytest -vvv tests/ui/heroku/test_heroku.py
+pytest -vvv tests/ui/heroku/test_heroku.py
 
 # Run a single test by name
-APP_NAME=HIROKUAPP pytest -vvv tests/ui/heroku/test_heroku.py::TestHirokuApp::test_ab_test_page
+pytest -vvv tests/ui/heroku/test_heroku.py::TestHerokuApp::test_ab_test_page
 
 # Parallel execution with retries and HTML report
-APP_NAME=PTA BROWSER=CHROME pytest -vvv -m "pta" -n 4 --reruns 3 \
+BROWSER=CHROME pytest -vvv -m "pta" -n 4 --reruns 3 \
   --html=output/reports/report.html --self-contained-html \
   --alluredir=output/allure-results tests/
 ```
@@ -49,7 +46,7 @@ pylint framework/ tests/ config/
 ### Docker
 ```bash
 docker build -t selenium-python-automation .
-docker run -e APP_NAME=PTA -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest tests/
+docker run -e BROWSER=CHROME -e HEADLESS=Y selenium-python-automation pytest -m "pta" tests/
 ```
 
 ## Architecture
@@ -83,14 +80,13 @@ output/              ← Auto-generated: logs/, reports/, screenshots/, videos/,
 
 ### Configuration Loading
 
-`config/config_parser.py` is the central config loader. It reads the env vars (`APP_NAME`, `SERVICE_NAME`, `MOBILE_APP_NAME`, `REGION`) and resolves the correct YAML/JSON/Excel file under `config/<type>/<app>/`. Each YAML config has region-keyed blocks (`DEV`, `QA`, `STAGE`, `PROD`).
+`config/config_parser.py` is the central config loader. It resolves YAML/JSON/Excel files under `config/<type>/<app>/` by name (e.g. `pta_ui_test_data_config`). Each per-app `tests/.../<app>/conftest.py` declares its own `testdata` (and other) fixtures by calling `ConfigParser.load_config(...)` with the right config name - so `APP_NAME` / `SERVICE_NAME` / `MOBILE_APP_NAME` env vars are no longer needed. `REGION` is still read at the test level to pick the right region-keyed block (`DEV`, `QA`, `STAGE`, `PROD`).
 
 ### Fixture Chain
 
-1. **Session** (`tests/conftest.py`): Cleans and recreates `output/` subdirectories; writes Allure `environment.properties`.
-2. **Function - UI** (`tests/ui/conftest.py`): Reads config → builds WebDriver (Chrome/Firefox/Edge, local or Grid) → yields driver → tears down; captures screenshot and video on failure.
-3. **Function - API** (`tests/api/conftest.py`): Instantiates `APIClient` with base URL and optional OAuth2 token.
-4. **Session - Mobile** (`tests/mobile/conftest.py`): Starts Appium server; builds desired capabilities from config.
+1. **Session** (`tests/conftest.py`): Cleans `output/`, creates dirs, writes Allure `environment.properties`, registers the autouse `_stamp_log_context` fixture and exposes the `log` fixture.
+2. **Layer** (`tests/ui/conftest.py`, `tests/mobile/conftest.py`): Cross-app concerns only - WebDriver lifecycle / Appium server lifecycle.
+3. **Per-app** (`tests/ui/<app>/conftest.py`, `tests/api/<service>/conftest.py`, `tests/mobile/<app>/conftest.py`): Declares the app-specific `testdata` (and `api_client` / `driver` for mobile) by loading the matching config file directly - no central if/elif on env vars.
 
 ### Page Object Pattern
 

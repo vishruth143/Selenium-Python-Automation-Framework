@@ -8,9 +8,6 @@ pipeline {
     }
     environment {
         // Set environment variables for the test run
-        APP_NAME = 'PTA'
-        MOBILE_APP_NAME = 'KWA'
-        SERVICE_NAME = 'JSONPLACEHOLDER'
         REGION = 'QA'
         HEADLESS = 'Y'
         DOCKER_IMAGE = 'selenium-python-automation' // Docker image name
@@ -37,7 +34,7 @@ pipeline {
                 bat 'set BROWSER=%BROWSER%'
                 // Run tests inside Docker container, passing environment variables
                 // Note: Use %BROWSER% to pass the correct value, not ${params.BROWSER}
-                bat 'docker run --name %OUTPUT_CONTAINER% -e APP_NAME=%APP_NAME% -e SERVICE_NAME=%SERVICE_NAME% -e REGION=%REGION% -e BROWSER=%BROWSER% -e HEADLESS=%HEADLESS% %DOCKER_IMAGE% pytest -vvv -m "pta or reqres" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
+                bat 'docker run --name %OUTPUT_CONTAINER% -e REGION=%REGION% -e BROWSER=%BROWSER% -e HEADLESS=%HEADLESS% %DOCKER_IMAGE% pytest -vvv -m "pta or jsonplaceholder" -n 4 --maxfail=1 --log-cli-level=INFO --reruns 3 --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests'
             }
         }
         stage('Copy Results from Container') {

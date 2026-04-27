@@ -1,7 +1,6 @@
 @echo off
 cd /d "%~dp0.."
 
-set APP_NAME=HEROKU
 set REGION=QA
 set BROWSER=CHROME
 set HEADLESS=Y

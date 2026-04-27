@@ -1,7 +1,6 @@
 @echo off
 cd /d "%~dp0.."
 
-set SERVICE_NAME=JSONPLACEHOLDER
 set REGION=QA
 pytest -vvv -m "jsonplaceholder" -n 4 --log-cli-level=INFO --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 
