@@ -9,6 +9,16 @@ import logging
 import json
 import platform
 
+import pytest
+
+from framework.utilities.custom_logger import (
+    Logger,
+    merge_worker_logs,
+    set_log_context,
+    clear_log_context,
+)
+
+
 def _on_rm_error(func, path, exc_info):
     # Try to remove read-only or locked files
     try:
@@ -36,6 +46,14 @@ def _release_log_handlers():
 
 # Clean up output folder before any tests run
 def pytest_sessionstart(session):
+    # When running under pytest-xdist, this hook fires once per worker
+    # process as well as on the master/controller. Only the master should
+    # clean and recreate the output/ directory - otherwise workers will
+    # delete files (logs, screenshots, videos) being written by sibling
+    # workers, which is another major source of "jumbled" / lost output.
+    if os.environ.get("PYTEST_XDIST_WORKER"):
+        return
+
     # Release all open log file handles BEFORE attempting to delete the folder.
     # Logger instances created at module level (e.g. in test files) open
     # test_execution.log immediately on import, which locks the file on Windows.
@@ -80,6 +98,93 @@ def pytest_sessionstart(session):
     with open(executor_path, 'w') as f:
         json.dump(executor_data, f, indent=2)
     print(f"Generated executor.json: {executor_data.get('name')}")
+
+    # Initialise the framework Logger on the main / controller process so
+    # the main shard file (test_execution_main.log) is created and a session
+    # header row is written. The shard files for every worker (and main)
+    # are merged into a single test_execution.log in pytest_sessionfinish.
+    main_log = Logger(file_id="session").logger
+    set_log_context(worker_id="main", test_name="session")
+    main_log.info("=" * 80)
+    main_log.info("Pytest session started - executor=%s, region=%s, browser=%s, headless=%s",
+                  executor_data.get("name"),
+                  os.getenv("REGION", "QA"),
+                  os.getenv("BROWSER", "CHROME"),
+                  os.getenv("HEADLESS", "N"))
+    main_log.info("=" * 80)
+    clear_log_context()
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """
+    Merge per-worker log shards into a single test_execution.log.
+
+    pytest-xdist workers each write to their own shard file
+    (test_execution_gw0.log, test_execution_gw1.log, ...) to avoid
+    cross-process write contention. This hook runs on the *controller*
+    process after all workers have finished, so all shards are fully
+    flushed and safe to read and merge.
+    """
+    # Only the controller process (no PYTEST_XDIST_WORKER env var) merges.
+    if os.environ.get("PYTEST_XDIST_WORKER"):
+        return
+    # Release file handles so Windows lets us read & delete the shard files.
+    _release_log_handlers()
+    try:
+        merge_worker_logs()
+        print("Merged worker log shards into test_execution.log")
+    except Exception as e:
+        print(f"Warning: could not merge worker logs: {e}")
+
+
+# ---------------------------------------------------------------------------
+# Global fixtures - available to UI, API, mobile and data tests alike.
+# ---------------------------------------------------------------------------
+@pytest.fixture()
+def log(request):
+    """
+    Return a Logger pre-stamped with worker-id and test-name.
+
+    Usage:
+        def test_foo(log):
+            log.info("hello")  # -> [gw0]  [test_foo]  INFO  ...
+    """
+    worker_id = os.environ.get("PYTEST_XDIST_WORKER", "main")
+    test_name = request.node.name
+    set_log_context(worker_id=worker_id, test_name=test_name)
+    logger = Logger(file_id=request.node.module.__name__.rsplit(".", 1)[-1])
+    yield logger
+    clear_log_context()
+
+
+@pytest.fixture(autouse=True)
+def _stamp_log_context(request):
+    """
+    Autouse fixture - stamps thread-local log context for EVERY test so that
+    module-level Logger instances (the existing pattern in this framework)
+    pick up the running test's worker_id + test_name without needing to
+    explicitly request the `log` fixture.
+
+    Also writes a clear START / END banner around each test so that when
+    several tests run sequentially on the same xdist worker (e.g. 4 tests
+    on `-n 2`), each test's log lines are visually separated inside the
+    worker's shard file.
+    """
+    worker_id = os.environ.get("PYTEST_XDIST_WORKER", "main")
+    test_name = request.node.name
+    set_log_context(worker_id=worker_id, test_name=test_name)
+
+    banner_logger = Logger(file_id="test.lifecycle")
+    banner_logger.info("-" * 80)
+    banner_logger.info("TEST START: %s", test_name)
+    banner_logger.info("-" * 80)
+
+    yield
+
+    banner_logger.info("-" * 80)
+    banner_logger.info("TEST END:   %s", test_name)
+    banner_logger.info("-" * 80)
+    clear_log_context()
 
 
 def _build_executor_info():

@@ -12,14 +12,14 @@ from selenium.common.exceptions import WebDriverException
 
 from config.config_parser import ConfigParser
 from framework.utilities.custom_logger import Logger
-from tests.ui.hirokuapp.pages.landing_page import LandingPage
-from tests.ui.hirokuapp.pages.ab_test_page import ABTestPage
-from tests.ui.hirokuapp.pages.add_remove_elements_page import AddRemoveElementsPage
-from tests.ui.hirokuapp.pages.basic_auth_page import BasicAuthPage
-from tests.ui.hirokuapp.pages.broken_images_page import BrokenImagesPage
-from tests.ui.hirokuapp.pages.challenging_dom_page import ChallengingDomPage
-from tests.ui.hirokuapp.pages.digest_auth_page import DigestAuthPage
-from tests.ui.hirokuapp.pages.disappearing_elements_page import DisappearingElementsPage
+from tests.ui.heroku.pages.landing_page import LandingPage
+from tests.ui.heroku.pages.ab_test_page import ABTestPage
+from tests.ui.heroku.pages.add_remove_elements_page import AddRemoveElementsPage
+from tests.ui.heroku.pages.basic_auth_page import BasicAuthPage
+from tests.ui.heroku.pages.broken_images_page import BrokenImagesPage
+from tests.ui.heroku.pages.challenging_dom_page import ChallengingDomPage
+from tests.ui.heroku.pages.digest_auth_page import DigestAuthPage
+from tests.ui.heroku.pages.disappearing_elements_page import DisappearingElementsPage
 
 log = Logger(file_id=__name__.rsplit(".", 1)[1])
 ui_test_env_config = ConfigParser.load_config("heroku_ui_test_env_config")
