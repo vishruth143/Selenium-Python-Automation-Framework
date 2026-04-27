@@ -10,15 +10,19 @@
 #
 # This file is automatically loaded by pytest for every test under tests/ui/.
 # It provides:
-#   1. A "testdata" fixture  — loads app-specific test data from YAML config.
-#   2. A "region" fixture    — resolves the target environment (QA, DEV, etc.).
-#   3. A "driver" fixture    — creates a Selenium WebDriver for each test,
+#   1. A "region" fixture    — resolves the target environment (QA, DEV, etc.).
+#   2. A "driver" fixture    — creates a Selenium WebDriver for each test,
 #                              wraps it with an event listener, starts video
 #                              recording, and tears everything down after.
-#   4. pytest_runtest_makereport hook — captures a screenshot on test failure
+#   3. pytest_runtest_makereport hook — captures a screenshot on test failure
 #                              and deletes the video file for passed tests.
-#   5. pytest_bdd_after_scenario hook — captures a screenshot when a BDD
+#   4. pytest_bdd_after_scenario hook — captures a screenshot when a BDD
 #                              scenario fails.
+#
+# Per-app "testdata" fixtures live in their own conftest.py files so each
+# app declares ONLY its own data file (no central if/elif on APP_NAME):
+#   tests/ui/pta/conftest.py    -> testdata = pta_ui_test_data_config.yml
+#   tests/ui/heroku/conftest.py -> testdata = heroku_ui_test_data_config.yml
 #
 # How the fixture chain works:
 #   tests/conftest.py  (session) — cleans output/, creates dirs, writes
@@ -27,6 +31,8 @@
 #       ↓
 #   tests/ui/conftest.py (this file) — creates browser, records video,
 #                                      captures screenshots on failure.
+#       ↓
+#   tests/ui/<app>/conftest.py     — declares the app-specific "testdata".
 #       ↓
 #   tests/ui/<app>/test_<app>.py — individual test cases use the "driver"
 #                                  fixture to interact with the browser.
@@ -42,31 +48,10 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.events import EventFiringWebDriver
 
 from framework.listeners.event_listeners import MyEventListener
-from config.config_parser import ConfigParser
 from framework.utilities.screenshot_utils import get_screenshot_path
 from framework.utilities.screen_recording_utils import start_video_recording, stop_video_recording
 
 
-# =============================================================================
-# FIXTURE: testdata (session scope)
-# =============================================================================
-# Loads the UI test data configuration ONCE per test session.
-# The data comes from a YAML file specific to the app under test.
-#
-# Example:
-#   APP_NAME=PTA → loads config/ui/pta/ui_test_data_config.yml
-#
-# Usage in a test:
-#   def test_login(driver, testdata):
-#       username = testdata["QA"]["username"]
-# =============================================================================
-@pytest.fixture(scope="session")
-def testdata():
-    if os.environ.get("APP_NAME", "").upper() == "PTA":
-        return ConfigParser.load_config("pta_ui_test_data_config")
-    elif os.environ.get("APP_NAME", "").upper() == "HEROKU":
-        return ConfigParser.load_config("heroku_ui_test_data_config")
-    return None
 
 
 # =============================================================================
