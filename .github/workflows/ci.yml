@@ -57,9 +57,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      APP_NAME: PTA
-      MOBILE_APP_NAME: KWA
-      SERVICE_NAME: JSONPLACEHOLDER
       REGION: qa
       BROWSER: CHROME
       HEADLESS: Y
