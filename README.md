@@ -93,9 +93,6 @@ $env:REGION   = "QA"      # default: QA
 $env:BROWSER  = "CHROME"  # default: CHROME
 $env:HEADLESS = "N"       # default: N
 ```
-
-> **Note:** `APP_NAME`, `SERVICE_NAME`, and `MOBILE_APP_NAME` are **no longer required**. Each app/service/mobile-app has its own `conftest.py` that selects the right config automatically based on the test path being collected (e.g. `pytest -m pta` picks `tests/ui/pta/conftest.py`, which loads `pta_ui_test_data_config.yml`).
-
 ### 4. Run tests
 
 ```bash
