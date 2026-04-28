@@ -16,7 +16,7 @@ class HomePage(BasePage):
 
     # ------------------------------------------------------Links-------------------------------------------------------
     _home_lnk = (By.XPATH, "//a[normalize-space()='Home']")
-    _practice_lnk = (By.XPATH, "//a[normalize-space()='Practice']")
+    _practice_lnk = (By.XPATH, "//a[normalize-space()='Practice1']")
     _courses_lnk = (By.XPATH, "//a[normalize-space()='Courses']")
     _blog_lnk = (By.XPATH, "//a[normalize-space()='Blog']")
     _contact_lnk = (By.XPATH, "//a[normalize-space()='Contact']")
