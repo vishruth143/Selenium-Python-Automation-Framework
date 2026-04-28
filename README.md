@@ -151,6 +151,11 @@ Selenium-Python-Automation-Framework/
 ├── output/                                                 # Auto-generated test artifacts (cleaned each session)
 │   ├── allure-report/                                      # Generated Allure HTML report
 │   ├── allure-results/                                     # Raw Allure result files (JSON + attachments)
+│   ├── healer/                                             # Locator Auto-Healer artifacts (do NOT hand-edit)
+│   │   ├── failures.json                                   # Parsed locator failures from test_execution.log
+│   │   ├── suggestions.json                                # Claude-generated locator fix suggestions
+│   │   ├── patch_report.json                               # Per-suggestion patch outcome (patched/skipped/error)
+│   │   └── pr_body.md                                      # Auto-generated PR description for the healer PR
 │   ├── logs/
 │   │   └── test_execution.log                              # Rotating execution log (10 MB / 5 backups)
 │   ├── reports/                                            # pytest-html self-contained HTML reports
@@ -195,7 +200,7 @@ Selenium-Python-Automation-Framework/
 │   │   └── test_retry_mechanism.py                         # pytest-rerunfailures retry snippet
 │   │
 │   ├── ui/
-│   │   ├── hirokuapp/
+│   │   ├── heroku/
 │   │   │   ├── pages/
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── ab_test_page.py                         # Page object — A/B Testing page
@@ -207,6 +212,7 @@ Selenium-Python-Automation-Framework/
 │   │   │   │   ├── disappearing_elements_page.py           # Page object — Disappearing Elements page
 │   │   │   │   └── landing_page.py                         # Page object — Herokuapp landing page
 │   │   │   ├── __init__.py
+│   │   │   ├── conftest.py                                 # Heroku app fixtures — loads heroku UI test data + env config
 │   │   │   └── test_heroku.py                              # Heroku UI tests (broken links, A/B, add/remove, auth, images, DOM, digest auth, disappearing elements)
 │   │   │
 │   │   └── pta/
@@ -230,15 +236,33 @@ Selenium-Python-Automation-Framework/
 │   └── conftest.py                                         # Session fixtures — clean output/, write Allure environment.properties
 │
 ├── tutorial/
+│   ├── locator_auto_healer.md                              # Locator Auto-Healer pipeline guide (parse → heal → patch → PR)
 │   └── tutorial.docx                                       # Framework tutorial document (beginner-to-advanced guide)
 │
+├── resume/
+│   └── Vishvambruth_JavagalThimmegowda_QEM_Resume_2026.docx # Author resume (reference only)
+│
+├── scripts/                                                # Standalone tooling (not part of the test suite)
+│   ├── __init__.py
+│   └── healer/                                             # Locator Auto-Healer — fixes broken locators via Claude
+│       ├── prompts/
+│       │   └── heal_locator.md                             # Prompt template sent to Claude per failure
+│       ├── __init__.py
+│       ├── config.py                                       # Healer constants (paths, thresholds, model name)
+│       ├── parse_failures.py                               # Step 1 — parse output/logs/test_execution.log → failures.json
+│       ├── heal.py                                         # Step 2 — ask Claude for fixes → suggestions.json
+│       ├── patcher.py                                      # Step 3 — apply suggestions to page objects → patch_report.json
+│       ├── open_pr.py                                      # Step 4 — branch + commit + push + open GitHub PR (pr_body.md)
+│       └── run_healer.py                                   # Orchestrator: chains parse → heal → patch → PR
+│
 ├── .gitignore                                              # Git ignore rules
+├── AGENTS.md                                               # AI coding-agent guidance (concise, per agents.md spec)
+├── automation_architecture.drawio                          # Editable architecture diagram (draw.io source)
 ├── automation_architecture.png                             # Framework architecture diagram
 ├── automation_coverage.png                                 # Test coverage diagram
 ├── CLAUDE.md                                               # AI assistant guidance (commands, architecture, patterns)
 ├── Dockerfile                                              # Docker container setup for headless test execution
 ├── Jenkinsfile                                             # Jenkins declarative CI/CD pipeline
-├── open_allure_report.bat                                  # Standalone: generate + serve existing Allure report
 ├── pytest.ini                                              # Pytest markers, config, and plugin settings
 ├── README.md                                               # Framework documentation
 └── requirements.txt                                        # Python dependencies
