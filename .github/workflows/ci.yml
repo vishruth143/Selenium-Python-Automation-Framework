@@ -56,10 +56,15 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     outputs:
-      total:   ${{ steps.test_results.outputs.total }}
-      passed:  ${{ steps.test_results.outputs.passed }}
-      failed:  ${{ steps.test_results.outputs.failed }}
-      skipped: ${{ steps.test_results.outputs.skipped }}
+      total:             ${{ steps.test_results.outputs.total }}
+      passed:            ${{ steps.test_results.outputs.passed }}
+      failed:            ${{ steps.test_results.outputs.failed }}
+      skipped:           ${{ steps.test_results.outputs.skipped }}
+      failed_ui:         ${{ steps.test_results.outputs.failed_ui }}
+      failed_api:        ${{ steps.test_results.outputs.failed_api }}
+      failed_mobile:     ${{ steps.test_results.outputs.failed_mobile }}
+      failed_performance: ${{ steps.test_results.outputs.failed_performance }}
+      failed_data:       ${{ steps.test_results.outputs.failed_data }}
 
     env:
       REGION: qa
@@ -107,28 +112,74 @@ jobs:
         if: always()
         id: test_results
         run: |
-          if [ -f output/reports/junit_report.xml ]; then
-            TOTAL=$(python3 -c "
-          import xml.etree.ElementTree as ET
-          tree = ET.parse('output/reports/junit_report.xml')
+          python3 - <<'PYEOF'
+          import os, xml.etree.ElementTree as ET
+          from collections import defaultdict
+
+          xml_path = 'output/reports/junit_report.xml'
+          gho = os.environ.get('GITHUB_OUTPUT', '')
+
+          def write(key, value):
+              if gho:
+                  with open(gho, 'a') as f:
+                      f.write(f"{key}={value}\n")
+              print(f"{key}={value}")
+
+          # Layer detection: map classname/file path segment → friendly label
+          LAYER_ORDER = ['ui', 'api', 'mobile', 'performance', 'data']
+          LAYER_LABELS = {
+              'ui':          '🖥️ UI',
+              'api':         '🔌 API',
+              'mobile':      '📱 Mobile',
+              'performance': '⚡ Performance',
+              'data':        '🗄️ Data',
+          }
+
+          if not os.path.isfile(xml_path):
+              for k in ('total','passed','failed','skipped'):
+                  write(k, '0')
+              for layer in LAYER_ORDER:
+                  write(f'failed_{layer}', 'None')
+              raise SystemExit(0)
+
+          tree = ET.parse(xml_path)
           root = tree.getroot()
-          suite = root if root.tag == 'testsuite' else root.find('testsuite')
-          total   = int(suite.get('tests', 0))
-          errors  = int(suite.get('errors', 0))
-          failures= int(suite.get('failures', 0))
-          skipped = int(suite.get('skipped', 0))
-          passed  = total - failures - errors - skipped
-          print(f'{total},{passed},{failures + errors},{skipped}')
-          ")
-            IFS=',' read -r TOTAL PASSED FAILED SKIPPED <<< "$TOTAL"
-          else
-            TOTAL=0; PASSED=0; FAILED=0; SKIPPED=0
-          fi
-          echo "total=$TOTAL"     >> "$GITHUB_OUTPUT"
-          echo "passed=$PASSED"   >> "$GITHUB_OUTPUT"
-          echo "failed=$FAILED"   >> "$GITHUB_OUTPUT"
-          echo "skipped=$SKIPPED" >> "$GITHUB_OUTPUT"
-          echo "Test Results → Total: $TOTAL | Passed: $PASSED | Failed: $FAILED | Skipped: $SKIPPED"
+          suites = root.findall('.//testsuite') or ([root] if root.tag == 'testsuite' else [])
+
+          total = passed = failed = skipped = 0
+          failed_by_layer = defaultdict(list)
+
+          for suite in suites:
+              total   += int(suite.get('tests',    0))
+              failed  += int(suite.get('failures', 0)) + int(suite.get('errors', 0))
+              skipped += int(suite.get('skipped',  0))
+
+          passed = total - failed - skipped
+
+          # Collect individual failed test names grouped by layer
+          for tc in root.iter('testcase'):
+              if tc.find('failure') is not None or tc.find('error') is not None:
+                  classname = tc.get('classname', '')
+                  name      = tc.get('name', 'unknown')
+                  # Determine layer from classname (e.g. "tests.ui.heroku.test_heroku")
+                  layer_found = 'ui'  # default
+                  for layer in LAYER_ORDER:
+                      if f'.{layer}.' in classname or classname.startswith(f'{layer}.') or classname.startswith(f'tests.{layer}.'):
+                          layer_found = layer
+                          break
+                  failed_by_layer[layer_found].append(name)
+
+          write('total',   str(total))
+          write('passed',  str(passed))
+          write('failed',  str(failed))
+          write('skipped', str(skipped))
+
+          for layer in LAYER_ORDER:
+              names = failed_by_layer.get(layer, [])
+              write(f'failed_{layer}', ', '.join(names) if names else 'None')
+
+          print(f"Results → Total:{total} Passed:{passed} Failed:{failed} Skipped:{skipped}")
+          PYEOF
 
       - name: Install Allure CLI (Manual)
         run: |
@@ -199,6 +250,11 @@ jobs:
           PASSED_TESTS: ${{ needs.build-and-test.outputs.passed }}
           FAILED_TESTS: ${{ needs.build-and-test.outputs.failed }}
           SKIPPED_TESTS: ${{ needs.build-and-test.outputs.skipped }}
+          FAILED_UI: ${{ needs.build-and-test.outputs.failed_ui }}
+          FAILED_API: ${{ needs.build-and-test.outputs.failed_api }}
+          FAILED_MOBILE: ${{ needs.build-and-test.outputs.failed_mobile }}
+          FAILED_PERFORMANCE: ${{ needs.build-and-test.outputs.failed_performance }}
+          FAILED_DATA: ${{ needs.build-and-test.outputs.failed_data }}
         run: |
           echo "Lint Job Status: $LINT_STATUS"
           echo "Build and Test Job Status: $BUILD_STATUS"
@@ -212,6 +268,16 @@ jobs:
             STATUS_EMOJI="❌"
             COLOR="FF0000"
           fi
+
+          # Build failure-details facts only for layers that have failures
+          FAILURE_FACTS=""
+          for LAYER_KEY in "🖥️ UI:$FAILED_UI" "🔌 API:$FAILED_API" "📱 Mobile:$FAILED_MOBILE" "⚡ Performance:$FAILED_PERFORMANCE" "🗄️ Data:$FAILED_DATA"; do
+            LABEL="${LAYER_KEY%%:*}"
+            NAMES="${LAYER_KEY#*:}"
+            if [ -n "$NAMES" ] && [ "$NAMES" != "None" ]; then
+              FAILURE_FACTS="${FAILURE_FACTS}{ \"name\": \"↳ $LABEL Failures\", \"value\": \"$NAMES\" },"
+            fi
+          done
 
           MESSAGE=$(cat <<EOF
           {
@@ -230,8 +296,9 @@ jobs:
                 { "name": "✅ Passed", "value": "$PASSED_TESTS" },
                 { "name": "❌ Failed", "value": "$FAILED_TESTS" },
                 { "name": "⏭️ Skipped", "value": "$SKIPPED_TESTS" },
+                $FAILURE_FACTS
                 { "name": "Branch", "value": "$GITHUB_REF_NAME" },
-                { "name": "Run", "value": "[View Run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" }                
+                { "name": "Run", "value": "[View Run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" }
               ],
               "markdown": true
             } ]
