@@ -55,6 +55,11 @@ jobs:
   build-and-test:
     needs: lint
     runs-on: ubuntu-latest
+    outputs:
+      total:   ${{ steps.test_results.outputs.total }}
+      passed:  ${{ steps.test_results.outputs.passed }}
+      failed:  ${{ steps.test_results.outputs.failed }}
+      skipped: ${{ steps.test_results.outputs.skipped }}
 
     env:
       REGION: qa
@@ -95,7 +100,35 @@ jobs:
             --capture=tee-sys \
             --alluredir=output/allure-results \
             --durations=10 \
+            --junit-xml=output/reports/junit_report.xml \
             tests
+
+      - name: Parse Test Results
+        if: always()
+        id: test_results
+        run: |
+          if [ -f output/reports/junit_report.xml ]; then
+            TOTAL=$(python3 -c "
+          import xml.etree.ElementTree as ET
+          tree = ET.parse('output/reports/junit_report.xml')
+          root = tree.getroot()
+          suite = root if root.tag == 'testsuite' else root.find('testsuite')
+          total   = int(suite.get('tests', 0))
+          errors  = int(suite.get('errors', 0))
+          failures= int(suite.get('failures', 0))
+          skipped = int(suite.get('skipped', 0))
+          passed  = total - failures - errors - skipped
+          print(f'{total},{passed},{failures + errors},{skipped}')
+          ")
+            IFS=',' read -r TOTAL PASSED FAILED SKIPPED <<< "$TOTAL"
+          else
+            TOTAL=0; PASSED=0; FAILED=0; SKIPPED=0
+          fi
+          echo "total=$TOTAL"     >> "$GITHUB_OUTPUT"
+          echo "passed=$PASSED"   >> "$GITHUB_OUTPUT"
+          echo "failed=$FAILED"   >> "$GITHUB_OUTPUT"
+          echo "skipped=$SKIPPED" >> "$GITHUB_OUTPUT"
+          echo "Test Results → Total: $TOTAL | Passed: $PASSED | Failed: $FAILED | Skipped: $SKIPPED"
 
       - name: Install Allure CLI (Manual)
         run: |
@@ -162,6 +195,10 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           GITHUB_ACTOR: ${{ github.actor }}
+          TOTAL_TESTS: ${{ needs.build-and-test.outputs.total }}
+          PASSED_TESTS: ${{ needs.build-and-test.outputs.passed }}
+          FAILED_TESTS: ${{ needs.build-and-test.outputs.failed }}
+          SKIPPED_TESTS: ${{ needs.build-and-test.outputs.skipped }}
         run: |
           echo "Lint Job Status: $LINT_STATUS"
           echo "Build and Test Job Status: $BUILD_STATUS"
@@ -189,6 +226,10 @@ jobs:
                 { "name": "Triggered By", "value": "$GITHUB_ACTOR" },
                 { "name": "Lint Job", "value": "$LINT_STATUS" },
                 { "name": "Build & Test Job", "value": "$BUILD_STATUS" },
+                { "name": "Total Tests", "value": "$TOTAL_TESTS" },
+                { "name": "✅ Passed", "value": "$PASSED_TESTS" },
+                { "name": "❌ Failed", "value": "$FAILED_TESTS" },
+                { "name": "⏭️ Skipped", "value": "$SKIPPED_TESTS" },
                 { "name": "Branch", "value": "$GITHUB_REF_NAME" },
                 { "name": "Run", "value": "[View Run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" }                
               ],
