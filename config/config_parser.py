@@ -11,18 +11,18 @@ from framework.utilities.loaders import load_json, load_yaml, load_xlsx_sheet
 
 class ConfigParser:
     CONFIG_FILE_PATHS = {
-        'common_config': 'common_config.yml',
-        'pta_ui_test_env_config': 'ui/pta/ui_test_env_config.yml',
-        'pta_ui_test_data_config': 'ui/pta/ui_test_data_config.yml',
-        'pta_ui_test_excel_data_config': 'ui/pta/ui_test_excel_data_config.xlsx',
-        'kwa_mobile_test_env_config': 'mobile/kwa/mobile_test_env_config.yml',
-        'kwa_mobile_test_data_config': 'mobile/kwa/mobile_test_data_config.yml',
-        'jsonplaceholder_api_test_env_config': 'api/jsonplaceholder/api_test_env_config.yml',
-        'jsonplaceholder_api_test_data_config': 'api/jsonplaceholder/api_test_data_config.json',
-        'jsonplaceholder_perf_test_config': 'performance/jsonplaceholder/perf_test_config.yml',
-        'restcountries_data_validation_config': 'data/restcountries/data_validation_config.yml',
-        'heroku_ui_test_env_config': 'ui/heroku/ui_test_env_config.yml',
-        'heroku_ui_test_data_config': 'ui/heroku/ui_test_data_config.yml',
+        'common_config'                         :   'common_config.yml',
+        'pta_ui_test_env_config'                :   'ui/pta/ui_test_env_config.yml',
+        'pta_ui_test_data_config'               :   'ui/pta/ui_test_data_config.yml',
+        'pta_ui_test_excel_data_config'         :   'ui/pta/ui_test_excel_data_config.xlsx',
+        'heroku_ui_test_env_config'             :   'ui/heroku/ui_test_env_config.yml',
+        'heroku_ui_test_data_config'            :   'ui/heroku/ui_test_data_config.yml',
+        'kwa_mobile_test_env_config'            :   'mobile/kwa/mobile_test_env_config.yml',
+        'kwa_mobile_test_data_config'           :   'mobile/kwa/mobile_test_data_config.yml',
+        'jsonplaceholder_api_test_env_config'   :   'api/jsonplaceholder/api_test_env_config.yml',
+        'jsonplaceholder_api_test_data_config'  :   'api/jsonplaceholder/api_test_data_config.json',
+        'jsonplaceholder_perf_test_config'      :   'performance/jsonplaceholder/perf_test_config.yml',
+        'restcountries_data_validation_config'  :   'data/restcountries/data_validation_config.yml',
     }
 
     @staticmethod
