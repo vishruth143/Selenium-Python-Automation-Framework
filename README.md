@@ -5,7 +5,15 @@
 
 **A scalable, maintainable test automation framework for UI, API, Mobile, Performance & Data testing.**
 
+![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white)
+![Selenium](https://img.shields.io/badge/Selenium-4.43.0-43B02A?logo=selenium&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-9.0.3-blue?logo=pytest&logoColor=white)
+![Appium](https://img.shields.io/badge/Appium-5.3.1-purple?logo=appium&logoColor=white)
+![Locust](https://img.shields.io/badge/Locust-2.43.4-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+
 Built with Python · Selenium · Pytest · Pytest-BDD · Appium · Locust · Requests
+
 Containerized with Docker · CI/CD via GitHub Actions & Jenkins · Notifications via MS Teams
 
 ![Architecture](automation_architecture.png)
@@ -18,31 +26,33 @@ Containerized with Docker · CI/CD via GitHub Actions & Jenkins · Notifications
 ## 📑 Table of Contents
 
 1. [Features](#-features)
-2. [Quick Start](#-quick-start)
-3. [Project Structure](#-project-structure)
-4. [Environment Variables](#-environment-variables)
-5. [Pytest Flag Reference](#-pytest-flag-reference)
-6. [Running Tests](#-running-tests)
+2. [Prerequisites](#-prerequisites)
+3. [Quick Start](#-quick-start)
+4. [Project Structure](#-project-structure)
+5. [Locator Naming Conventions](#-locator-naming-conventions)
+6. [Environment Variables](#-environment-variables)
+7. [Pytest Flag Reference](#-pytest-flag-reference)
+8. [Running Tests](#-running-tests)
    - [UI · PTA](#ui--pta)
    - [UI · Heroku](#ui--heroku)
    - [API · JSONPlaceholder](#api--jsonplaceholder)
    - [Mobile · KWA](#mobile--kwa)
    - [Performance · Locust](#performance--locust)
    - [Data Quality · REST Countries](#data-quality--rest-countries)
-7. [Reports](#-reports)
+9. [Reports](#-reports)
    - [HTML Report](#html-report)
    - [Allure Report](#allure-report)
    - [One-Click Executor Scripts](#-one-click-executor-scripts-windows)
-8. [Docker](#-docker)
-9. [CI/CD Integration](#-cicd-integration)
-   - [GitHub Actions](#-github-actions)
-   - [Jenkins](#-jenkins)
-10. [MS Teams Notifications](#-ms-teams-notifications)
-11. [Screen Recording (ffmpeg)](#-screen-recording-ffmpeg)
-12. [Inspecting Environment Variables](#-inspecting-environment-variables)
-13. [Conventional Commits](#-conventional-commits)
-14. [MCP Servers](#-mcp-servers)
-15. [Claude · GitHub Integration](#-claude--github-integration)
+10. [Docker](#-docker)
+11. [CI/CD Integration](#-cicd-integration)
+    - [GitHub Actions](#-github-actions)
+    - [Jenkins](#-jenkins)
+12. [MS Teams Notifications](#-ms-teams-notifications)
+13. [Screen Recording (ffmpeg)](#-screen-recording-ffmpeg)
+14. [Inspecting Environment Variables](#-inspecting-environment-variables)
+15. [Conventional Commits](#-conventional-commits)
+16. [MCP Servers](#-mcp-servers)
+17. [Claude · GitHub Integration](#-claude--github-integration)
 
 ---
 
@@ -71,6 +81,23 @@ Containerized with Docker · CI/CD via GitHub Actions & Jenkins · Notifications
 
 ---
 
+## 🛠 Prerequisites
+
+Ensure the following tools are installed before setting up the project:
+
+| Tool          | Version | Purpose                                          | Install                                                      |
+|---------------|---------|--------------------------------------------------|--------------------------------------------------------------|
+| Python        | 3.10+   | Runtime for Pytest, Selenium and all dependencies | [python.org](https://www.python.org/downloads/)              |
+| Google Chrome | Latest  | Default browser for test execution               | [chrome](https://www.google.com/chrome/)                     |
+| ChromeDriver  | Auto    | Selenium WebDriver for Chrome                    | Auto-managed by Selenium Manager                             |
+| Node.js       | 18+     | Required for MCP server tools (optional)         | [nodejs.org](https://nodejs.org/)                            |
+| ffmpeg        | Any     | Screen recording for failed UI tests             | [ffmpeg.org](https://ffmpeg.org/download.html)               |
+| Git           | Any     | Source control                                   | [git-scm.com](https://git-scm.com/)                          |
+
+> **Note:** Firefox and Edge are also supported. Their respective WebDrivers are managed automatically by Selenium Manager (bundled with Selenium 4.6+).
+
+---
+
 ## ⚡ Quick Start
 
 ### 1. Clone the repository
@@ -80,35 +107,43 @@ git clone https://github.com/vishruth143/Selenium-Python-Automation-Framework.gi
 cd Selenium-Python-Automation-Framework
 ```
 
-### 2. Install Python dependencies
+### 2. Create and activate a virtual environment
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### 3. Install Python dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Set environment variables (optional)
+### 4. Set environment variables (optional)
 
 ```powershell
 $env:REGION   = "QA"      # default: QA
 $env:BROWSER  = "CHROME"  # default: CHROME
 $env:HEADLESS = "N"       # default: N
 ```
-### 4. Run tests
 
-```bash
-pytest -vvv -m "pta" -n 4 --reruns 3 \
-  --html=output/reports/pta_report.html --self-contained-html \
-  --alluredir=output/allure-results \
+### 5. Run tests
+
+```powershell
+pytest -vvv -m "pta" -n 4 --reruns 3 `
+  --html=output/reports/pta_report.html --self-contained-html `
+  --alluredir=output/allure-results `
   --capture=tee-sys --durations=10 tests
 ```
 
-### 5. Generate the Allure report
+### 6. Generate the Allure report
 
 ```bash
 allure generate output/allure-results --clean -o output/allure-report
 ```
 
-### 6. View the report
+### 7. View the report
 
 - Open `output/reports/pta_report.html` in a browser, **or**
 - Serve the Allure report locally:
@@ -201,7 +236,7 @@ Selenium-Python-Automation-Framework/
 │   │   ├── patch_report.json
 │   │   └── pr_body.md
 │   ├── logs/
-│   │   └── test_execution.log                             # Rotating execution log (10 MB / 5 backups)
+│   │   └── test_execution.log                             # Merged execution log (per-worker shards merged at session end; 10 MB / 5 backups)
 │   ├── reports/                                           # pytest-html self-contained HTML reports
 │   ├── screenshots/                                       # PNG screenshots captured on test failure
 │   └── videos/                                            # MP4 screen recordings (kept only on failure)
@@ -220,6 +255,7 @@ Selenium-Python-Automation-Framework/
 ├── tests/                                                 # Test suite
 │   ├── api/
 │   │   ├── jsonplaceholder/
+│   │   │   ├── conftest.py                                # JSONPlaceholder fixtures: api_client + testdata
 │   │   │   └── test_jsonplaceholder.py                    # JSONPlaceholder API tests
 │   │   └── conftest.py                                    # APIClient with base URL + optional OAuth2
 │   │
@@ -273,7 +309,7 @@ Selenium-Python-Automation-Framework/
 │   │   │
 │   │   └── conftest.py                                    # WebDriver init/teardown, screenshot & video on failure
 │   │
-│   └── conftest.py                                        # Session fixtures — clean output/, write Allure env props
+│   └── conftest.py                                        # Session fixtures — clean output/, write Allure env props, executor.json, autouse log-context stamping
 │
 ├── tutorial/
 │   ├── locator_auto_healer.md                             # Locator Auto-Healer pipeline guide
@@ -297,29 +333,85 @@ Selenium-Python-Automation-Framework/
 
 ---
 
+## 🏷 Locator Naming Conventions
+
+All locators defined in page object classes under `tests/**/pages/` follow a consistent suffix convention so the element type is immediately clear from the variable name alone.
+
+| Element Type       | Suffix      | Example                                                  |
+|--------------------|-------------|----------------------------------------------------------|
+| Button             | `_btn`      | `_submit_btn = (By.ID, "submit")`                        |
+| Text field / Input | `_txt`      | `_page_heading_txt = (By.XPATH, "//h1[...]")`            |
+| Input field        | `_input`    | `_username_input = (By.ID, "username")`                  |
+| Password field     | `_pwd`      | `_password_pwd = (By.ID, "password")`                    |
+| Link / Anchor      | `_lnk`      | `_logout_lnk = (By.XPATH, "//a[...]")`                   |
+| Dropdown / Select  | `_ddl`      | `_region_ddl = (By.ID, "region")`                        |
+| Checkbox           | `_chk`      | `_remember_me_chk = (By.ID, "remember")`                 |
+| Radio button       | `_rdo`      | `_gender_male_rdo = (By.ID, "male")`                     |
+| Label / Text span  | `_lbl`      | `_error_message_lbl = (By.ID, "error")`                  |
+| Header             | `_hdr`      | `_page_title_hdr = (By.TAG_NAME, "h2")`                  |
+| Image              | `_img`      | `_logo_img = (By.CSS_SELECTOR, "img.logo")`              |
+| Table              | `_tbl`      | `_results_tbl = (By.ID, "results")`                      |
+| List / `<ul>`      | `_lst`      | `_nav_menu_lst = (By.CSS_SELECTOR, "ul.nav")`            |
+| List item / `<li>` | `_itm`      | `_cart_item_itm = (By.CSS_SELECTOR, "li.cart-item")`     |
+| Form               | `_frm`      | `_login_frm = (By.ID, "login-form")`                     |
+| Container / `<div>`| `_ctr`      | `_modal_ctr = (By.ID, "modal")`                          |
+| Icon               | `_ico`      | `_search_ico = (By.CSS_SELECTOR, "i.search")`            |
+| Textarea           | `_area`     | `_comments_area = (By.ID, "comments")`                   |
+| Alert / Toast      | `_alert`    | `_success_alert = (By.CSS_SELECTOR, ".alert")`           |
+
+### Naming Pattern
+
+```python
+# Class-level tuple (private by convention): _<descriptive_name>_<suffix>
+_username_input    = (By.ID, "username")
+_password_input    = (By.ID, "password")
+_submit_btn        = (By.ID, "submit")
+_error_message_lbl = (By.ID, "error")
+```
+
+**Examples from this project:**
+
+```python
+# tests/ui/pta/pages/login_page.py
+_username_input             = (By.ID, "username")
+_password_input             = (By.ID, "password")
+_submit_btn                 = (By.ID, "submit")
+_logout_btn                 = (By.XPATH, "//a[normalize-space()='Log out']")
+_logged_in_successfully_txt = (By.XPATH, "//h1[normalize-space()='Logged In Successfully']")
+
+# tests/ui/heroku/pages/landing_page.py
+_ab_testing_lnk          = (By.XPATH, "//a[normalize-space()='A/B Testing']")
+_add_remove_elements_lnk = (By.XPATH, "//a[normalize-space()='Add/Remove Elements']")
+_broken_images_lnk       = (By.XPATH, "//a[normalize-space()='Broken Images']")
+```
+
+> 💡 This convention makes locators self-documenting — no need to inspect the HTML to know what type of element a variable represents.
+
+---
+
 ## 🌱 Environment Variables
 
-> `APP_NAME`, `SERVICE_NAME`, and `MOBILE_APP_NAME` were previously required to select which app/service/mobile-app to run. They are **no longer needed** — each app folder under `tests/` has its own `conftest.py` that loads the right config automatically based on the test path being collected.
+> **Note:** `APP_NAME`, `SERVICE_NAME`, and `MOBILE_APP_NAME` were previously required to select which app/service/mobile-app to run. They are **no longer needed** — each app folder under `tests/` has its own `conftest.py` that loads the right config automatically based on the test path being collected.
 
 ### UI Testing
 
-| Variable   | Description                                                 | Default  | Required |
-|------------|-------------------------------------------------------------|----------|:--------:|
-| `REGION`   | Target region/environment (`QA`, `DEV`, `STAGE`, `PROD`)    | `QA`     | Optional |
-| `BROWSER`  | Browser to run tests on (`CHROME`, `FIREFOX`, `EDGE`)       | `CHROME` | Optional |
-| `HEADLESS` | Run in headless mode (`Y` or `N`)                           | `N`      | Optional |
+| Variable   | Description                                                 | Default  | Accepted Values                    | Required |
+|------------|-------------------------------------------------------------|----------|------------------------------------|:--------:|
+| `REGION`   | Target region/environment                                   | `QA`     | `DEV`, `QA`, `STAGE`, `PROD`       | Optional |
+| `BROWSER`  | Browser to run tests on                                     | `CHROME` | `CHROME`, `FIREFOX`, `EDGE`        | Optional |
+| `HEADLESS` | Run in headless mode                                        | `N`      | `Y`, `N`                           | Optional |
 
 ### API Testing
 
-| Variable | Description                                              | Default | Required |
-|----------|----------------------------------------------------------|---------|:--------:|
-| `REGION` | Target region/environment (`QA`, `DEV`, `STAGE`, `PROD`) | `QA`    | Optional |
+| Variable | Description               | Default | Accepted Values              | Required |
+|----------|---------------------------|---------|------------------------------|:--------:|
+| `REGION` | Target region/environment | `QA`    | `DEV`, `QA`, `STAGE`, `PROD` | Optional |
 
 ### Mobile Testing
 
-| Variable | Description                                              | Default | Required |
-|----------|----------------------------------------------------------|---------|:--------:|
-| `REGION` | Target region/environment (`QA`, `DEV`, `STAGE`, `PROD`) | `QA`    | Optional |
+| Variable | Description               | Default | Accepted Values              | Required |
+|----------|---------------------------|---------|------------------------------|:--------:|
+| `REGION` | Target region/environment | `QA`    | `DEV`, `QA`, `STAGE`, `PROD` | Optional |
 
 ---
 
@@ -452,11 +544,11 @@ python -m http.server 8000
 
 The `executor/` folder contains Windows batch scripts that run the full test suite **and** generate + serve the Allure report in a single step.
 
-| Script                                            | Test Suite                | Marker             | Browser           |
-|---------------------------------------------------|---------------------------|--------------------|-------------------|
-| `executor/heroku_ui_tests_executor.bat`           | Heroku UI tests           | `-m "heroku"`      | Chrome (headless) |
-| `executor/pta_ui_tests_executor.bat`              | PTA UI tests              | `-m "pta"`         | Chrome (headless) |
-| `executor/jsonplaceholder_api_tests_executor.bat` | JSONPlaceholder API tests | `-m "jsonplaceholder"` | N/A           |
+| Script                                            | Test Suite                | Marker                   | Browser           |
+|---------------------------------------------------|---------------------------|--------------------------|-------------------|
+| `executor/heroku_ui_tests_executor.bat`           | Heroku UI tests           | `-m "heroku"`            | Chrome (headless) |
+| `executor/pta_ui_tests_executor.bat`              | PTA UI tests              | `-m "pta"`               | Chrome (headless) |
+| `executor/jsonplaceholder_api_tests_executor.bat` | JSONPlaceholder API tests | `-m "jsonplaceholder"`   | N/A               |
 
 **How to run**
 
@@ -565,7 +657,7 @@ The pipeline triggers automatically when changes are pushed or merged to `main` 
 |-------------------------|-------------------------------------------------------------------------------------|
 | **Checkout**            | Pulls latest code from Git                                                          |
 | **Build Docker Image**  | `docker build -t selenium-python-automation .`                                      |
-| **Run Tests**           | Runs `pytest -m "pta or reqres"` inside the container with `HEADLESS=Y`             |
+| **Run Tests**           | Runs `pytest -m "pta or jsonplaceholder"` inside the container with `HEADLESS=Y`   |
 | **Copy Results**        | Copies `output/` (reports, logs, screenshots) from container to Jenkins workspace   |
 | **Cleanup**             | Removes the test container                                                          |
 | **Post**                | Archives `output/reports/report.html` and `output/allure-results/**` as artifacts   |
@@ -668,13 +760,13 @@ This project follows the [Conventional Commits](https://www.conventionalcommits.
 <optional footer — e.g. BREAKING CHANGE, closes #issue>
 ```
 
-### Type prefixes
+### Type Prefixes
 
 | Prefix     | When to use                                                                       | Example                                                          |
 |------------|-----------------------------------------------------------------------------------|------------------------------------------------------------------|
 | `feat`     | A new feature                                                                     | `feat(login): add remember-me checkbox`                          |
 | `fix`      | A bug fix                                                                         | `fix(logger): release file handlers before output cleanup`       |
-| `chore`    | Routine tasks, dependency updates, tooling — no production logic change           | `chore(deps): bump selenium 4.41.0 → 4.43.0`                     |
+| `chore`    | Routine tasks, dependency updates, tooling — no production logic change           | `chore(deps): bump faker 40.13.0 → 40.15.0`                      |
 | `docs`     | Documentation-only changes                                                        | `docs(readme): add conventional commits reference`               |
 | `style`    | Formatting, whitespace, missing semicolons — no logic change                      | `style: reformat imports in conftest.py`                         |
 | `refactor` | Code restructured without fixing a bug or adding a feature                        | `refactor(common): extract login steps into helper method`       |
@@ -704,7 +796,7 @@ The scope is a short noun describing the section of the codebase affected. Place
 | `ci`              | `.github/workflows/`, `Jenkinsfile`, `Dockerfile`  |
 | `readme`          | `README.md`                                        |
 
-### Breaking changes
+### Breaking Changes
 
 Add `BREAKING CHANGE:` in the footer **or** append `!` after the type:
 
@@ -714,15 +806,15 @@ feat(config)!: rename region key from 'qa' to 'QA' in env config
 BREAKING CHANGE: all config YAML files must now use uppercase region keys.
 ```
 
-### Quick examples used in this project
+### Quick Examples
 
 ```text
 feat(pta): add test_pta_clean_version.py with clean login test without tutorial comments
 
 fix(conftest): release log handlers before rmtree to fix Windows file lock
 
-chore(deps): bump pytest 8.4.2 → 9.0.3, selenium 4.41.0 → 4.43.0,
-             faker 40.11.1 → 40.13.0, requests 2.33.0 → 2.33.1
+chore(deps): bump faker 40.13.0 → 40.15.0, locust 2.32.x → 2.43.4,
+             pylint 3.x → 4.0.5
 
 docs(readme): add conventional commits reference section
 
@@ -740,6 +832,20 @@ The configuration file lives at:
 ```text
 %LOCALAPPDATA%\github-copilot\intellij\mcp.json
 ```
+
+### MCP Server Reference
+
+| Server                 | Package                                       | Purpose                                                              |
+|------------------------|-----------------------------------------------|----------------------------------------------------------------------|
+| `github`               | GitHub Copilot MCP (remote)                   | GitHub repo, PR, issue, and search management                        |
+| `playwright`           | `@playwright/mcp@latest`                      | Browser automation — navigate, click, screenshot, snapshot           |
+| `selenium`             | `@angiejones/mcp-selenium`                    | Selenium WebDriver interactions for browser testing                  |
+| `filesystem`           | `@modelcontextprotocol/server-filesystem`     | Read/write files within allowed local directories                    |
+| `excel`                | `@negokaz/excel-mcp-server`                   | Read, write, and format Excel workbooks                              |
+| `rest-api`             | `dkmaker-mcp-rest-api`                        | Test REST API endpoints (base URL: `https://rahulshettyacademy.com/`)|
+| `mysql`                | `mysql_mcp_server` (via `uv`)                 | Execute SQL queries against a local MySQL database                   |
+| `word-document-server` | `office-word-mcp-server` (via `uvx`)          | Create and manipulate Word `.docx` documents                         |
+| `mcp-atlassian`        | `mcp-atlassian` (via `uvx`)                   | Jira and Confluence integration                                      |
 
 ### `mcp.json`
 
@@ -768,7 +874,9 @@ The configuration file lives at:
     "excel": {
       "command": "cmd",
       "args": ["/c", "npx", "--yes", "@negokaz/excel-mcp-server"],
-      "env": { "EXCEL_MCP_PAGING_CELLS_LIMIT": "4000" }
+      "env": {
+        "EXCEL_MCP_PAGING_CELLS_LIMIT": "4000"
+      }
     },
     "rest-api": {
       "command": "node",
@@ -799,23 +907,22 @@ The configuration file lives at:
     "word-document-server": {
       "command": "uvx",
       "args": ["--from", "office-word-mcp-server", "word_mcp_server"]
+    },
+    "mcp-atlassian": {
+      "command": "uvx",
+      "args": ["mcp-atlassian"],
+      "env": {
+        "JIRA_URL": "https://your-domain.atlassian.net",
+        "JIRA_USERNAME": "your-email@example.com",
+        "JIRA_API_TOKEN": "your_jira_api_token_here",
+        "CONFLUENCE_URL": "https://your-company.atlassian.net/wiki",
+        "CONFLUENCE_USERNAME": "your.email@company.com",
+        "CONFLUENCE_API_TOKEN": "your_api_token"
+      }
     }
   }
 }
 ```
-
-### MCP server reference
-
-| Server                 | Package                                       | Purpose                                                              |
-|------------------------|-----------------------------------------------|----------------------------------------------------------------------|
-| `github`               | GitHub Copilot MCP (remote)                   | GitHub repo, PR, issue, and search management                        |
-| `playwright`           | `@playwright/mcp@latest`                      | Browser automation — navigate, click, screenshot, snapshot           |
-| `selenium`             | `@angiejones/mcp-selenium`                    | Selenium WebDriver interactions for browser testing                  |
-| `filesystem`           | `@modelcontextprotocol/server-filesystem`     | Read/write files within allowed local directories                    |
-| `excel`                | `@negokaz/excel-mcp-server`                   | Read, write, and format Excel workbooks                              |
-| `rest-api`             | `dkmaker-mcp-rest-api`                        | Test REST API endpoints (base URL: `https://rahulshettyacademy.com/`)|
-| `mysql`                | `mysql_mcp_server` (via `uv`)                 | Execute SQL queries against a local MySQL database                   |
-| `word-document-server` | `office-word-mcp-server` (via `uvx`)          | Create and manipulate Word `.docx` documents                         |
 
 ### Prerequisites
 
@@ -823,7 +930,7 @@ The configuration file lives at:
 # Node.js (for npx-based servers)
 node --version   # v18+ recommended
 
-# Python uv (for mysql_mcp_server and word-document-server)
+# Python uv (for mysql_mcp_server, word-document-server and mcp-atlassian)
 pip install uv
 # or
 winget install astral-sh.uv
@@ -832,7 +939,7 @@ winget install astral-sh.uv
 npm install -g dkmaker-mcp-rest-api
 ```
 
-> Replace `<your-username>` in the paths above with your actual Windows username before using the config.
+> **Note:** Replace `<your-username>` in the paths above with your actual Windows username before using the config.
 
 ---
 

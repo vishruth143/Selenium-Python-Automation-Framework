@@ -1,5 +1,5 @@
 # .github/workflows/ci.yml
-name: CI - Docker Build and Test
+name: CI Tests
 
 # Triggers: on push to relevant paths/branches, pull requests to main, and daily schedule
 on:
@@ -17,6 +17,8 @@ on:
   pull_request:
     branches:
       - main
+
+  workflow_dispatch:
 
   schedule:
     - cron: '30 3 * * *'  # Runs at 09:00 AM IST every day
