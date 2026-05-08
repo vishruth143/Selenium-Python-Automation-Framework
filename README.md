@@ -39,20 +39,21 @@ Containerized with Docker · CI/CD via GitHub Actions & Jenkins · Notifications
    - [Mobile · KWA](#mobile--kwa)
    - [Performance · Locust](#performance--locust)
    - [Data Quality · REST Countries](#data-quality--rest-countries)
-9. [Reports](#-reports)
-   - [HTML Report](#html-report)
-   - [Allure Report](#allure-report)
-   - [One-Click Executor Scripts](#-one-click-executor-scripts-windows)
-10. [Docker](#-docker)
-11. [CI/CD Integration](#-cicd-integration)
+9. [Mobile Testing Setup (KWA · Android Emulator)](#-mobile-testing-setup-kwa--android-emulator)
+10. [Reports](#-reports)
+    - [HTML Report](#html-report)
+    - [Allure Report](#allure-report)
+    - [One-Click Executor Scripts](#-one-click-executor-scripts-windows)
+11. [Docker](#-docker)
+12. [CI/CD Integration](#-cicd-integration)
     - [GitHub Actions](#-github-actions)
     - [Jenkins](#-jenkins)
-12. [MS Teams Notifications](#-ms-teams-notifications)
-13. [Screen Recording (ffmpeg)](#-screen-recording-ffmpeg)
-14. [Inspecting Environment Variables](#-inspecting-environment-variables)
-15. [Conventional Commits](#-conventional-commits)
-16. [MCP Servers](#-mcp-servers)
-17. [Claude · GitHub Integration](#-claude--github-integration)
+13. [MS Teams Notifications](#-ms-teams-notifications)
+14. [Screen Recording (ffmpeg)](#-screen-recording-ffmpeg)
+15. [Inspecting Environment Variables](#-inspecting-environment-variables)
+16. [Conventional Commits](#-conventional-commits)
+17. [MCP Servers](#-mcp-servers)
+18. [Claude · GitHub Integration](#-claude--github-integration)
 
 ---
 
@@ -270,6 +271,7 @@ Selenium-Python-Automation-Framework/
 │   │   │   │   ├── contact_us_form_page.py
 │   │   │   │   ├── enter_some_value_page.py
 │   │   │   │   └── home_page.py
+│   │   │   ├── conftest.py                                # KWA fixtures: Appium driver + testdata
 │   │   │   └── test_kwa.py                                # KWA mobile functional tests
 │   │   └── conftest.py                                    # Appium server + desired capabilities
 │   │
@@ -314,6 +316,10 @@ Selenium-Python-Automation-Framework/
 ├── tutorial/
 │   ├── locator_auto_healer.md                             # Locator Auto-Healer pipeline guide
 │   └── tutorial.docx                                      # Framework tutorial document
+│
+├── Interview_preparations/                                # Interview prep materials
+│   ├── interview_prep_mcq.md                              # Multiple-choice questions for interview preparation
+│   └── interview_preparations.docx                        # Detailed interview preparation notes
 │
 ├── resume/
 │   └── Vishvambruth_JavagalThimmegowda_QEM_Resume_2026.docx
@@ -671,6 +677,170 @@ The pipeline triggers automatically when changes are pushed or merged to `main` 
    python -m http.server 8000
    # Visit http://localhost:8000
    ```
+
+---
+
+## 📱 Mobile Testing Setup (KWA · Android Emulator)
+
+This section walks you through setting up Android tooling, launching an emulator, and running the KWA mobile test suite end-to-end.
+
+### 🛠 Prerequisites
+
+| Tool                     | Version  | Purpose                                          | Install                                                                                           |
+|--------------------------|----------|--------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| Java JDK                 | 11+      | Required by Android SDK & Appium                 | [adoptium.net](https://adoptium.net/)                                                             |
+| Android Studio           | Latest   | Provides Android SDK, AVD Manager & emulator     | [developer.android.com](https://developer.android.com/studio)                                     |
+| Appium Server            | 2.x      | Mobile automation server                         | `npm install -g appium`                                                                           |
+| UiAutomator2 driver      | Latest   | Appium driver for Android                        | `appium driver install uiautomator2`                                                              |
+| Node.js                  | 18+      | Required by Appium                               | [nodejs.org](https://nodejs.org/)                                                                 |
+
+> **Environment variables** — add these to your system or PowerShell profile after installing Android Studio:
+>
+> ```powershell
+> $env:ANDROID_HOME = "C:\Users\<your-username>\AppData\Local\Android\Sdk"
+> $env:Path += ";$env:ANDROID_HOME\emulator;$env:ANDROID_HOME\platform-tools;$env:ANDROID_HOME\tools"
+> ```
+
+---
+
+### Step 1 — Install Appium and the UiAutomator2 driver
+
+```powershell
+npm install -g appium
+appium driver install uiautomator2
+appium driver list   # confirm uiautomator2 is listed as 'installed'
+```
+
+Verify Appium is working:
+
+```powershell
+appium --version
+```
+
+---
+
+### Step 2 — Create an Android Virtual Device (AVD)
+
+1. Open **Android Studio** → click **More Actions** → **Virtual Device Manager** (or go to *Tools → Device Manager*).
+2. Click **Create Device**.
+3. Select a device definition — e.g. **Pixel 9 Pro XL** — and click **Next**.
+4. Choose a system image (e.g. **API 35, Android 15.0, x86_64**) → download if needed → click **Next**.
+5. Set the AVD name to `Pixel_9_Pro_XL` *(this must match the `avd_name` parameter in `framework/utilities/emulator_launcher.py`)*.
+6. Click **Finish**.
+
+> **Tip:** You can list all existing AVDs from the command line:
+>
+> ```powershell
+> emulator -list-avds
+> ```
+
+---
+
+### Step 3 — Launch the Android Emulator
+
+#### Option A — Automatic (recommended)
+
+The framework auto-launches the emulator for you. When you run the KWA tests, `framework/utilities/emulator_launcher.py` is called automatically inside the `driver` fixture:
+
+- Checks if an emulator is already running via `adb devices`.
+- If not, starts `emulator -avd Pixel_9_Pro_XL` as a background process.
+- Polls `adb devices` until the device appears, then waits for `sys.boot_completed=1`.
+- Raises `RuntimeError` if boot does not complete within ~5 minutes.
+
+No manual action needed — just run the tests (Step 5).
+
+#### Option B — Manual launch
+
+Start the emulator yourself before running tests:
+
+```powershell
+# Launch by AVD name
+emulator -avd Pixel_9_Pro_XL
+
+# Verify it is online
+adb devices
+# Expected output:
+# List of devices attached
+# emulator-5554   device
+```
+
+Wait until the emulator home screen appears before proceeding.
+
+---
+
+### Step 4 — Verify the environment
+
+Run these checks to confirm everything is wired up correctly before executing tests:
+
+```powershell
+# 1. Confirm adb sees the emulator
+adb devices
+
+# 2. Confirm Appium can see the device
+appium --version
+
+# 3. Check the APK is in place
+Test-Path "framework\app_apk\Android_Demo_App.apk"   # should print True
+
+# 4. Inspect the env config (local emulator mode)
+Get-Content config\mobile\kwa\mobile_test_env_config.yml
+# RUN_ON_CLOUD must be: false
+```
+
+---
+
+### Step 5 — Run the KWA Mobile Tests
+
+```powershell
+# Activate the virtual environment first
+.venv\Scripts\activate
+
+# Run all KWA mobile tests
+pytest -vvv -m "kwa" --maxfail=1 --log-cli-level=INFO --reruns 3 `
+  --html=output/reports/kwa_mobile_report.html --self-contained-html `
+  --alluredir=output/allure-results --capture=tee-sys --durations=10 tests
+```
+
+The framework will automatically:
+1. Start a local Appium server (`tests/mobile/conftest.py`).
+2. Launch the emulator if it is not already running.
+3. Install and launch `Android_Demo_App.apk` on the emulator.
+4. Execute the two KWA test cases (`test_kwa_enter_some_value`, `test_kwa_contact_us_form`).
+5. Stop the Appium server after the session ends.
+
+---
+
+### Step 6 — Run on LambdaTest Cloud (optional)
+
+To run on a real cloud device instead of a local emulator:
+
+1. Sign up at [lambdatest.com](https://www.lambdatest.com/) and upload the APK to LambdaTest App Center.
+2. Copy your **Username**, **Access Key**, and the uploaded **App ID**.
+3. Update `config/mobile/kwa/mobile_test_env_config.yml`:
+
+   ```yaml
+   RUN_ON_CLOUD: true
+   CLOUD_PROVIDER: lambdatest
+   IS_VIRTUAL_DEVICE: true          # true = emulator, false = real device
+   LAMBDATEST_USERNAME: <your-username>
+   LAMBDATEST_ACCESS_KEY: <your-access-key>
+   APP: lt://APP<your-app-id>       # app ID from LambdaTest App Center
+   ```
+
+4. Run the same pytest command from Step 5 — the `driver` fixture detects `RUN_ON_CLOUD: true` and connects to `hub.lambdatest.com` instead of the local Appium server.
+
+---
+
+### Troubleshooting
+
+| Symptom | Likely Cause | Fix |
+|---|---|---|
+| `adb: command not found` | `platform-tools` not on `PATH` | Add `$ANDROID_HOME\platform-tools` to `PATH` |
+| `emulator: command not found` | `emulator` not on `PATH` | Add `$ANDROID_HOME\emulator` to `PATH` |
+| `Emulator did not appear in adb devices` | AVD name mismatch | Run `emulator -list-avds` and check it matches `avd_name` in `emulator_launcher.py` |
+| `Appium server failed to start` | Port 4723 in use or Appium not installed | Run `appium` manually to see the error; kill any process on port 4723 |
+| `FileNotFoundError: APK file not found` | APK missing from `framework/app_apk/` | Ensure `Android_Demo_App.apk` exists at `framework/app_apk/Android_Demo_App.apk` |
+| `SessionNotCreatedException` | UiAutomator2 driver not installed | Run `appium driver install uiautomator2` |
 
 ---
 
