@@ -1,4 +1,5 @@
 from appium.webdriver.webdriver import WebDriver  # Appium WebDriver
+from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
@@ -75,3 +76,19 @@ class BasePage:
             )
         except TimeoutException as e:
             raise Exception(f"[WAIT_FOR_CLICKABLE] Element not clickable: ({by}, {locator}) | {str(e)}")
+
+    def scroll_to_element(self, text):
+        """Scroll using Android UIAutomator UiScrollable until the element with the given text is visible."""
+        try:
+            locator = f'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("{text}"))'
+            self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, locator)
+        except Exception as e:
+            raise Exception(f"[SCROLL_TO_ELEMENT] Failed to scroll to element with text '{text}' | {str(e)}")
+
+    def accept_alert(self):
+        """Accept an alert dialog."""
+        try:
+            WebDriverWait(self.driver, self.timeout).until(ec.alert_is_present())
+            self.driver.switch_to.alert.accept()
+        except TimeoutException as e:
+            raise Exception(f"[ACCEPT_ALERT] Alert not present | {str(e)}")

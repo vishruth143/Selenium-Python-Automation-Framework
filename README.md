@@ -789,7 +789,65 @@ Get-Content config\mobile\kwa\mobile_test_env_config.yml
 
 ---
 
-### Step 5 — Run the KWA Mobile Tests
+### Step 5 — Connect Appium Inspector (optional, for locator discovery)
+
+Appium Inspector is a GUI tool for browsing the element hierarchy of your Android app — useful for finding locators when building or debugging page objects.
+
+#### Prerequisites
+
+- Appium Inspector installed: download from [github.com/appium/appium-inspector/releases](https://github.com/appium/appium-inspector/releases)
+- Appium server running and an emulator/device online (see Steps 3–4)
+
+#### 1 — Start the Appium server
+
+```powershell
+appium --address 127.0.0.1 --port 4723
+```
+
+#### 2 — Open Appium Inspector and configure the connection
+
+Launch Appium Inspector and fill in the **New Session** form under the **Appium Server** tab:
+
+| Field       | Value       |
+|-------------|-------------|
+| Remote Host | `127.0.0.1` |
+| Remote Port | `4723`      |
+| Remote Path | `/`         |
+
+#### 3 — Add Desired Capabilities
+
+Switch to **JSON Representation** and paste:
+
+```json
+{
+  "platformName": "Android",
+  "appium:automationName": "UiAutomator2",
+  "appium:deviceName": "emulator-5554",
+  "appium:app": "C:\\Selenium-Python-Automation-Framework\\framework\\app_apk\\Android_Demo_App.apk",
+  "appium:noReset": true
+}
+```
+
+> **Tip:** Set `"appium:noReset": true` to reuse an already-installed APK. Set it to `false` when you need a clean install.
+
+#### 4 — Start the session
+
+Click **Start Session**. Appium Inspector launches the app on the emulator and displays the element tree on the right alongside a live screenshot on the left.
+
+#### 5 — Inspect elements and copy locators
+
+- Click any element in the screenshot or the XML source tree.
+- The **Selected Element** panel shows all attributes (`resource-id`, `content-desc`, `class`, `xpath`, etc.).
+- Copy the value and use it in your page object following the framework's locator convention:
+
+  ```python
+  _some_element_btn = (AppiumBy.ID, "com.example.app:id/someButton")
+  _some_label_txt   = (AppiumBy.XPATH, "//android.widget.TextView[@text='Hello']")
+  ```
+
+---
+
+### Step 6 — Run the KWA Mobile Tests
 
 ```powershell
 # Activate the virtual environment first
@@ -810,7 +868,7 @@ The framework will automatically:
 
 ---
 
-### Step 6 — Run on LambdaTest Cloud (optional)
+### Step 7 — Run on LambdaTest Cloud (optional)
 
 To run on a real cloud device instead of a local emulator:
 

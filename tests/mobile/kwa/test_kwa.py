@@ -7,6 +7,7 @@ from framework.utilities.custom_logger import Logger
 from tests.mobile.kwa.pages.home_page import HomePage
 from tests.mobile.kwa.pages.enter_some_value_page import EnterSomeValuePage
 from tests.mobile.kwa.pages.contact_us_form_page import ContactUsFormPage
+from tests.mobile.kwa.pages.scroll_view_page import ScrollViewPage
 
 from framework.utilities.screenshot_utils import get_screenshot_path
 
@@ -118,4 +119,40 @@ class TestKWAAPP:
             self.driver.save_screenshot(screenshot_path)
             log.error(f"Error: {e}")
             log.info("Test #01 :  Verify 'CONTACT US FORM' functionality. - Failed")
+            raise
+
+    # @pytest.mark.skip
+    def test_kwa_scroll_view(self, driver, request):
+        """
+        Test #03 : Verify 'SCROLL VIEW' functionality.
+        Steps:
+        01) Click on the 'ScrollView' button on the home page.
+        02) Scroll the screen down until BUTTON16 is visible and click it.
+        03) Click YES on the Alert popup that is opened.
+        """
+
+        test_name = request.node.name.rsplit("[", 1)[0]
+        screenshot_path = get_screenshot_path(test_name)
+        self.driver = driver
+
+        # Pages needed
+        self.homepage = HomePage(self.driver)
+        self.scrollviewpage = ScrollViewPage(self.driver)
+
+        try:
+            log.info(50 * '*')
+            log.info("Test #03 : Verify 'SCROLL VIEW' functionality.")
+            log.info(50 * '*')
+
+            log.info("STEP 01: Click on the 'ScrollView' button on the home page.")
+            self.homepage.click_scroll_view_btn()
+            log.info("STEP 02: Scroll down until BUTTON16 is visible and click on it.")
+            self.scrollviewpage.scroll_to_button16_and_click()
+            log.info("STEP 03: Click YES on the Alert popup.")
+            self.scrollviewpage.accept_button16_alert()
+            log.info("Test #03 : Verify 'SCROLL VIEW' functionality. - Passed")
+        except Exception as e:
+            self.driver.save_screenshot(screenshot_path)
+            log.error(f"Error: {e}")
+            log.info("Test #03 : Verify 'SCROLL VIEW' functionality. - Failed")
             raise
