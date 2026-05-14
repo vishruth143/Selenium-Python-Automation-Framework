@@ -62,4 +62,3 @@ class HomePage(BasePage):
 
     def click_scroll_view_btn(self):
         self.click(*self._scroll_view_btn)
-

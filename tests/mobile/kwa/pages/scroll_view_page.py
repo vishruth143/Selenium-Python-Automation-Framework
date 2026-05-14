@@ -30,4 +30,3 @@ class ScrollViewPage(BasePage):
 
     def accept_button16_alert(self):
         self.accept_alert()
-
