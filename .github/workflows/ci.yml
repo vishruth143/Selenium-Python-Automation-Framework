@@ -229,7 +229,7 @@ jobs:
           name: videos
           path: output/videos
 
-  # Notification job: sends CI status to Microsoft Teams via webhook
+  # Notification job: sends CI status to Microsoft Teams via webhook (Adaptive Card)
   notify-teams:
     name: Notify Teams
     needs: [ lint, build-and-test ]
@@ -238,74 +238,139 @@ jobs:
 
     steps:
       - name: Send Notification to Microsoft Teams
-        env:
-          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          LINT_STATUS: ${{ needs.lint.result }}
-          BUILD_STATUS: ${{ needs.build-and-test.result }}
-          GITHUB_REF_NAME: ${{ github.ref_name }}
-          GITHUB_SERVER_URL: ${{ github.server_url }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-          GITHUB_EVENT_NAME: ${{ github.event_name }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          TOTAL_TESTS: ${{ needs.build-and-test.outputs.total }}
-          PASSED_TESTS: ${{ needs.build-and-test.outputs.passed }}
-          FAILED_TESTS: ${{ needs.build-and-test.outputs.failed }}
-          SKIPPED_TESTS: ${{ needs.build-and-test.outputs.skipped }}
-          FAILED_UI: ${{ needs.build-and-test.outputs.failed_ui }}
-          FAILED_API: ${{ needs.build-and-test.outputs.failed_api }}
-          FAILED_MOBILE: ${{ needs.build-and-test.outputs.failed_mobile }}
-          FAILED_PERFORMANCE: ${{ needs.build-and-test.outputs.failed_performance }}
-          FAILED_DATA: ${{ needs.build-and-test.outputs.failed_data }}
         run: |
-          echo "Lint Job Status: $LINT_STATUS"
-          echo "Build and Test Job Status: $BUILD_STATUS"
+          LINT_STATUS="${{ needs.lint.result }}"
+          BUILD_STATUS="${{ needs.build-and-test.result }}"
 
-          OVERALL_STATUS="success"
-          STATUS_EMOJI="✅"
-          COLOR="00FF00"
-
-          if [ "$LINT_STATUS" != "success" ] || [ "$BUILD_STATUS" != "success" ]; then
-            OVERALL_STATUS="failure"
-            STATUS_EMOJI="❌"
-            COLOR="FF0000"
+          # ── Overall result ──────────────────────────────────────────────────────
+          if [ "$LINT_STATUS" = "success" ] && [ "$BUILD_STATUS" = "success" ]; then
+            OVERALL="✅ All Tests Passed"
+          else
+            OVERALL="❌ Some Tests Failed"
           fi
 
-          # Build failure-details facts only for layers that have failures
-          FAILURE_FACTS=""
-          for LAYER_KEY in "🖥️ UI:$FAILED_UI" "🔌 API:$FAILED_API" "📱 Mobile:$FAILED_MOBILE" "⚡ Performance:$FAILED_PERFORMANCE" "🗄️ Data:$FAILED_DATA"; do
-            LABEL="${LAYER_KEY%%:*}"
-            NAMES="${LAYER_KEY#*:}"
-            if [ -n "$NAMES" ] && [ "$NAMES" != "None" ]; then
-              FAILURE_FACTS="${FAILURE_FACTS}{ \"name\": \"↳ $LABEL Failures\", \"value\": \"$NAMES\" },"
-            fi
-          done
+          # ── Test stats ──────────────────────────────────────────────────────────
+          TOTAL="${{ needs.build-and-test.outputs.total }}"
+          PASSED="${{ needs.build-and-test.outputs.passed }}"
+          FAILED="${{ needs.build-and-test.outputs.failed }}"
+          SKIPPED="${{ needs.build-and-test.outputs.skipped }}"
 
-          MESSAGE=$(cat <<EOF
+          FAILED_UI="${{ needs.build-and-test.outputs.failed_ui }}"
+          FAILED_API="${{ needs.build-and-test.outputs.failed_api }}"
+          FAILED_MOBILE="${{ needs.build-and-test.outputs.failed_mobile }}"
+          FAILED_PERFORMANCE="${{ needs.build-and-test.outputs.failed_performance }}"
+          FAILED_DATA="${{ needs.build-and-test.outputs.failed_data }}"
+
+          # ── Per-layer failure blocks (only rendered when failures exist) ────────
+          UI_FAILURES_BLOCK=""
+          if [ -n "$FAILED_UI" ] && [ "$FAILED_UI" != "None" ]; then
+            UI_LIST=$(echo "$FAILED_UI" | sed 's/, /\n/g')
+            UI_FAILURES_BLOCK=",{\"type\":\"TextBlock\",\"text\":\"↳ 🖥️ UI Failures\",\"weight\":\"Bolder\",\"spacing\":\"Small\"},{\"type\":\"TextBlock\",\"text\":\"${UI_LIST}\",\"wrap\":true,\"color\":\"Attention\",\"spacing\":\"None\"}"
+          fi
+
+          API_FAILURES_BLOCK=""
+          if [ -n "$FAILED_API" ] && [ "$FAILED_API" != "None" ]; then
+            API_LIST=$(echo "$FAILED_API" | sed 's/, /\n/g')
+            API_FAILURES_BLOCK=",{\"type\":\"TextBlock\",\"text\":\"↳ 🔌 API Failures\",\"weight\":\"Bolder\",\"spacing\":\"Small\"},{\"type\":\"TextBlock\",\"text\":\"${API_LIST}\",\"wrap\":true,\"color\":\"Attention\",\"spacing\":\"None\"}"
+          fi
+
+          MOBILE_FAILURES_BLOCK=""
+          if [ -n "$FAILED_MOBILE" ] && [ "$FAILED_MOBILE" != "None" ]; then
+            MOBILE_LIST=$(echo "$FAILED_MOBILE" | sed 's/, /\n/g')
+            MOBILE_FAILURES_BLOCK=",{\"type\":\"TextBlock\",\"text\":\"↳ 📱 Mobile Failures\",\"weight\":\"Bolder\",\"spacing\":\"Small\"},{\"type\":\"TextBlock\",\"text\":\"${MOBILE_LIST}\",\"wrap\":true,\"color\":\"Attention\",\"spacing\":\"None\"}"
+          fi
+
+          PERF_FAILURES_BLOCK=""
+          if [ -n "$FAILED_PERFORMANCE" ] && [ "$FAILED_PERFORMANCE" != "None" ]; then
+            PERF_LIST=$(echo "$FAILED_PERFORMANCE" | sed 's/, /\n/g')
+            PERF_FAILURES_BLOCK=",{\"type\":\"TextBlock\",\"text\":\"↳ ⚡ Performance Failures\",\"weight\":\"Bolder\",\"spacing\":\"Small\"},{\"type\":\"TextBlock\",\"text\":\"${PERF_LIST}\",\"wrap\":true,\"color\":\"Attention\",\"spacing\":\"None\"}"
+          fi
+
+          DATA_FAILURES_BLOCK=""
+          if [ -n "$FAILED_DATA" ] && [ "$FAILED_DATA" != "None" ]; then
+            DATA_LIST=$(echo "$FAILED_DATA" | sed 's/, /\n/g')
+            DATA_FAILURES_BLOCK=",{\"type\":\"TextBlock\",\"text\":\"↳ 🗄️ Data Failures\",\"weight\":\"Bolder\",\"spacing\":\"Small\"},{\"type\":\"TextBlock\",\"text\":\"${DATA_LIST}\",\"wrap\":true,\"color\":\"Attention\",\"spacing\":\"None\"}"
+          fi
+
+          PAYLOAD=$(cat <<EOF
           {
-            "@type": "MessageCard",
-            "@context": "http://schema.org/extensions",
-            "themeColor": "$COLOR",
-            "summary": "Automation CI Status",
-            "sections": [ {
-              "activityTitle": "$STATUS_EMOJI Selenium CI Pipeline Report",
-              "facts": [
-                { "name": "Trigger", "value": "$GITHUB_EVENT_NAME" },
-                { "name": "Triggered By", "value": "$GITHUB_ACTOR" },
-                { "name": "Lint Job", "value": "$LINT_STATUS" },
-                { "name": "Build & Test Job", "value": "$BUILD_STATUS" },
-                { "name": "Total Tests", "value": "$TOTAL_TESTS" },
-                { "name": "✅ Passed", "value": "$PASSED_TESTS" },
-                { "name": "❌ Failed", "value": "$FAILED_TESTS" },
-                { "name": "⏭️ Skipped", "value": "$SKIPPED_TESTS" },
-                $FAILURE_FACTS
-                { "name": "Branch", "value": "$GITHUB_REF_NAME" },
-                { "name": "Run", "value": "[View Run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" }
-              ],
-              "markdown": true
-            } ]
+            "type": "message",
+            "attachments": [
+              {
+                "contentType": "application/vnd.microsoft.card.adaptive",
+                "content": {
+                  "\$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                  "type": "AdaptiveCard",
+                  "version": "1.4",
+                  "body": [
+                    {
+                      "type": "TextBlock",
+                      "size": "Large",
+                      "weight": "Bolder",
+                      "text": "Selenium CI Pipeline — ${OVERALL}"
+                    },
+                    {
+                      "type": "FactSet",
+                      "facts": [
+                        { "title": "Repository",      "value": "${{ github.repository }}" },
+                        { "title": "Branch",           "value": "${{ github.ref_name }}" },
+                        { "title": "Trigger",          "value": "${{ github.event_name }}" },
+                        { "title": "Triggered by",     "value": "${{ github.actor }}" },
+                        { "title": "Lint Job",         "value": "${LINT_STATUS}" },
+                        { "title": "Build & Test Job", "value": "${BUILD_STATUS}" }
+                      ]
+                    },
+                    {
+                      "type": "ColumnSet",
+                      "columns": [
+                        {
+                          "type": "Column", "width": "stretch",
+                          "items": [
+                            { "type": "TextBlock", "text": "Total Tests", "weight": "Bolder" },
+                            { "type": "TextBlock", "text": "${TOTAL}", "size": "ExtraLarge", "weight": "Bolder", "spacing": "None" }
+                          ]
+                        },
+                        {
+                          "type": "Column", "width": "stretch",
+                          "items": [
+                            { "type": "TextBlock", "text": "✅ Passed", "weight": "Bolder", "color": "Good" },
+                            { "type": "TextBlock", "text": "${PASSED}", "size": "ExtraLarge", "weight": "Bolder", "color": "Good", "spacing": "None" }
+                          ]
+                        },
+                        {
+                          "type": "Column", "width": "stretch",
+                          "items": [
+                            { "type": "TextBlock", "text": "❌ Failed", "weight": "Bolder", "color": "Attention" },
+                            { "type": "TextBlock", "text": "${FAILED}", "size": "ExtraLarge", "weight": "Bolder", "color": "Attention", "spacing": "None" }
+                          ]
+                        },
+                        {
+                          "type": "Column", "width": "stretch",
+                          "items": [
+                            { "type": "TextBlock", "text": "⏭️ Skipped", "weight": "Bolder", "color": "Warning" },
+                            { "type": "TextBlock", "text": "${SKIPPED}", "size": "ExtraLarge", "weight": "Bolder", "color": "Warning", "spacing": "None" }
+                          ]
+                        }
+                      ]
+                    }
+                    ${UI_FAILURES_BLOCK}
+                    ${API_FAILURES_BLOCK}
+                    ${MOBILE_FAILURES_BLOCK}
+                    ${PERF_FAILURES_BLOCK}
+                    ${DATA_FAILURES_BLOCK}
+                  ],
+                  "actions": [
+                    {
+                      "type": "Action.OpenUrl",
+                      "title": "View Run",
+                      "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    }
+                  ]
+                }
+              }
+            ]
           }
           EOF
           )
 
-          curl --retry 3 --retry-delay 5 -H "Content-Type: application/json" -d "$MESSAGE" "$TEAMS_WEBHOOK_URL"
+          curl --retry 3 --retry-delay 5 -H "Content-Type: application/json" -d "$PAYLOAD" "${{ secrets.TEAMS_WEBHOOK_URL }}"
