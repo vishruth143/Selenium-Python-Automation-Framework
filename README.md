@@ -694,12 +694,28 @@ This section walks you through setting up Android tooling, launching an emulator
 | UiAutomator2 driver      | Latest   | Appium driver for Android                        | `appium driver install uiautomator2`                                                              |
 | Node.js                  | 18+      | Required by Appium                               | [nodejs.org](https://nodejs.org/)                                                                 |
 
-> **Environment variables** — add these to your system or PowerShell profile after installing Android Studio:
->
-> ```powershell
-> $env:ANDROID_HOME = "C:\Users\<your-username>\AppData\Local\Android\Sdk"
-> $env:Path += ";$env:ANDROID_HOME\emulator;$env:ANDROID_HOME\platform-tools;$env:ANDROID_HOME\tools"
-> ```
+**Environment variables** — run these **once** in PowerShell to persist them permanently across all sessions:
+
+```powershell
+# 1. Set ANDROID_HOME permanently (User scope)
+[System.Environment]::SetEnvironmentVariable("ANDROID_HOME", "$env:LOCALAPPDATA\Android\Sdk", [System.EnvironmentVariableTarget]::User)
+
+# 2. Append Android tools to PATH permanently (User scope)
+$androidHome = "$env:LOCALAPPDATA\Android\Sdk"
+$current = [System.Environment]::GetEnvironmentVariable("Path", "User")
+$additions = "$androidHome\emulator;$androidHome\platform-tools;$androidHome\tools"
+[System.Environment]::SetEnvironmentVariable("Path", "$current;$additions", [System.EnvironmentVariableTarget]::User)
+```
+
+After running the above, **close and reopen** your terminal for the changes to take effect. Verify with:
+
+```powershell
+$env:ANDROID_HOME          # should print the SDK path
+adb --version              # should print ADB version
+emulator -list-avds        # should list your AVDs
+```
+
+> ⚠️ Avoid using `$env:Path +=` — that only applies to the **current session** and is lost when the terminal is closed.
 
 ---
 
@@ -721,18 +737,18 @@ appium --version
 
 ### Step 2 — Create an Android Virtual Device (AVD)
 
-1. Open **Android Studio** → click **More Actions** → **Virtual Device Manager** (or go to *Tools → Device Manager*).
-2. Click **Create Device**.
+1. Open **Android Studio** → click on **Device Manager** (or go to *Tools → Device Manager*).
+2. Click + icon and **Create Virtual Device**.
 3. Select a device definition — e.g. **Pixel 9 Pro XL** — and click **Next**.
 4. Choose a system image (e.g. **API 35, Android 15.0, x86_64**) → download if needed → click **Next**.
 5. Set the AVD name to `Pixel_9_Pro_XL` *(this must match the `avd_name` parameter in `framework/utilities/emulator_launcher.py`)*.
 6. Click **Finish**.
 
 > **Tip:** You can list all existing AVDs from the command line:
->
-> ```powershell
-> emulator -list-avds
-> ```
+
+```powershell
+emulator -list-avds
+```
 
 ---
 
@@ -847,7 +863,74 @@ Click **Start Session**. Appium Inspector launches the app on the emulator and d
 
 ---
 
-### Step 6 — Run the KWA Mobile Tests
+### Step 6 — Use the `mcp-appium` Server (optional, AI-driven locator discovery)
+
+For an AI-assisted alternative to Appium Inspector, this project ships with the [`mcp-appium`](#-mcp-servers) server (custom Node.js Appium MCP). Instead of clicking through a GUI, you can ask GitHub Copilot / Claude in natural language to launch the app, traverse screens, and return locator suggestions ready to paste into your page object.
+
+#### Prerequisites
+
+- `mcp-appium` configured in `%LOCALAPPDATA%\github-copilot\intellij\mcp.json` (see [MCP Servers](#-mcp-servers) for the full block).
+- An Android emulator/device online (`adb devices` shows it).
+- The KWA APK installed (Appium will install `framework/app_apk/Android_Demo_App.apk` on first launch, or the package `com.code2lead.kwad` if already installed).
+
+#### What the server exposes
+
+The `mcp-appium` server exposes Appium WebDriver primitives as tools the AI agent can call directly:
+
+| Tool                  | Purpose                                                                    |
+|-----------------------|----------------------------------------------------------------------------|
+| `start_session`       | Auto-detects an iOS simulator or Android emulator/device and starts Appium |
+| `launch_app`          | Launches an app by bundle ID (iOS) / package name (Android)                |
+| `get_page_source`     | Returns the full XML element hierarchy of the current screen               |
+| `get_screenshot_file` | Captures a screenshot and saves it to a temp file                          |
+| `find_element`        | Finds an element by `id`, `xpath`, `accessibility id`, `-android uiautomator`, etc. |
+| `tap_element`         | Taps an element by its element ID                                          |
+| `enter_text`          | Clears and types text into an input field                                  |
+| `get_element_text`    | Reads the visible text from an element                                     |
+| `simulate_gesture`    | Custom W3C gesture (swipe, scroll, pinch) using normalized coordinates     |
+| `press_home_button`   | Sends the app to the background                                            |
+| `get_device_logs`     | Pulls device console logs since the last call                              |
+| `end_session`         | Tears the Appium session down                                              |
+
+#### Example — Ask the agent to find a locator
+
+In Copilot Chat / Claude, simply prompt:
+
+> *"Launch the KWA app on the emulator and find the locator for the ZOOM button on the home page."*
+
+The agent will autonomously:
+
+1. Call `start_session` (auto-detects `emulator-5554`).
+2. Call `launch_app` with `com.code2lead.kwad`.
+3. Call `get_page_source` + `get_screenshot_file` to inspect the home screen.
+4. Identify the ZOOM button and return a ready-to-paste locator:
+
+   ```python
+   _zoom_btn = (AppiumBy.ID, "com.code2lead.kwad:id/Zoom")
+
+   @property
+   def zoom_btn(self):
+       return self.find_element(*self._zoom_btn, ec.element_to_be_clickable)
+
+   def click_zoom_btn(self):
+       self.click(*self._zoom_btn)
+   ```
+
+5. Call `end_session` to clean up.
+
+#### When to use which
+
+| Use case                                                       | Tool                          |
+|----------------------------------------------------------------|-------------------------------|
+| Visually browse the entire element tree, copy attributes by hand | **Appium Inspector** (Step 5) |
+| Ask the agent in plain English to discover, verify or patch locators | **mcp-appium** (Step 6)       |
+| Run the full pytest suite                                      | **pytest + Appium server**    |
+
+> 💡 The `mcp-appium` server connects to the **same** Appium endpoint (`127.0.0.1:4723`) as the rest of the framework — make sure the Appium server (`appium`) is running before invoking it.
+
+---
+
+### Step 7 — Run the KWA Mobile Tests
 
 ```powershell
 # Activate the virtual environment first
@@ -868,7 +951,7 @@ The framework will automatically:
 
 ---
 
-### Step 7 — Run on LambdaTest Cloud (optional)
+### Step 8 — Run on LambdaTest Cloud (optional)
 
 To run on a real cloud device instead of a local emulator:
 
@@ -885,7 +968,7 @@ To run on a real cloud device instead of a local emulator:
    APP: lt://APP<your-app-id>       # app ID from LambdaTest App Center
    ```
 
-4. Run the same pytest command from Step 5 — the `driver` fixture detects `RUN_ON_CLOUD: true` and connects to `hub.lambdatest.com` instead of the local Appium server.
+4. Run the same pytest command from Step 7 — the `driver` fixture detects `RUN_ON_CLOUD: true` and connects to `hub.lambdatest.com` instead of the local Appium server.
 
 ---
 
@@ -1147,6 +1230,12 @@ The configuration file lives at:
         "CONFLUENCE_USERNAME": "your.email@company.com",
         "CONFLUENCE_API_TOKEN": "your_api_token"
       }
+    },
+    "mcp-appium": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\@gavrix\\appium-mcp\\server.js"
+      ]
     }
   }
 }

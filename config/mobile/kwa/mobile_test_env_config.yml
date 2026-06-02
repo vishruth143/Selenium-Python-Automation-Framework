@@ -9,7 +9,7 @@ LAMBDATEST_ACCESS_KEY : <Your access key>
 APP : <Your app id>
 KWA:
   PLATFORM_NAME : Android
-  DEVICE_NAME : Pixel 8 Pro
+  DEVICE_NAME : Pixel_9_Pro_XL
   APPIUM_VERSION : 2.16.2
   PLATFORM_VERSION : 16
   UDID : emulator-5554

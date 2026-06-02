@@ -1,9 +1,0 @@
-{
-  "android": {
-  "platformName": "Android",
-  "appium:automationName": "UiAutomator2",
-  "appium:deviceName": "emulator-5554",
-  "appium:app": "C:\\Selenium-Python-Automation-Framework\\framework\\app_apk\\Android_Demo_App.apk",
-  "appium:noReset": true
-  }
-}

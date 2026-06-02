@@ -43,7 +43,7 @@ from framework.utilities.emulator_launcher import launch_emulator
 mobile_test_env_config = ConfigParser.load_config("kwa_mobile_test_env_config")
 platform_name = mobile_test_env_config['KWA'].get("PLATFORM_NAME", "Android")
 automation_name = mobile_test_env_config['KWA'].get("AUTOMATION_NAME", "uiautomator2")
-device_name = mobile_test_env_config['KWA'].get("DEVICE_NAME", "Pixel 9 Pro XL")
+device_name = mobile_test_env_config['KWA'].get("DEVICE_NAME", "Pixel_9_Pro_XL")
 udid = mobile_test_env_config['KWA'].get("UDID", "emulator-5554")
 app_package = mobile_test_env_config['KWA'].get("APP_PACKAGE", "com.code2lead.kwad")
 app_activity = mobile_test_env_config['KWA'].get("APP_ACTIVITY", "com.code2lead.kwad.MainActivity")
@@ -77,7 +77,7 @@ def driver(request):
 
             options = UiAutomator2Options()
             options.platform_name = mobile_test_env_config.get("PLATFORM_NAME", "Android")
-            options.device_name = mobile_test_env_config.get("DEVICE_NAME", "Pixel 8 Pro")
+            options.device_name = mobile_test_env_config.get("DEVICE_NAME", "Pixel_9_Pro_XL")
             options.platform_version = mobile_test_env_config.get("PLATFORM_VERSION", "16")
             options.appium_version = mobile_test_env_config.get("APPIUM_VERSION", "2.16.2")
             options.app = app_url
@@ -85,7 +85,7 @@ def driver(request):
 
             lt_options = {
                 "platformName": "Android",
-                "appium:deviceName": "Pixel 8 Pro",
+                "appium:deviceName": "Pixel_9_Pro_XL",
                 "appium:appiumVersion": "2.1.3",
                 "appium:platformVersion": "16",
                 "app": app_url,
@@ -106,7 +106,7 @@ def driver(request):
         driver_instance = webdriver.Remote(remote_url, options=options)
 
     else:
-        launch_emulator()  # Ensure emulator is running before driver init
+        launch_emulator(device_name)  # Ensure emulator is running before driver init
 
         options = UiAutomator2Options()
         options.platform_name = platform_name
