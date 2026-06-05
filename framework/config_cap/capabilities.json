@@ -1,0 +1,24 @@
+{
+  "android": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:deviceName": "Pixel_9_Pro_XL",
+    "appium:avd": "Pixel_9_Pro_XL",
+    "appium:platformVersion": "16",
+    "appium:udid": "emulator-5554",
+    "appium:appPackage": "com.code2lead.kwad",
+    "appium:appActivity": "com.code2lead.kwad.MainActivity",
+    "appium:app": "C:\\Selenium-Python-Automation-Framework\\framework\\app_apk\\Android_Demo_App.apk",
+    "appium:noReset": true,
+    "appium:fullReset": false,
+    "appium:autoGrantPermissions": true,
+    "appium:newCommandTimeout": 300,
+    "appium:uiautomator2ServerInstallTimeout": 60000,
+    "appium:adbExecTimeout": 60000,
+    "appium:systemPort": 8200,
+    "appium:skipServerInstallation": false,
+    "appium:skipDeviceInitialization": false,
+    "appium:disableWindowAnimation": true,
+    "appium:ignoreHiddenApiPolicyError": true
+  }
+}

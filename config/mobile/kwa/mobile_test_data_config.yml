@@ -7,3 +7,9 @@ test_kwa_contact_us_form:
   Email : test@test.com
   Address : Testing Address
   Mobile No : 8888888888
+
+test_kwa_tab_activity:
+  home_fragment : HomeFragment
+  sport_fragment : SportFragment
+  movie_fragment : MovieFragment
+

@@ -805,6 +805,102 @@ Get-Content config\mobile\kwa\mobile_test_env_config.yml
 
 ---
 
+### Step 4b — Find an App's `APP_PACKAGE` and `APP_ACTIVITY`
+
+`config/mobile/kwa/mobile_test_env_config.yml` requires two Android-specific values that uniquely identify the app and its launch screen:
+
+```yaml
+APP_PACKAGE : com.code2lead.kwad
+APP_ACTIVITY : com.code2lead.kwad.MainActivity
+```
+
+- **`APP_PACKAGE`** — the Android application ID (e.g. `com.code2lead.kwad`). One value per APK.
+- **`APP_ACTIVITY`** — the fully-qualified class name of the activity Appium should launch first (usually the `MAIN` / `LAUNCHER` activity, e.g. `com.code2lead.kwad.MainActivity`).
+
+Use any of the methods below — pick the one that matches your starting point.
+
+#### Option A — APK file is on disk (use `aapt` / `aapt2`)
+
+`aapt` ships with the Android SDK Build-Tools (`%ANDROID_HOME%\build-tools\<version>\aapt.exe`). Make sure the build-tools `bin` is on `PATH`, then:
+
+```powershell
+aapt dump badging .\framework\app_apk\Android_Demo_App.apk | Select-String "package:|launchable-activity"
+```
+
+Expected output:
+
+```text
+package: name='com.code2lead.kwad' versionCode='1' versionName='1.0'
+launchable-activity: name='com.code2lead.kwad.MainActivity'  label='KWA' icon=''
+```
+
+- The `name=` after `package:` → `APP_PACKAGE`
+- The `name=` after `launchable-activity:` → `APP_ACTIVITY`
+
+> 💡 If `aapt` is not on `PATH`, run it directly: `& "$env:ANDROID_HOME\build-tools\34.0.0\aapt.exe" dump badging .\framework\app_apk\Android_Demo_App.apk`
+
+#### Option B — App is already installed on the emulator/device (use `adb`)
+
+1. **List installed packages** — filter by a keyword to find the app ID:
+
+   ```powershell
+   adb shell pm list packages | Select-String "code2lead"
+   # package:com.code2lead.kwad
+   ```
+
+2. **Get the launcher activity** for that package:
+
+   ```powershell
+   adb shell cmd package resolve-activity --brief com.code2lead.kwad
+   # com.code2lead.kwad
+   # com.code2lead.kwad/.MainActivity
+   ```
+
+   The second line is `<package>/<activity>`. A leading `.` means the activity is in the package's root namespace, so `.MainActivity` expands to `com.code2lead.kwad.MainActivity`.
+
+3. **Alternative — launch the app manually and read the foreground activity:**
+
+   ```powershell
+   # Launch the app, then run:
+   adb shell "dumpsys activity activities | Select-String 'mResumedActivity|topResumedActivity'"
+   # ActivityRecord{... com.code2lead.kwad/.MainActivity ...}
+   ```
+
+#### Option C — Use the `appium-mcp` / `mcp-appium` server
+
+After starting a session, ask the agent in plain English:
+
+> *"What's the current foreground app's package and activity?"*
+
+The agent calls `appium_mobile_device_info` (or the equivalent `getCurrentPackage` / `getCurrentActivity` capabilities) and returns both values.
+
+#### Option D — Read it from `build.gradle` (if you own the source)
+
+In the app module's `build.gradle`:
+
+```groovy
+android {
+    defaultConfig {
+        applicationId "com.code2lead.kwad"   // → APP_PACKAGE
+    }
+}
+```
+
+The launcher activity is declared in `AndroidManifest.xml`:
+
+```xml
+<activity android:name=".MainActivity">
+  <intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+    <category android:name="android.intent.category.LAUNCHER" />
+  </intent-filter>
+</activity>
+```
+
+The `android:name` (resolved against the manifest's `package` attribute) → `APP_ACTIVITY`.
+
+---
+
 ### Step 5 — Connect Appium Inspector (optional, for locator discovery)
 
 Appium Inspector is a GUI tool for browsing the element hierarchy of your Android app — useful for finding locators when building or debugging page objects.
@@ -927,6 +1023,101 @@ The agent will autonomously:
 | Run the full pytest suite                                      | **pytest + Appium server**    |
 
 > 💡 The `mcp-appium` server connects to the **same** Appium endpoint (`127.0.0.1:4723`) as the rest of the framework — make sure the Appium server (`appium`) is running before invoking it.
+
+---
+
+### Step 6b — Use the `appium-mcp` Server (npm-published, embedded drivers)
+
+In addition to the legacy `mcp-appium` server above, this project also wires up the official npm package [`appium-mcp`](https://www.npmjs.com/package/appium-mcp) — a richer MCP server that runs Appium drivers **embedded in-process** (no separate `appium` server required) and exposes a much larger toolset for AI-driven mobile automation.
+
+#### Configuration
+
+`appium-mcp` is already declared in `%LOCALAPPDATA%\github-copilot\intellij\mcp.json`:
+
+```json
+"appium-mcp": {
+  "disabled": false,
+  "timeout": 100,
+  "type": "stdio",
+  "command": "npx",
+  "args": ["appium-mcp@latest"],
+  "env": {
+    "ANDROID_HOME": "C:\\Users\\<you>\\AppData\\Local\\Android\\Sdk",
+    "CAPABILITIES_CONFIG": "C:\\Selenium-Python-Automation-Framework\\framework\\config_cap\\capabilities.json"
+  }
+}
+```
+
+The `CAPABILITIES_CONFIG` env var points at `framework/config_cap/capabilities.json` so the agent can pull the same KWA capabilities (`appPackage`, `appActivity`, `app`, `automationName`, etc.) the pytest suite uses.
+
+#### Key differences vs. `mcp-appium` (Step 6)
+
+| Aspect                    | `mcp-appium` (Step 6)                  | `appium-mcp` (Step 6b)                                 |
+|---------------------------|----------------------------------------|--------------------------------------------------------|
+| Source                    | Local Node script (`@gavrix/appium-mcp`) | npm package `appium-mcp@latest`                        |
+| Appium server             | Connects to external `appium` on `:4723` | Drivers embedded — **no external Appium needed**       |
+| Device discovery          | Manual capabilities                    | `select_device` lists & auto-selects emulator/device   |
+| iOS support               | Limited                                | Full (XCUITest + simulator boot, WDA prebuild)         |
+| Toolset                   | ~12 primitives                         | 30+ tools (gestures, AI find, geo, clipboard, perms…)  |
+| Best for                  | Lightweight locator probing            | Full exploratory automation + test generation         |
+
+#### Selected tools exposed
+
+| Tool                            | Purpose                                                                  |
+|---------------------------------|--------------------------------------------------------------------------|
+| `select_device`                 | Lists Android/iOS devices and auto-selects when only one is connected    |
+| `appium_session_management`     | `create` / `delete` / `list` / `attach` / `select` Appium sessions       |
+| `appium_app_lifecycle`          | `activate`, `terminate`, `install`, `query_state`, `clear`, `deep_link`  |
+| `appium_find_element`           | Find element by `accessibility id`, `id`, `-android uiautomator`, xpath… |
+| `appium_gesture`                | `tap`, `double_tap`, `long_press`, `scroll`, `swipe`, `pinch_zoom`, `back` |
+| `appium_drag_and_drop`          | Drag-and-drop with element or coordinate source/target                   |
+| `appium_set_value` / `appium_get_text` | Type into / read text from an element                              |
+| `appium_mobile_keyboard`        | `hide` / `is_shown` for the soft keyboard                                |
+| `appium_screenshot`             | Full-screen or per-element PNG capture                                   |
+| `appium_get_page_source`        | XML element hierarchy of current screen                                  |
+| `generate_locators`             | Snapshot of all interactable elements with locator suggestions           |
+| `appium_generate_tests`         | Drives the live session through given steps and emits test code         |
+| `appium_geolocation`            | `get` / `set` / `reset` GPS coordinates                                  |
+| `appium_mobile_clipboard`       | Read/write the device clipboard                                          |
+| `appium_mobile_permissions`     | Grant/revoke runtime permissions (Android) or privacy services (iOS)    |
+| `appium_screen_recording`       | `start` / `stop` MP4 recording                                           |
+
+> See the full list at [npmjs.com/package/appium-mcp](https://www.npmjs.com/package/appium-mcp).
+
+#### Example — open KWA, click HYBRID, type "VISHVA", click SUBMIT
+
+In Copilot Chat / Claude, simply prompt:
+
+> *"Use appium-mcp to open the KWA app on the emulator, click the HYBRID button, type VISHVA into the text input, then click SUBMIT."*
+
+The agent autonomously:
+
+1. `select_device` → picks `emulator-5554` (Pixel_9_Pro_XL).
+2. `appium_session_management action=create` → starts an embedded UiAutomator2 session with `com.code2lead.kwad` from `capabilities.json`.
+3. `appium_find_element strategy="-android uiautomator" selector='new UiSelector().text("HYBRID")'` → returns element UUID.
+4. `appium_gesture action=tap` on that UUID.
+5. `appium_find_element` for the EditText → `appium_set_value text="VISHVA"`.
+6. `appium_mobile_keyboard action=hide`.
+7. `appium_find_element` for `text("SUBMIT")` → `appium_gesture action=tap`.
+8. `appium_screenshot` to confirm the result.
+
+#### Generating a pytest from a recorded flow
+
+After driving a flow interactively, ask the agent:
+
+> *"Now use appium_generate_tests to emit the pytest version of the steps above for `tests/mobile/kwa/`."*
+
+Move locators into a page object under `framework/pages/mobile/` (extending `BasePage`), and keep the test thin per the framework's POM convention.
+
+#### Troubleshooting
+
+| Symptom                                                                 | Fix                                                                                       |
+|-------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| `'GET /screenshot' cannot be proxied… instrumentation process is not running` | `appium_session_management action=delete` then `create` again — UiAutomator2 sometimes crashes on first launch with `disableWindowAnimation` |
+| `npx` not found                                                         | Install Node.js LTS                                                                       |
+| No devices listed by `select_device`                                    | Start the emulator (`emulator -avd Pixel_9_Pro_XL`) or plug a device with USB debugging   |
+| Driver download slow on first run                                       | Normal — UiAutomator2 driver is fetched once and cached                                   |
+| Capabilities ignored                                                    | Validate `framework/config_cap/capabilities.json`; pass overrides via the `capabilities` arg of `appium_session_management` |
 
 ---
 
@@ -1236,6 +1427,17 @@ The configuration file lives at:
       "args": [
         "C:\\@gavrix\\appium-mcp\\server.js"
       ]
+    },
+    "appium-mcp": {
+      "disabled": false,
+      "timeout": 100,
+      "type": "stdio",
+      "command": "npx",
+      "args": ["appium-mcp@latest"],
+      "env": {
+        "ANDROID_HOME": "C:\\Users\\<your-username>\\AppData\\Local\\Android\\Sdk",
+        "CAPABILITIES_CONFIG": "C:\\Selenium-Python-Automation-Framework\\framework\\config_cap\\capabilities.json"
+      }
     }
   }
 }

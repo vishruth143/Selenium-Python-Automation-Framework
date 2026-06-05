@@ -8,6 +8,7 @@ from tests.mobile.kwa.pages.home_page import HomePage
 from tests.mobile.kwa.pages.enter_some_value_page import EnterSomeValuePage
 from tests.mobile.kwa.pages.contact_us_form_page import ContactUsFormPage
 from tests.mobile.kwa.pages.scroll_view_page import ScrollViewPage
+from tests.mobile.kwa.pages.tab_activity_page import TabActivityPage
 
 from framework.utilities.screenshot_utils import get_screenshot_path
 
@@ -155,4 +156,68 @@ class TestKWAAPP:
             self.driver.save_screenshot(screenshot_path)
             log.error(f"Error: {e}")
             log.info("Test #03 : Verify 'SCROLL VIEW' functionality. - Failed")
+            raise
+
+    # @pytest.mark.skip
+    def test_kwa_tab_activity(self, driver, request, testdata):
+        """
+        Test #04 : Verify 'TAB ACTIVITY' functionality.
+        Steps:
+        01) Click on the 'TAB ACTIVITY' button on the home page.
+        02) Verify HOME, SPORT and MOVIE tabs are visible.
+        03) Verify 'HomeFragment' is displayed by default (HOME tab).
+        04) Click on the 'SPORT' tab and verify 'SportFragment' is displayed.
+        05) Click on the 'MOVIE' tab and verify 'MovieFragment' is displayed.
+        06) Click back on the 'HOME' tab and verify 'HomeFragment' is displayed again.
+        """
+
+        test_name = request.node.name.rsplit("[", 1)[0]
+        screenshot_path = get_screenshot_path(test_name)
+        self.driver = driver
+
+        # Pages needed
+        self.homepage = HomePage(self.driver)
+        self.tabactivitypage = TabActivityPage(self.driver)
+
+        try:
+            log.info(50 * '*')
+            log.info("Test #04 : Verify 'TAB ACTIVITY' functionality.")
+            log.info(50 * '*')
+
+            home_fragment = testdata[test_name]['home_fragment']
+            sport_fragment = testdata[test_name]['sport_fragment']
+            movie_fragment = testdata[test_name]['movie_fragment']
+
+            log.info("STEP 01: Click on the 'TAB ACTIVITY' button on the home page.")
+            self.homepage.click_tab_activity_btn()
+
+            log.info("STEP 02: Verify HOME, SPORT and MOVIE tabs are visible.")
+            assert self.tabactivitypage.is_home_tab_visible(), "HOME tab is not visible"
+            assert self.tabactivitypage.is_sport_tab_visible(), "SPORT tab is not visible"
+            assert self.tabactivitypage.is_movie_tab_visible(), "MOVIE tab is not visible"
+
+            log.info("STEP 03: Verify 'HomeFragment' is displayed by default.")
+            actual = self.tabactivitypage.get_fragment_txt()
+            assert actual == home_fragment, f"Expected '{home_fragment}', got '{actual}'"
+
+            log.info("STEP 04: Click on the 'SPORT' tab and verify 'SportFragment' is displayed.")
+            self.tabactivitypage.click_sport_tab()
+            actual = self.tabactivitypage.get_fragment_txt()
+            assert actual == sport_fragment, f"Expected '{sport_fragment}', got '{actual}'"
+
+            log.info("STEP 05: Click on the 'MOVIE' tab and verify 'MovieFragment' is displayed.")
+            self.tabactivitypage.click_movie_tab()
+            actual = self.tabactivitypage.get_fragment_txt()
+            assert actual == movie_fragment, f"Expected '{movie_fragment}', got '{actual}'"
+
+            log.info("STEP 06: Click back on the 'HOME' tab and verify 'HomeFragment' is displayed.")
+            self.tabactivitypage.click_home_tab()
+            actual = self.tabactivitypage.get_fragment_txt()
+            assert actual == home_fragment, f"Expected '{home_fragment}', got '{actual}'"
+
+            log.info("Test #04 : Verify 'TAB ACTIVITY' functionality. - Passed")
+        except Exception as e:
+            self.driver.save_screenshot(screenshot_path)
+            log.error(f"Error: {e}")
+            log.info("Test #04 : Verify 'TAB ACTIVITY' functionality. - Failed")
             raise
