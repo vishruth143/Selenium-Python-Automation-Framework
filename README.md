@@ -821,7 +821,7 @@ Use any of the methods below — pick the one that matches your starting point.
 
 #### Option A — APK file is on disk (use `aapt` / `aapt2`)
 
-`aapt` ships with the Android SDK Build-Tools (`%ANDROID_HOME%\build-tools\<version>\aapt.exe`). Make sure the build-tools `bin` is on `PATH`, then:
+`aapt` ships with the Android SDK Build-Tools (`%ANDROID_HOME%\build-tools\<version>\aapt.exe`). Note that `aapt.exe` lives directly inside the versioned build-tools folder — there is no `bin` subfolder. Make sure the build-tools folder itself is on `PATH`, then:
 
 ```powershell
 aapt dump badging .\framework\app_apk\Android_Demo_App.apk | Select-String "package:|launchable-activity"

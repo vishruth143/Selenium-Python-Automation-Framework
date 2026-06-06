@@ -19,6 +19,8 @@ class ConfigParser:
         'heroku_ui_test_data_config'            :   'ui/heroku/ui_test_data_config.yml',
         'kwa_mobile_test_env_config'            :   'mobile/kwa/mobile_test_env_config.yml',
         'kwa_mobile_test_data_config'           :   'mobile/kwa/mobile_test_data_config.yml',
+        'wdio_mobile_test_env_config'           :   'mobile/wdio/mobile_test_env_config.yml',
+        'wdio_mobile_test_data_config'          :   'mobile/wdio/mobile_test_data_config.yml',
         'jsonplaceholder_api_test_env_config'   :   'api/jsonplaceholder/api_test_env_config.yml',
         'jsonplaceholder_api_test_data_config'  :   'api/jsonplaceholder/api_test_data_config.json',
         'jsonplaceholder_perf_test_config'      :   'performance/jsonplaceholder/perf_test_config.yml',
