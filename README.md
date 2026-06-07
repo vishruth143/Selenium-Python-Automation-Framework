@@ -40,6 +40,18 @@ Containerized with Docker · CI/CD via GitHub Actions & Jenkins · Notifications
    - [Performance · Locust](#performance--locust)
    - [Data Quality · REST Countries](#data-quality--rest-countries)
 9. [Mobile Testing Setup (KWA · Android Emulator)](#-mobile-testing-setup-kwa--android-emulator)
+   - [Step 1 — Install Appium and the UiAutomator2 driver](#step-1--install-appium-and-the-uiautomator2-driver)
+   - [Step 2 — Create an Android Virtual Device (AVD)](#step-2--create-an-android-virtual-device-avd)
+   - [Step 3 — Launch the Android Emulator](#step-3--launch-the-android-emulator)
+   - [Step 4 — Verify the environment](#step-4--verify-the-environment)
+   - [Step 4a — Install the APK on the emulator (manual)](#step-4a--install-the-apk-on-the-emulator-manual)
+   - [Step 4b — Find an App's `APP_PACKAGE` and `APP_ACTIVITY`](#step-4b--find-an-apps-app_package-and-app_activity)
+   - [Step 5 — Connect Appium Inspector (optional, for locator discovery)](#step-5--connect-appium-inspector-optional-for-locator-discovery)
+   - [Step 6 — Use the `mcp-appium` Server (optional, AI-driven locator discovery)](#step-6--use-the-mcp-appium-server-optional-ai-driven-locator-discovery)
+   - [Step 6b — Use the `appium-mcp` Server (npm-published, embedded drivers)](#step-6b--use-the-appium-mcp-server-npm-published-embedded-drivers)
+   - [Step 7 — Run the KWA Mobile Tests](#step-7--run-the-kwa-mobile-tests)
+   - [Step 8 — Run on LambdaTest Cloud (optional)](#step-8--run-on-lambdatest-cloud-optional)
+   - [Troubleshooting](#troubleshooting)
 10. [Reports](#-reports)
     - [HTML Report](#html-report)
     - [Allure Report](#allure-report)
@@ -802,6 +814,40 @@ Test-Path "framework\app_apk\Android_Demo_App.apk"   # should print True
 Get-Content config\mobile\kwa\mobile_test_env_config.yml
 # RUN_ON_CLOUD must be: false
 ```
+
+---
+
+### Step 4a — Install the APK on the emulator (manual)
+
+The framework installs the APK automatically during test startup, but you can also pre-install it manually to validate the app and package before running tests.
+
+#### Option A — Fresh install (APK not installed yet)
+
+```powershell
+adb install -r .\framework\app_apk\Android_Demo_App.apk
+```
+
+#### Option B — Replace an existing install and clear app data
+
+```powershell
+adb uninstall com.code2lead.kwad
+adb install .\framework\app_apk\Android_Demo_App.apk
+```
+
+#### Verify install and launch
+
+```powershell
+# Confirm package is installed
+adb shell pm list packages | Select-String "com.code2lead.kwad"
+
+# Launch app using package/activity
+adb shell am start -n com.code2lead.kwad/com.code2lead.kwad.MainActivity
+
+# Optional: verify the foreground activity
+adb shell dumpsys activity activities | Select-String "mResumedActivity|topResumedActivity"
+```
+
+> If `adb install` fails with `INSTALL_FAILED_VERSION_DOWNGRADE`, uninstall first and install again.
 
 ---
 
