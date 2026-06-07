@@ -71,4 +71,3 @@ class TabActivityPage(BasePage):
     # ------------------------------------------------------Get text----------------------------------------------------
     def get_fragment_txt(self):
         return self.get_text(*self._fragment_txt)
-

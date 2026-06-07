@@ -70,4 +70,3 @@ class HomePage(BasePage):
 
     def click_tab_activity_btn(self):
         self.click(*self._tab_activity_btn)
-
