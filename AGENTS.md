@@ -4,14 +4,14 @@ Guidance for AI coding agents working in this Selenium + Pytest + Appium framewo
 
 ## Big Picture
 
-Layered **Page Object Model** with **per-app config auto-discovery**. There is no central `if APP_NAME == ...` switch — each app/service folder under `tests/` owns a `conftest.py` that loads its own config via `config/config_parser.py` (`ConfigParser.load_config(name)`). Tests are selected and routed entirely by **pytest markers** (`-m pta`, `-m heroku`, `-m jsonplaceholder`, `-m kwa`, `-m restcountries_data`).
+Layered **Page Object Model** with **per-app config auto-discovery**. There is no central `if APP_NAME == ...` switch — each app/service folder under `tests/` owns a `conftest.py` that loads its own config via `config/config_parser.py` (`ConfigParser.load_config(name)`). Tests are selected and routed entirely by **pytest markers** (`-m pta`, `-m heroku`, `-m jsonplaceholder`, `-m kwa`, `-m wdio`, `-m restcountries_data`).
 
 Fixture chain (read in order to understand any test):
 1. `tests/conftest.py` — session: cleans `output/`, writes Allure `environment.properties`, exposes `log` fixture.
-2. `tests/{ui,api,mobile}/conftest.py` — layer: WebDriver / APIClient / Appium lifecycle, screenshot + ffmpeg video on UI failure (kept only on fail).
+2. `tests/{ui,api,mobile,data}/conftest.py` — layer: WebDriver / APIClient / Appium lifecycle, data prefetch fixtures for REST Countries, screenshot + ffmpeg video on UI failure (kept only on fail).
 3. `tests/{ui,api,mobile}/<app>/conftest.py` — app: declares `testdata` (and `api_client` / `driver` for mobile) by loading the matching config file. Region-keyed blocks (`DEV`/`QA`/`STAGE`/`PROD`) selected by `REGION` env var (default `QA`).
 
-Config files live at `config/<type>/<app>/` as YAML / JSON / XLSX (e.g. `config/ui/pta/ui_test_data_config.yml`, `config/ui/pta/ui_test_excel_data_config.xlsx`).
+Config files live at `config/<type>/<app>/` as YAML / JSON / XLSX (e.g. `config/ui/pta/ui_test_data_config.yml`, `config/ui/pta/ui_test_excel_data_config.xlsx`, `config/mobile/wdio/mobile_test_env_config.yml`).
 
 ## Page Object Convention
 
@@ -25,7 +25,7 @@ Selenium events are auto-logged via `framework/listeners/event_listeners.py` (Ev
 
 ## Logging & Artifacts
 
-Use `framework/utilities/custom_logger.py`. Tests log steps as literal `STEP 01`, `STEP 02`, ... for grep-ability across the rotating `output/logs/test_execution.log` (10 MB × 5). On UI failure, `screenshot_utils.py` + `screen_recording_utils.py` (ffmpeg) drop artifacts under `output/screenshots/` and `output/videos/`; passing tests' videos are deleted.
+Use `framework/utilities/custom_logger.py`. Tests log steps as literal `STEP 01`, `STEP 02`, ... for grep-ability across the rotating `output/logs/test_execution.log` (10 MB × 5). With xdist, workers write shard logs (`test_execution_gw*.log`) that are merged into `test_execution.log` at session end. On UI failure, `screenshot_utils.py` + `screen_recording_utils.py` (ffmpeg) drop artifacts under `output/screenshots/` and `output/videos/`; passing tests' videos are deleted.
 
 ## Commands
 
@@ -37,6 +37,7 @@ pytest -vvv -m "pta" tests/
 pytest -vvv -m "heroku" tests/
 pytest -vvv -m "jsonplaceholder" tests/
 pytest -vvv -m "kwa" tests/
+pytest -vvv -m "wdio" tests/
 pytest -vvv -m "restcountries_data" tests/data/
 
 # Performance (Locust, not pytest) — JSONPlaceholder, 9 tasks
@@ -54,13 +55,14 @@ pytest -vvv -m "pta" -n 4 --reruns 3 --html=output/reports/report.html \
 pylint framework/ tests/ config/
 ```
 
-Markers are declared in `pytest.ini` and map 1:1 to app/service names (`pta, heroku, kwa, jsonplaceholder, restcountries_data`) plus cross-cutting `excel, param, retry` used by `tests/snippet/` demos. Add new ones there.
+Markers are declared in `pytest.ini` and map 1:1 to app/service names (`pta, heroku, kwa, wdio, jsonplaceholder, restcountries_data`) plus cross-cutting `excel, param, retry` used by `tests/snippet/` demos. Add new ones there.
 
 ## Project-Specific Rules
 
 - **Do NOT** add `APP_NAME` / `SERVICE_NAME` / `MOBILE_APP_NAME` env-var branching — that pattern was removed; route via per-app `conftest.py` instead.
 - **Do NOT** put WebDriver calls in tests — extend `BasePage` if a primitive is missing.
 - New app? Create `tests/<layer>/<app>/{__init__.py, conftest.py, pages/, test_<app>.py}`, a matching `config/<layer>/<app>/` folder, and a marker in `pytest.ini`.
+- WDIO mobile demo follows the same per-app pattern: `tests/mobile/wdio/` + `config/mobile/wdio/` with marker `wdio`.
 - Two PTA test variants exist intentionally: `test_pta_clean_version.py` (terse) and `test_pta_tutorial_version.py` (heavily commented for onboarding) — keep both in sync when changing flows.
 - BDD lives at `tests/ui/pta/features/*.feature` with steps in `tests/ui/pta/steps/test_pta_app.py` (pytest-bdd).
 - Performance tests are **Locust**, not pytest — `tests/performance/locustfile.py` (no marker, no `BasePage`).
@@ -69,5 +71,4 @@ Markers are declared in `pytest.ini` and map 1:1 to app/service names (`pta, her
 
 ## Commits
 
-Conventional Commits enforced. Allowed scopes: `deps, conftest, logger, common, config, pta, hirokuapp, jsonplaceholder, performance, data, kwa, ci, readme`. Example: `feat(hirokuapp): add broken_images_page page object`. See skill at `.claude/skills/commit-message/SKILL.md`.
-
+Conventional Commits enforced. Allowed scopes: `deps, conftest, logger, common, config, pta, hirokuapp, jsonplaceholder, performance, data, kwa, ci, readme`. Example: `feat(hirokuapp): add broken_images_page page object`. See skill at `.claude/skills/commit-message/skill.md`.
