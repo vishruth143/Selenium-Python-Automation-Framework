@@ -3,13 +3,11 @@
 REM Move to repository root regardless of where the script is launched from.
 cd /d "%~dp0.."
 
-REM Default execution context for PTA UI tests.
+REM Default execution context for KWA mobile tests.
 set REGION=QA
-set BROWSER=CHROME
-set HEADLESS=Y
 
-REM Run PTA UI tests with verbose logs, parallel workers, HTML report, and Allure raw results.
-pytest -vvv -m "pta" -n 4 --log-cli-level=INFO --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
+REM Run KWA mobile tests with verbose logs, parallel workers, HTML report, and Allure raw results.
+pytest -vvv -m "kwa" --log-cli-level=INFO --html=output/reports/report.html --alluredir=output/allure-results --self-contained-html --capture=tee-sys --durations=10 tests
 
 REM Guardrail: fail fast if Allure results folder was not produced.
 if not exist "output\allure-results\" (
@@ -33,3 +31,4 @@ REM Keep this terminal open; press Ctrl+C to stop the server.
 echo Serving Allure Report...
 start "" "http://localhost:8000/output/allure-report"
 python -m http.server 8000
+
