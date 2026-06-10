@@ -65,7 +65,8 @@ Containerized with Docker · CI/CD via GitHub Actions & Jenkins · Notifications
 15. [Inspecting Environment Variables](#-inspecting-environment-variables)
 16. [Conventional Commits](#-conventional-commits)
 17. [MCP Servers](#-mcp-servers)
-18. [Claude · GitHub Integration](#-claude--github-integration)
+18. [GitHub Copilot Instructions](#-github-copilot-instructions)
+19. [Claude · GitHub Integration](#-claude--github-integration)
 
 ---
 
@@ -104,6 +105,7 @@ Ensure the following tools are installed before setting up the project:
 | Google Chrome | Latest  | Default browser for test execution               | [chrome](https://www.google.com/chrome/)                     |
 | ChromeDriver  | Auto    | Selenium WebDriver for Chrome                    | Auto-managed by Selenium Manager                             |
 | Node.js       | 18+     | Required for MCP server tools (optional)         | [nodejs.org](https://nodejs.org/)                            |
+| Allure CLI    | Latest  | Generate and serve Allure test reports            | [allurereport.org](https://allurereport.org/docs/install/)   |
 | ffmpeg        | Any     | Screen recording for failed UI tests             | [ffmpeg.org](https://ffmpeg.org/download.html)               |
 | Git           | Any     | Source control                                   | [git-scm.com](https://git-scm.com/)                          |
 
@@ -1505,6 +1507,22 @@ npm install -g dkmaker-mcp-rest-api
 ```
 
 > **Note:** Replace `<your-username>` in the paths above with your actual Windows username before using the config.
+
+---
+
+## 🤖 GitHub Copilot Instructions
+
+Project-specific Copilot guidance lives in [`/.github/copilot-instructions.md`](./.github/copilot-instructions.md).
+
+Use that file for repository-specific coding rules such as:
+
+- layered POM and per-app config auto-discovery
+- marker-based test routing
+- no central `APP_NAME` / `SERVICE_NAME` / `MOBILE_APP_NAME` branching
+- `BasePage`-driven Selenium interactions
+- validation and commit conventions for this repository
+
+For broader agent guidance, also see `AGENTS.md` and `CLAUDE.md`.
 
 ---
 

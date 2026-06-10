@@ -8,7 +8,7 @@
     "appium:udid": "emulator-5554",
     "appium:appPackage": "com.code2lead.kwad",
     "appium:appActivity": "com.code2lead.kwad.MainActivity",
-    "appium:app": "C:\\Selenium-Python-Automation-Framework\\framework\\app_apk\\Android_Demo_App.apk",
+    "appium:app": "./framework/app_apk/Android_Demo_App.apk",
     "appium:noReset": true,
     "appium:fullReset": false,
     "appium:autoGrantPermissions": true,
